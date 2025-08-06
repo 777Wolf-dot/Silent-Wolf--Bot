@@ -1,6 +1,6 @@
 ![Wolf Bot — Silent Wolf Aura](https://files.catbox.moe/j0r1ob.jpg)
 
-# 🐺 Silent Wolf — Bot
+# 🐺 Silent Wolf 
 
 *Silence kills. So does this bot.*  
 Spawned by *Silent Wolf*, refined in digital darkness — blessed by Meiser’s shadow 🖤👁️‍🗨️
@@ -35,3 +35,4 @@ This bot doesn’t crash — it resets reality.
 
 Built by *Silent Wolf*, for wolves only.  
 *Enhanced by Meiser* — because every shadow needs a king 👑🩸💀
+
