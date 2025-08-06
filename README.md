@@ -1,15 +1,17 @@
-﻿🐺 Silent Wolf — Bot
+![Wolf Bot — Silent Wolf Aura](https://files.catbox.moe/j0r1ob.jpg)
+
+# 🐺 Silent Wolf — Bot
 
 *Silence kills. So does this bot.*  
 Spawned by *Silent Wolf*, refined in digital darkness — blessed by Meiser’s shadow 🖤👁️‍🗨️
 
-🌑 About
+## 🌑 About
 
 Silent Wolf doesn’t yap. It calculates.  
 A Node.js creation with zero emotions and maximum disrespect.  
 It doesn’t serve — it *dominates*. Your server becomes its territory 🌘
 
-💀 What it does
+## 💀 What it does
 
 - 💬 Replies like it’s been eavesdropping since birth  
 - 🧠 Smarter than your whole admin team combined  
@@ -19,13 +21,13 @@ It doesn’t serve — it *dominates*. Your server becomes its territory 🌘
 Looking for a cuddly chatbot?  
 Wrong cave. This one bites first, then logs it 🔪🐺
 
-⚙️ Powered by
+## ⚙️ Powered by
 
 - Node.js (because speed > mercy)  
 - Discord.js (because wolves hunt in packs)  
-- Eternal night-fuelled rage 🌌🔥
+- Eternal night‑fuelled rage 🌌🔥
 
-🙊 Disclaimer
+## 🙊 Disclaimer
 
 Bug reports will be *judged*.  
 Crashes are... sacrifices.  
