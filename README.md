@@ -3,12 +3,19 @@
 </p>
 
 <h1 align="center">
-  ⚡🐺<br>
-  <span style="color:#00FFFF"><b>WOLF BOT</b></span><br>
-  <i><sub>by Silent Wolf • Enhanced by Meiser</sub></i>
+
+⚡🐺<br>
+
+<span style="font-size: 42px;">
+  <b>🅆🄾🄻🄵 ⓑⓞⓣ</b>
+</span><br>
+
+<i><sub>by Silent Wolf •</sub></i>
+
 </h1>
 
 <p align="center"><i>“Silence kills. So does this bot.”</i></p>
+
 <p align="center">
   <b>Spawned by <code>Silent Wolf</code>, refined in digital darkness — blessed by Meiser’s shadow 🖤👁️‍🗨️</b>
 </p>
@@ -20,6 +27,8 @@
   <img src="https://img.shields.io/badge/Rage%20Fueled-🔥_No_Mercy-black?style=for-the-badge" />
 </p>
 
+---
+
 ## 🌑 𝙰𝚋𝚘𝚞𝚝
 
 > 🧊 Silent Wolf doesn’t yap.  
@@ -30,7 +39,7 @@
 
 ---
 
-## 💀 𝖂𝖍𝖆𝖙 𝖎𝖙 𝖉𝖔𝖊𝖘
+## 💀 𝕎𝕙𝕒𝕥 𝕀𝕥 𝔻𝕠𝕖𝕤
 
 - 💬 Replies like it’s been eavesdropping since birth  
 - 🧠 Smarter than your whole admin team combined  
@@ -43,7 +52,7 @@
 
 ---
 
-## ⚙️ 𝙿𝚘𝚠𝚎𝚛𝚎𝚍 𝚋𝚢
+## ⚙️ 𝕋𝕖𝕔𝕙 𝕊𝕥𝕒𝕔𝕜
 
 - ⚡ **Node.js** — because speed > mercy  
 - 💬 **Discord.js** — because wolves hunt in packs  
@@ -52,7 +61,7 @@
 
 ---
 
-## 🙊 𝙳𝚒𝚜𝚌𝚕𝚊𝚒𝚖𝚎𝚛
+## 🙊 𝔻𝕚𝕤𝕔𝕝𝕒𝕚𝕞𝕖𝕣
 
 > ⚖️ Bug reports will be *judged*  
 > 🔥 Crashes are... **sacrifices**  
@@ -63,5 +72,5 @@
 <p align="center">
   👤 Built by <b>Silent Wolf</b><br>
   💀 Enhanced by <b>Meiser</b> — the King behind the curtain 👑🩸💀<br><br>
-  <i>You're not running a bot. You're unleashing a presence.</i>
+  <i>You're not running a bot.<br>You're unleashing a **predator**.</i>
 </p>
