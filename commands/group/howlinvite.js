@@ -1,6 +1,6 @@
 // ./commands/group/howlinvite.js
 export default {
-  name: 'howlinvite',
+  name: 'invite',
   description: 'Add users to group by their numbers',
   async execute(sock, msg, args, metadata, banned, saveBannedList) {
     const groupId = msg.key.remoteJid;

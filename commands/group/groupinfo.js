@@ -1,5 +1,5 @@
 export default {
-  name: 'deninfo',
+  name: 'groupinfo',
   description: 'Shows detailed group information',
   category: 'group',
   async execute(sock, msg, args, metadata) {

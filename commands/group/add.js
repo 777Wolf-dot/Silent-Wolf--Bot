@@ -1,5 +1,5 @@
 export default {
-  name: 'howladd',
+  name: 'add',
   description: 'Add a member to the group',
   category: 'group',
 

@@ -1,5 +1,5 @@
 export default {
-  name: 'riseinpack',
+  name: 'promote',
   description: 'Promote a member to admin',
   category: 'group',
   async execute(sock, msg, args, metadata) {

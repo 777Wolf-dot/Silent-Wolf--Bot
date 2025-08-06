@@ -1,7 +1,7 @@
 import { delay } from '@whiskeysockets/baileys';
 
 export default {
-  name: 'wolfsnare',
+  name: 'block',
   description: 'Block a user (tag in group or auto-block in DM)',
   category: 'owner',
   async execute(sock, msg, args) {

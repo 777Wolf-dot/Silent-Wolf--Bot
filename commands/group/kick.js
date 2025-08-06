@@ -1,5 +1,5 @@
 export default {
-  name: 'banish',
+  name: 'kick',
   description: 'Removes mentioned members from the group.',
   execute: async (sock, msg, args, metadata) => {
     const isGroup = msg.key.remoteJid.endsWith('@g.us');

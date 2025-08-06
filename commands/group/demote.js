@@ -1,5 +1,5 @@
 export default {
-  name: 'fallfrompack',
+  name: 'demote',
   description: 'Demote a group admin to member',
   category: 'group',
   async execute(sock, msg, args, metadata) {
