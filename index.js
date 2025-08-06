@@ -1,4 +1,3 @@
-
 const messageCache = {};
 
 import fs from 'fs';
@@ -22,7 +21,6 @@ const {
 
 const commands = new Map();
 
-// const antideleteSettings = {};
 let banned = {};
 let ownerJid = null;
 
@@ -37,17 +35,6 @@ const loadBannedList = () => {
 const saveBannedList = () => {
   fs.writeFileSync('./banned.json', JSON.stringify(banned, null, 2));
 };
-
-// const loadAntideleteSettings = () => {
-//   try {
-//     const data = fs.readFileSync('./antideleteSettings.json', 'utf-8');
-//     Object.assign(antideleteSettings, JSON.parse(data));
-//   } catch {}
-// };
-
-// const saveAntideleteSettings = () => {
-//   fs.writeFileSync('./antideleteSettings.json', JSON.stringify(antideleteSettings, null, 2));
-// };
 
 const loadCommandsFromFolder = async (folder) => {
   const files = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
@@ -67,7 +54,6 @@ const startSock = async () => {
   const { version } = await fetchLatestBaileysVersion();
 
   loadBannedList();
-  // loadAntideleteSettings();
 
   const sock = makeWASocket({
     version,
@@ -140,45 +126,13 @@ const startSock = async () => {
     }
   });
 
-  // sock.ev.on('messages.update', async updates => {
-
-  //   for (const update of updates) {
-  //     const { key, message } = update;
-  //     const jid = key.remoteJid;
-  //     const id = key.id;
-  //     const participant = key.participant || jid;
-  //     const setting = antideleteSettings[jid];
-
-  //     if (!setting?.enabled) continue;
-
-  //     const cachedMsg = messageCache[jid]?.[id];
-  //     if (!cachedMsg) continue;
-
-  //     let text = `🗑️ *Antidelete Alert*\nFrom: @${participant.split('@')[0]}\n\nRecovered Message:\n`;
-
-  //     const msgContent = cachedMsg.message?.conversation || cachedMsg.message?.extendedTextMessage?.text || '[Media/Sticker]';
-  //     text += msgContent;
-
-  //     const forwardTo = setting.mode === 'chat' ? jid : (ownerJid || participant);
-  //     await sock.sendMessage(forwardTo, { text, mentions: [participant] });
-  //   }
-  // });
-   
-
-
-
-
-
-
-
-
   const handleCommand = async (commandName, sock, msg, args) => {
     const sender = msg.key.remoteJid;
 
     try {
       if (commands.has(commandName)) {
         const metadata = sender.endsWith('@g.us') ? await sock.groupMetadata(sender) : {};
-        return await commands.get(commandName).execute(sock, msg, args, metadata, banned, saveBannedList, antideleteSettings, saveAntideleteSettings);
+        return await commands.get(commandName).execute(sock, msg, args, metadata, banned, saveBannedList);
       }
 
       const aiPath = path.join('./commands/ai', `${commandName}.js`);
