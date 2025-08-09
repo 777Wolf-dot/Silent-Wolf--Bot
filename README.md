@@ -1,5 +1,5 @@
 <p align="center">
-  <img style ="width: 220px;" src="https://files.catbox.moe/j0r1ob.jpg" alt="Wolf Bot — Silent Wolf Aura" />
+  <img style ="width: 500px; height: 300px;" src="https://files.catbox.moe/j0r1ob.jpg" alt="Wolf Bot — Silent Wolf Aura" />
 </p>
 
 <h1 align="center">
@@ -74,5 +74,6 @@
   💀 Enhanced by <b>Meiser</b> — the King behind the curtain 👑🩸💀<br><br>
   <i>You're not running a bot.<br>You're unleashing a **predator**.</i>
 </p>
+
 
 
