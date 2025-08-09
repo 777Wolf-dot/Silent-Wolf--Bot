@@ -1,171 +1,490 @@
-const messageCache = {};
+// const messageCache = {};
 
-import fs from 'fs';
-import P from 'pino';
-import qrcode from 'qrcode-terminal';
-import { Boom } from '@hapi/boom';
+// import fs from 'fs';
+// import P from 'pino';
+// import qrcode from 'qrcode-terminal';
+// import { Boom } from '@hapi/boom';
+// import pkg from '@whiskeysockets/baileys';
+// import path from 'path';
+// import dotenv from 'dotenv';
+// dotenv.config();
+
+// const {
+//   default: makeWASocket,
+//   useMultiFileAuthState,
+//   DisconnectReason,
+//   fetchLatestBaileysVersion,
+//   makeInMemoryStore,
+//   downloadMediaMessage,
+//   jidNormalizedUser
+// } = pkg;
+
+// const commands = new Map();
+
+// let banned = {};
+// let ownerJid = null;
+
+// const loadBannedList = () => {
+//   if (fs.existsSync('./banned.json')) {
+//     banned = JSON.parse(fs.readFileSync('./banned.json'));
+//   } else {
+//     banned = {};
+//   }
+// };
+
+// const saveBannedList = () => {
+//   fs.writeFileSync('./banned.json', JSON.stringify(banned, null, 2));
+// };
+
+// const loadCommandsFromFolder = async (folder) => {
+//   const files = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
+//   for (const file of files) {
+//     const command = await import(`./commands/${folder}/${file}`);
+//     if (!command.default?.name) {
+//       console.warn(`⚠️ Skipping command without a name: ${file}`);
+//       continue;
+//     }
+//     commands.set(command.default.name, command.default);
+//     console.log(`📦 Loaded ${folder} command: ${command.default.name}`);
+//   }
+// };
+
+// const startSock = async () => {
+//   const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys');
+//   const { version } = await fetchLatestBaileysVersion();
+
+//   loadBannedList();
+
+//   const sock = makeWASocket({
+//     version,
+//     auth: state,
+//     logger: P({ level: 'silent' }),
+//   });
+
+//   sock.ev.on('creds.update', saveCreds);
+
+//   sock.ev.on('connection.update', (update) => {
+//     const { connection, lastDisconnect, qr } = update;
+//     if (qr) qrcode.generate(qr, { small: true });
+//     if (connection === 'close') {
+//       const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
+//       if (shouldReconnect) startSock();
+//     } else if (connection === 'open') {
+//       console.log('✅ Bot connected successfully!');
+//       ownerJid = sock.user.id;
+//       console.log('🤖 Bot Owner Detected as:', ownerJid);
+//     }
+//   });
+
+//   await loadCommandsFromFolder('group');
+//   await loadCommandsFromFolder('settings');
+//   await loadCommandsFromFolder('owner');
+//   await loadCommandsFromFolder('utility');
+
+//   sock.ev.on('group-participants.update', async ({ id, participants, action }) => {
+//     if (action === 'add' && banned[id]) {
+//       for (const user of participants) {
+//         if (banned[id].includes(user)) {
+//           console.log(`🚫 Auto-removing banned user: ${user}`);
+//           await sock.groupParticipantsUpdate(id, [user], 'remove');
+//           await sock.sendMessage(id, {
+//             text: `🚫 @${user.split('@')[0]} is *banned* and has been auto-removed.`,
+//             mentions: [user],
+//           });
+//         }
+//       }
+//     }
+//   });
+
+  // sock.ev.on('messages.upsert', async ({ messages, type }) => {
+  //   if (type !== 'notify') return;
+  //   const msg = messages[0];
+  //   if (!msg.message) return;
+
+  //   if (!messageCache[msg.key.remoteJid]) messageCache[msg.key.remoteJid] = {};
+  //   messageCache[msg.key.remoteJid][msg.key.id] = msg;
+
+  //   const textMsg =
+  //     msg.message?.conversation ||
+  //     msg.message?.extendedTextMessage?.text;
+
+  //   const sender = msg.key.remoteJid;
+
+  //   if (textMsg?.startsWith('.')) {
+  //     const parts = textMsg.trim().slice(1).split(/\s+/);
+  //     const commandName = parts[0].toLowerCase();
+  //     const args = parts.slice(1);
+
+  //     console.log(`📩 Command from ${msg.key.fromMe ? 'SELF 🐺' : sender}: ${textMsg}`);
+
+  //     if (commandName === 'menu') {
+  //       const menuText = (await import('./commands/menus/settingMenu.js')).default();
+  //       await sock.sendMessage(sender, { text: menuText }, { quoted: msg });
+  //     } else {
+  //       await handleCommand(commandName, sock, msg, args);
+  //     }
+  //   }
+  // });
+
+//   const handleCommand = async (commandName, sock, msg, args) => {
+//     const sender = msg.key.remoteJid;
+
+//     try {
+//       if (commands.has(commandName)) {
+//         const metadata = sender.endsWith('@g.us') ? await sock.groupMetadata(sender) : {};
+//         return await commands.get(commandName).execute(sock, msg, args, metadata, banned, saveBannedList);
+//       }
+
+//       const aiPath = path.join('./commands/ai', `${commandName}.js`);
+//       if (fs.existsSync(aiPath)) {
+//         const command = await import(aiPath);
+//         return await command.default(sock, msg, args);
+//       }
+
+//       const audioPath = path.join('./commands/audio', `${commandName}.js`);
+//       if (fs.existsSync(audioPath)) {
+//         const quoted = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+//         if (!quoted || (!quoted.audioMessage && !msg.message.audioMessage)) {
+//           return await sock.sendMessage(sender, { text: '🐺 Quote or send an audio file to apply audio effects.' }, { quoted: msg });
+//         }
+
+//         const stream = await downloadMediaMessage(
+//           msg.message.audioMessage ? msg : msg.message.extendedTextMessage.contextInfo,
+//           'buffer', {}, { logger: P({ level: 'silent' }) }
+//         );
+
+//         const inputPath = `./temp/audio-${Date.now()}.mp3`;
+//         fs.writeFileSync(inputPath, stream);
+
+//         const command = await import(audioPath);
+//         await command.default(sock, msg, inputPath);
+//         return;
+//       }
+
+//     } catch (err) {
+//       console.error('❌ Error in command:', err);
+//       await sock.sendMessage(sender, { text: '🐺 *Even the alpha stumbles...* Try again later.' }, { quoted: msg });
+//     }
+//   };
+// };
+
+// startSock();
+
+
+
+
+// // ====== IMPORTS ======
+// import pkg from '@whiskeysockets/baileys';
+// const {
+//     default: makeWASocket,
+//     useMultiFileAuthState,
+//     DisconnectReason,
+//     fetchLatestBaileysVersion
+// } = pkg;
+// // Store recent messages per chat to help with private chat replies
+// const messageCache = {};
+
+// import P from 'pino';
+// import fs from 'fs';
+// import path from 'path';
+// import dotenv from 'dotenv';
+// import chalk from 'chalk';
+// import qrcode from 'qrcode-terminal';
+
+// dotenv.config();
+
+// // ====== CONFIG ======
+// const PREFIX = process.env.PREFIX || '.';
+// console.log(chalk.green('✅ Current PREFIX:'), `"${PREFIX}"`);
+
+// const commands = new Map();
+
+// // ====== COMMAND LOADER ======
+// function loadCommandsFromFolder(folderPath) {
+//     const absolutePath = path.resolve(folderPath);
+//     fs.readdirSync(absolutePath).forEach((file) => {
+//         const fullPath = path.join(absolutePath, file);
+//         const stat = fs.statSync(fullPath);
+
+//         if (stat.isDirectory()) {
+//             loadCommandsFromFolder(fullPath);
+//         } else if (file.endsWith('.js')) {
+//             import(`file://${fullPath}`)
+//                 .then((cmdModule) => {
+//                     const cmd = cmdModule.default;
+//                     if (cmd?.name) {
+//                         commands.set(cmd.name.toLowerCase(), cmd);
+//                         if (Array.isArray(cmd.alias)) {
+//                             cmd.alias.forEach(alias => commands.set(alias.toLowerCase(), cmd));
+//                         }
+//                         console.log(chalk.blueBright(`✅ Loaded command: ${cmd.name}`));
+//                     }
+//                 })
+//                 .catch((err) => {
+//                     console.error(`❌ Failed to load command file: ${file}`, err);
+//                 });
+//         }
+//     });
+// }
+
+// // Load commands initially
+// loadCommandsFromFolder('./commands');
+
+// // ====== COMMAND HANDLER ======
+// async function handleCommand(commandName, sock, msg, args) {
+//     const sender = msg.key.remoteJid;
+//     const command = commands.get(commandName.toLowerCase());
+
+//     if (command) {
+//         try {
+//             await command.execute(sock, msg, args);
+//         } catch (err) {
+//             console.error(`❌ Error executing ${commandName}:`, err);
+//             await sock.sendMessage(sender, { text: `❌ Error running *${commandName}* command.` }, { quoted: msg });
+//         }
+//     } else {
+//         await sock.sendMessage(sender, { text: `❌ Unknown command: *${commandName}*` }, { quoted: msg });
+//     }
+// }
+
+// // ====== MAIN SOCKET ======
+// const startSock = async () => {
+//     const { state, saveCreds } = await useMultiFileAuthState('auth');
+//     const { version } = await fetchLatestBaileysVersion();
+
+//     const sock = makeWASocket({
+//         version,
+//         auth: state,
+//         logger: P({ level: 'silent' }),
+//         browser: ['Silent Wolf', 'Safari', '1.0']
+//     });
+
+//     // ====== QR CODE HANDLING ======
+//     sock.ev.on('connection.update', (update) => {
+//         const { connection, lastDisconnect, qr } = update;
+
+//         if (qr) {
+//             console.log(chalk.yellow('📲 Scan this QR code to connect:'));
+//             qrcode.generate(qr, { small: true });
+//         }
+
+//         if (connection === 'close') {
+//             const reason = lastDisconnect?.error?.output?.statusCode;
+//             if (reason === DisconnectReason.loggedOut) {
+//                 console.log(chalk.red('❌ Logged out. Please scan the QR again.'));
+//                 fs.rmSync('./auth', { recursive: true, force: true });
+//                 startSock();
+//             } else {
+//                 console.log(chalk.red(`Connection closed. Reconnecting...`));
+//                 startSock();
+//             }
+//         } else if (connection === 'open') {
+//             console.log(chalk.green('✅ Connected to WhatsApp!'));
+//         }
+//     });
+
+//     sock.ev.on('creds.update', saveCreds);
+
+//     // ====== MESSAGE LISTENER ======
+//    sock.ev.on('messages.upsert', async ({ messages, type }) => {
+//     if (type !== 'notify') return;
+//     const msg = messages[0];
+//     if (!msg.message) return;
+
+//     if (!messageCache[msg.key.remoteJid]) messageCache[msg.key.remoteJid] = {};
+//     messageCache[msg.key.remoteJid][msg.key.id] = msg;
+
+//     const textMsg =
+//       msg.message?.conversation ||
+//       msg.message?.extendedTextMessage?.text;
+
+//     const sender = msg.key.remoteJid;
+
+//     if (textMsg?.startsWith('.')) {
+//       const parts = textMsg.trim().slice(1).split(/\s+/);
+//       const commandName = parts[0].toLowerCase();
+//       const args = parts.slice(1);
+
+//       console.log(`📩 Command from ${msg.key.fromMe ? 'SELF 🐺' : sender}: ${textMsg}`);
+
+//       if (commandName === 'menu') {
+//         const menuText = (await import('./commands/menus/settingMenu.js')).default();
+//         await sock.sendMessage(sender, { text: menuText }, { quoted: msg });
+//       } else {
+//         await handleCommand(commandName, sock, msg, args);
+//       }
+//     }
+//   });
+
+//     return sock;
+// };
+
+// // Start bot
+// startSock();
+
+
+
+
+// ====== IMPORTS ======
+
+
+
+
 import pkg from '@whiskeysockets/baileys';
-import path from 'path';
-import dotenv from 'dotenv';
-dotenv.config();
-
 const {
-  default: makeWASocket,
-  useMultiFileAuthState,
-  DisconnectReason,
-  fetchLatestBaileysVersion,
-  makeInMemoryStore,
-  downloadMediaMessage,
-  jidNormalizedUser
+    default: makeWASocket,
+    useMultiFileAuthState,
+    DisconnectReason,
+    fetchLatestBaileysVersion
 } = pkg;
 
+import P from 'pino';
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+import chalk from 'chalk';
+import qrcode from 'qrcode-terminal';
+
+
+
+dotenv.config();
+
+// ====== CONFIG ======
+const PREFIX = process.env.PREFIX || '.';
+console.log(chalk.green('✅ Current PREFIX:'), `"${PREFIX}"`);
+
 const commands = new Map();
+const messageCache = {};
 
-let banned = {};
-let ownerJid = null;
+// ====== COMMAND LOADER ======
+function loadCommandsFromFolder(folderPath) {
+    const absolutePath = path.resolve(folderPath);
+    fs.readdirSync(absolutePath).forEach((file) => {
+        const fullPath = path.join(absolutePath, file);
+        const stat = fs.statSync(fullPath);
 
-const loadBannedList = () => {
-  if (fs.existsSync('./banned.json')) {
-    banned = JSON.parse(fs.readFileSync('./banned.json'));
-  } else {
-    banned = {};
-  }
-};
+        if (stat.isDirectory()) {
+            loadCommandsFromFolder(fullPath);
+        } else if (file.endsWith('.js')) {
+            import(`file://${fullPath}`)
+                .then((cmdModule) => {
+                    const cmd = cmdModule.default;
+                    if (cmd?.name) {
+                        commands.set(cmd.name.toLowerCase(), cmd);
+                        if (Array.isArray(cmd.alias)) {
+                            cmd.alias.forEach(alias => commands.set(alias.toLowerCase(), cmd));
+                        }
+                        console.log(chalk.blueBright(`✅ Loaded command: ${cmd.name}`));
+                    }
+                })
+                .catch((err) => {
+                    console.error(`❌ Failed to load command file: ${file}`, err);
+                });
+        }
+    });
+}
 
-const saveBannedList = () => {
-  fs.writeFileSync('./banned.json', JSON.stringify(banned, null, 2));
-};
+// Load commands initially
+loadCommandsFromFolder('./commands');
 
-const loadCommandsFromFolder = async (folder) => {
-  const files = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
-  for (const file of files) {
-    const command = await import(`./commands/${folder}/${file}`);
-    if (!command.default?.name) {
-      console.warn(`⚠️ Skipping command without a name: ${file}`);
-      continue;
+// ====== COMMAND HANDLER ======
+async function handleCommand(commandName, sock, msg, args) {
+    const chatId = msg.key.remoteJid;
+    const command = commands.get(commandName.toLowerCase());
+
+    if (!command) {
+    // ❌ Ignore if not a valid command
+    return;
+}
+
+try {
+    let metadata = null;
+    if (chatId.endsWith('@g.us')) {
+        try {
+            metadata = await sock.groupMetadata(chatId);
+        } catch (err) {
+            console.error(`⚠️ Failed to fetch group metadata for ${chatId}`, err);
+        }
     }
-    commands.set(command.default.name, command.default);
-    console.log(`📦 Loaded ${folder} command: ${command.default.name}`);
-  }
-};
+    await command.execute(sock, msg, args, metadata);
+} catch (err) {
+    console.error(`❌ Error executing ${commandName}:`, err);
+    await sock.sendMessage(chatId, { text: `❌ Error running *${commandName}* command.` }, { quoted: msg });
+}
 
+}
+
+// ====== MAIN SOCKET ======
 const startSock = async () => {
-  const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys');
-  const { version } = await fetchLatestBaileysVersion();
+    const { state, saveCreds } = await useMultiFileAuthState('auth');
+    const { version } = await fetchLatestBaileysVersion();
 
-  loadBannedList();
+    const sock = makeWASocket({
+        version,
+        auth: state,
+        logger: P({ level: 'silent' }),
+        browser: ['Silent Wolf', 'Safari', '1.0']
+    });
 
-  const sock = makeWASocket({
-    version,
-    auth: state,
-    logger: P({ level: 'silent' }),
-  });
+    // ====== QR CODE HANDLING ======
+    sock.ev.on('connection.update', (update) => {
+        const { connection, lastDisconnect, qr } = update;
 
-  sock.ev.on('creds.update', saveCreds);
-
-  sock.ev.on('connection.update', (update) => {
-    const { connection, lastDisconnect, qr } = update;
-    if (qr) qrcode.generate(qr, { small: true });
-    if (connection === 'close') {
-      const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-      if (shouldReconnect) startSock();
-    } else if (connection === 'open') {
-      console.log('✅ Bot connected successfully!');
-      ownerJid = sock.user.id;
-      console.log('🤖 Bot Owner Detected as:', ownerJid);
-    }
-  });
-
-  await loadCommandsFromFolder('group');
-  await loadCommandsFromFolder('settings');
-  await loadCommandsFromFolder('owner');
-  await loadCommandsFromFolder('utility');
-
-  sock.ev.on('group-participants.update', async ({ id, participants, action }) => {
-    if (action === 'add' && banned[id]) {
-      for (const user of participants) {
-        if (banned[id].includes(user)) {
-          console.log(`🚫 Auto-removing banned user: ${user}`);
-          await sock.groupParticipantsUpdate(id, [user], 'remove');
-          await sock.sendMessage(id, {
-            text: `🚫 @${user.split('@')[0]} is *banned* and has been auto-removed.`,
-            mentions: [user],
-          });
-        }
-      }
-    }
-  });
-
-  sock.ev.on('messages.upsert', async ({ messages, type }) => {
-    if (type !== 'notify') return;
-    const msg = messages[0];
-    if (!msg.message) return;
-
-    if (!messageCache[msg.key.remoteJid]) messageCache[msg.key.remoteJid] = {};
-    messageCache[msg.key.remoteJid][msg.key.id] = msg;
-
-    const textMsg =
-      msg.message?.conversation ||
-      msg.message?.extendedTextMessage?.text;
-
-    const sender = msg.key.remoteJid;
-
-    if (textMsg?.startsWith('.')) {
-      const parts = textMsg.trim().slice(1).split(/\s+/);
-      const commandName = parts[0].toLowerCase();
-      const args = parts.slice(1);
-
-      console.log(`📩 Command from ${msg.key.fromMe ? 'SELF 🐺' : sender}: ${textMsg}`);
-
-      if (commandName === 'menu') {
-        const menuText = (await import('./commands/menus/settingMenu.js')).default();
-        await sock.sendMessage(sender, { text: menuText }, { quoted: msg });
-      } else {
-        await handleCommand(commandName, sock, msg, args);
-      }
-    }
-  });
-
-  const handleCommand = async (commandName, sock, msg, args) => {
-    const sender = msg.key.remoteJid;
-
-    try {
-      if (commands.has(commandName)) {
-        const metadata = sender.endsWith('@g.us') ? await sock.groupMetadata(sender) : {};
-        return await commands.get(commandName).execute(sock, msg, args, metadata, banned, saveBannedList);
-      }
-
-      const aiPath = path.join('./commands/ai', `${commandName}.js`);
-      if (fs.existsSync(aiPath)) {
-        const command = await import(aiPath);
-        return await command.default(sock, msg, args);
-      }
-
-      const audioPath = path.join('./commands/audio', `${commandName}.js`);
-      if (fs.existsSync(audioPath)) {
-        const quoted = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-        if (!quoted || (!quoted.audioMessage && !msg.message.audioMessage)) {
-          return await sock.sendMessage(sender, { text: '🐺 Quote or send an audio file to apply audio effects.' }, { quoted: msg });
+        if (qr) {
+            console.log(chalk.yellow('📲 Scan this QR code to connect:'));
+            qrcode.generate(qr, { small: true });
         }
 
-        const stream = await downloadMediaMessage(
-          msg.message.audioMessage ? msg : msg.message.extendedTextMessage.contextInfo,
-          'buffer', {}, { logger: P({ level: 'silent' }) }
-        );
+        if (connection === 'close') {
+            const reason = lastDisconnect?.error?.output?.statusCode;
+            if (reason === DisconnectReason.loggedOut) {
+                console.log(chalk.red('❌ Logged out. Please scan the QR again.'));
+                fs.rmSync('./auth', { recursive: true, force: true });
+                startSock();
+            } else {
+                console.log(chalk.red(`Connection closed. Reconnecting...`));
+                startSock();
+            }
+        } else if (connection === 'open') {
+            console.log(chalk.green('✅ Connected to WhatsApp!'));
+        }
+    });
 
-        const inputPath = `./temp/audio-${Date.now()}.mp3`;
-        fs.writeFileSync(inputPath, stream);
+    sock.ev.on('creds.update', saveCreds);
 
-        const command = await import(audioPath);
-        await command.default(sock, msg, inputPath);
-        return;
-      }
+    // ====== MESSAGE LISTENER ======
+    sock.ev.on('messages.upsert', async ({ messages, type }) => {
+        if (type !== 'notify') return;
+        const msg = messages[0];
+        if (!msg.message) return;
 
-    } catch (err) {
-      console.error('❌ Error in command:', err);
-      await sock.sendMessage(sender, { text: '🐺 *Even the alpha stumbles...* Try again later.' }, { quoted: msg });
-    }
-  };
+        if (!messageCache[msg.key.remoteJid]) messageCache[msg.key.remoteJid] = {};
+        messageCache[msg.key.remoteJid][msg.key.id] = msg;
+
+        const textMsg =
+            msg.message?.conversation ||
+            msg.message?.extendedTextMessage?.text;
+
+        const sender = msg.key.remoteJid;
+
+        if (textMsg?.startsWith(PREFIX)) {
+            const parts = textMsg.trim().slice(PREFIX.length).split(/\s+/);
+            const commandName = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            console.log(`📩 Command from ${msg.key.fromMe ? 'SELF 🐺' : sender}: ${textMsg}`);
+
+            if (commandName === 'menu') {
+                const menuText = (await import('./commands/menus/settingMenu.js')).default();
+                await sock.sendMessage(sender, { text: menuText }, { quoted: msg });
+            } else {
+                await handleCommand(commandName, sock, msg, args);
+            }
+        }
+    });
+
+    return sock;
 };
 
+// Start bot
 startSock();

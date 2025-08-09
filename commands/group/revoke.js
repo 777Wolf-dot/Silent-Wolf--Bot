@@ -1,35 +1,42 @@
 export default {
-  name: 'revoke',
-  description: 'Reset group invite link',
-  category: 'group',
-  async execute(sock, msg, args, metadata) {
-    const sender = msg.key.remoteJid;
-    const isGroup = sender.endsWith('@g.us');
+    name: 'revoke',
+    alias: [],
+    description: 'Revoke the group invite link',
+    async execute(sock, msg, args) {
+        const jid = msg.key.remoteJid;
 
-    if (!isGroup) {
-      await sock.sendMessage(sender, { text: '❌ This command can only be used in groups.' }, { quoted: msg });
-      return;
+        // Check if it's a group
+        if (!jid.endsWith('@g.us')) {
+            await sock.sendMessage(jid, { text: '❌ This command can only be used in groups.' }, { quoted: msg });
+            return;
+        }
+
+        try {
+            // Fetch group metadata
+            const groupMetadata = await sock.groupMetadata(jid);
+
+            if (!groupMetadata?.participants) {
+                await sock.sendMessage(jid, { text: '⚠️ Could not fetch group participants.' }, { quoted: msg });
+                return;
+            }
+
+            // Ensure the user is an admin
+            const sender = msg.key.participant || jid;
+            const isAdmin = groupMetadata.participants.some(
+                p => p.id === sender && ['admin', 'superadmin'].includes(p.admin)
+            );
+
+            if (!isAdmin) {
+                await sock.sendMessage(jid, { text: '❌ Only group admins can use this command.' }, { quoted: msg });
+                return;
+            }
+
+            // Revoke invite link
+            await sock.groupRevokeInvite(jid);
+            await sock.sendMessage(jid, { text: '✅ Group invite link has been revoked.' });
+        } catch (err) {
+            console.error('Error in revoke command:', err);
+            await sock.sendMessage(jid, { text: '❌ Failed to revoke group link.' }, { quoted: msg });
+        }
     }
-
-    const user = msg.key.participant || msg.participant || msg.key.remoteJid;
-    const groupAdmins = metadata.participants.filter(p => p.admin);
-    const isAdmin = groupAdmins.some(p => p.id === user);
-
-    if (!isAdmin) {
-      await sock.sendMessage(sender, { text: '⛔ Only pack leaders (admins) can use this command.' }, { quoted: msg });
-      return;
-    }
-
-    try {
-      await sock.groupRevokeInvite(sender);
-      await sock.sendMessage(sender, {
-        text: '🔁 *Group invite link has been revoked!*\n🛡️ A new link will be generated if requested.',
-      }, { quoted: msg });
-    } catch (err) {
-      console.error(err);
-      await sock.sendMessage(sender, {
-        text: '❌ Failed to revoke the invite link. The wolf stumbled...',
-      }, { quoted: msg });
-    }
-  }
 };

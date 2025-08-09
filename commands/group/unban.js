@@ -1,46 +1,86 @@
 import fs from 'fs';
+const banFile = './banned.json';
 
-const bannedPath = './banned.json';
+// ===== Helper functions =====
+function loadBans() {
+    try {
+        if (!fs.existsSync(banFile)) return [];
+        const data = JSON.parse(fs.readFileSync(banFile, 'utf8'));
+        return Array.isArray(data) ? data : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveBans(bans) {
+    fs.writeFileSync(banFile, JSON.stringify(bans, null, 2));
+}
 
 export default {
-  name: 'unban',
-  description: 'Unban a user from the group',
-  category: 'group',
-  async execute(sock, m, args) {
-    const groupId = m.key.remoteJid;
-    const isGroup = groupId.endsWith('@g.us');
+    name: 'unban',
+    description: 'Unban a user from the group ban list',
+    category: 'group',
+    async execute(sock, msg, args) {
+        const chatId = msg.key.remoteJid;
+        const isGroup = chatId.endsWith('@g.us');
 
-    if (!isGroup) return sock.sendMessage(groupId, { text: 'This command only works in groups.' });
+        if (!isGroup) {
+            return sock.sendMessage(chatId, { text: '❌ This command can only be used in groups.' }, { quoted: msg });
+        }
 
-    const quoted = m.message?.extendedTextMessage?.contextInfo?.participant;
-    const mention = m.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0];
-    const target = mention || quoted;
+        // ✅ Check admin status from metadata
+        const metadata = await sock.groupMetadata(chatId);
+        const senderId = msg.key.participant || msg.participant || msg.key.remoteJid;
+        const isAdmin = metadata.participants.some(
+            p => p.id === senderId && (p.admin === 'admin' || p.admin === 'superadmin')
+        );
 
-    if (!target) {
-      return sock.sendMessage(groupId, { text: 'Tag or reply to the user you want to unban.' });
+        if (!isAdmin) {
+            return sock.sendMessage(chatId, { text: '🛑 Only group admins can use this command.' }, { quoted: msg });
+        }
+
+        // ===== Get target user =====
+        let targetJid;
+
+        // 1️⃣ Mentioned user
+        if (msg.message?.extendedTextMessage?.contextInfo?.mentionedJid?.[0]) {
+            targetJid = msg.message.extendedTextMessage.contextInfo.mentionedJid[0];
+        }
+
+        // 2️⃣ Reply to a message
+        else if (msg.message?.extendedTextMessage?.contextInfo?.participant) {
+            targetJid = msg.message.extendedTextMessage.contextInfo.participant;
+        }
+
+        // 3️⃣ Number provided as argument
+        else if (args[0]) {
+            let num = args[0].replace(/[^0-9]/g, ''); // Remove non-digits
+            if (num.length < 8) {
+                return sock.sendMessage(chatId, { text: '⚠️ Invalid number format.' }, { quoted: msg });
+            }
+            if (!num.endsWith('@s.whatsapp.net')) {
+                num += '@s.whatsapp.net';
+            }
+            targetJid = num;
+        }
+
+        if (!targetJid) {
+            return sock.sendMessage(chatId, { text: '⚠️ Please tag, reply, or provide a number to unban.' }, { quoted: msg });
+        }
+
+        let bans = loadBans();
+        if (bans.includes(targetJid)) {
+            bans = bans.filter(id => id !== targetJid);
+            saveBans(bans);
+            await sock.sendMessage(chatId, { 
+                text: `✅ @${targetJid.split('@')[0]} has been unbanned!`,
+                mentions: [targetJid]
+            }, { quoted: msg });
+        } else {
+            await sock.sendMessage(chatId, { 
+                text: `ℹ️ @${targetJid.split('@')[0]} is not banned.`,
+                mentions: [targetJid]
+            }, { quoted: msg });
+        }
     }
-
-    // Load banned data
-    let bannedData = {};
-    if (fs.existsSync(bannedPath)) {
-      bannedData = JSON.parse(fs.readFileSync(bannedPath));
-    }
-
-    if (!bannedData[groupId]) {
-      return sock.sendMessage(groupId, { text: 'There are no banned users in this group.' });
-    }
-
-    if (!bannedData[groupId].includes(target)) {
-      return sock.sendMessage(groupId, { text: 'This user is not banned.' });
-    }
-
-    // Remove user from ban list
-    bannedData[groupId] = bannedData[groupId].filter(id => id !== target);
-    fs.writeFileSync(bannedPath, JSON.stringify(bannedData, null, 2));
-
-    await sock.sendMessage(groupId, {
-      text: `✅ @${target.split('@')[0]} has been *unbanned*.`,
-      mentions: [target],
-    });
-  },
 };
