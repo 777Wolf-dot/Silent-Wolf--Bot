@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
+<<<<<<< HEAD
     "@iamtraction/google-translate": "^2.0.1",
     "@vitalets/google-translate-api": "^9.2.1",
     "@whiskeysockets/baileys": "^6.7.18",
@@ -26,6 +27,12 @@
     "glob": "^11.0.3",
     "moment-timezone": "^0.6.0",
     "node-fetch": "^3.3.2",
+=======
+    "@whiskeysockets/baileys": "^6.7.18",
+    "chatgpt": "^5.2.5",
+    "dotenv": "^17.2.1",
+    "glob": "^11.0.3",
+>>>>>>> e038eca05d5160531c9162d888229f97538bb7b1
     "pino": "^8.21.0",
     "qrcode-terminal": "^0.12.0",
     "sharp": "^0.32.6"
