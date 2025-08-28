@@ -1,7 +1,12 @@
-const warnings = new Map();
+
 
 // Replace with your WhatsApp number including @s.whatsapp.net
 const BOT_OWNER = 'yournumber@s.whatsapp.net';
+
+// commands/group/warn.js
+
+const warnings = new Map();
+
 
 export default {
   name: 'warn',
@@ -15,6 +20,7 @@ export default {
 
     const user = mentions[0];
 
+
     // Check if user is the bot owner
     if (user === BOT_OWNER) {
       return sock.sendMessage(jid, { text: '❌ Cannot warn the bot owner!' }, { quoted: msg });
@@ -26,12 +32,13 @@ export default {
       return sock.sendMessage(jid, { text: '❌ Cannot warn a group admin!' }, { quoted: msg });
     }
 
+
+
     const current = warnings.get(user) || 0;
     const updated = current + 1;
     warnings.set(user, updated);
 
     let text = `⚠️ <@${user.split('@')[0]}> has been warned. (${updated}/3)`;
-
     if (updated >= 3) {
       try {
         await sock.groupParticipantsUpdate(jid, [user], 'remove');
