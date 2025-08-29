@@ -3,15 +3,58 @@
 
 export default function settingMenu() {
   return `╔════ 🐺 GROUP COMMANDS ════╗
-🐺 kick
 🐺 add
-🐺 link
-🐺 revoke
-🐺 promote
 🐺 demote
+🐺 promote
+🐺 kick
+🐺 mute
+🐺 unmute
+🐺 groupinfo
+🐺 tagadmin
+🐺 warn
+🐺 link
+🐺 invite
+🐺 revoke
+🐺 setdesc
+🐺 setpp
 🐺 tagall
 🐺 hidetag
+🐺 fangtrace
+🐺 ban
+🐺 unban
+🐺 banlist
+🐺 clearbanlist
+🐺 gctime
 ╚═══════════════════════════╝
+
+╔════ 📥 DOWNLOAD COMMANDS ════╗
+📲 apk
+⬇️ download
+📘 facebook
+🗂️ gdrive
+🧬 gitclone
+🖼️ image
+📷 instagram
+🍏 itunes
+📤 mediafire
+🎶 song
+🎶 song2
+▶️ play
+▶️ play2
+💾 savestatus
+💌 telesticker
+🎥 tiktok
+🎵 tiktokaudio
+🐦 twitter
+🎞️ video
+🧾 videodoc
+🔞 xvideos
+🎧 ytmp3
+📄 ytmp3doc
+🎬 ytmp4
+📄 ytmp4doc
+╚═════════════════════════════╝
+
 
 ╔════ ⚙️ SETTINGS COMMANDS ════╗
 ⚙️ setwelcome
