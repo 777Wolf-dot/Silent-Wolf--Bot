@@ -1,43 +1,60 @@
-// import dotenv from 'dotenv';
-// dotenv.config();
+// commands/ai/gpt.js
+import fetch from "node-fetch";
 
-// import { ChatGPTAPI } from 'chatgpt';
+export default {
+  name: "gpt",
+  alias: ["chatgpt", "wolfgpt"],
+  desc: "Talk with Silent Wolf's GPT AI 🐺",
+  category: "AI",
+  usage: ".gpt <your question>",
+  async execute(sock, m, args) {
+    try {
+      const query = args.join(" ");
+      if (!query) {
+        return sock.sendMessage(m.key.remoteJid, {
+          text: "🐺✨ Silent Wolf says: What do you want me to think about?\n\nUsage: *.gpt Who created you?*"
+        }, { quoted: m });
+      }
 
-// // Load API key from environment variable
-// const apiKey = process.env.OPENAI_API_KEY;
+      // Load API Key
+      const apiKey = process.env.OPENAI_API_KEY;
+      if (!apiKey) {
+        return sock.sendMessage(m.key.remoteJid, {
+          text: "⚠️ Silent Wolf error: No API key found in .env!"
+        }, { quoted: m });
+      }
 
-// if (!apiKey) {
-//   throw new Error('Missing OPENAI_API_KEY in .env file');
-// }
+      // Call OpenAI
+      const response = await fetch("https://api.openai.com/v1/responses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini",
+          input: query
+        })
+      });
 
-// const api = new ChatGPTAPI({ apiKey });
+      const data = await response.json();
+      let reply = data.output?.[0]?.content?.[0]?.text || "⚠️ Silent Wolf could not fetch a reply...";
 
-// export default async (sock, msg) => {
-//   const sender = msg.key.remoteJid;
-//   const textMsg = msg.message?.conversation || msg.message?.extendedTextMessage?.text || '';
-  
-//   // Extract the prompt by removing the command '.gpt'
-//   const prompt = textMsg.trim().slice(4).trim();
+      const wolfReply = `
+🌑🌲 *Silent Wolf GPT* 🌲🌑
+━━━━━━━━━━━━━━
+${reply}
+━━━━━━━━━━━━━━
+🐺✨ *Silent Wolf at your service* ✨🐺
+`;
 
-//   if (!prompt) {
-//     await sock.sendMessage(sender, {
-//       text: `🐺 *Silent Wolf GPT*\n\nPlease ask me something.\nUsage: *.gpt What is the meaning of life?*`
-//     }, { quoted: msg });
-//     return;
-//   }
+      await sock.sendMessage(m.key.remoteJid, { text: wolfReply }, { quoted: m });
 
-//   try {
-//     // Send prompt to ChatGPT API
-//     const response = await api.sendMessage(prompt);
-
-//     await sock.sendMessage(sender, {
-//       text: `🐺 *Silent Wolf's Wisdom*\n\n🔮 *The Wolf Responds:*\n${response.text}`
-//     }, { quoted: msg });
-
-//   } catch (error) {
-//     console.error('GPT command error:', error);
-//     await sock.sendMessage(sender, {
-//       text: `⚠️ *Oops! Something went wrong.*\nCheck your API key and try again.`
-//     }, { quoted: msg });
-//   }
-// };
+    } catch (err) {
+      console.error("GPT Error:", err);
+      await sock.sendMessage(m.key.remoteJid, {
+        text: "❌ Silent Wolf stumbled in the forest... try again!"
+      }, { quoted: m });
+    }
+  }
+};
