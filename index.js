@@ -1,13 +1,4 @@
-
-
-
-
-
 // ====== IMPORTS ======
-
-
-
-
 import pkg from '@whiskeysockets/baileys';
 const {
     default: makeWASocket,
@@ -22,8 +13,6 @@ import path from 'path';
 import dotenv from 'dotenv';
 import chalk from 'chalk';
 import qrcode from 'qrcode-terminal';
-
-
 
 dotenv.config();
 
@@ -70,26 +59,22 @@ async function handleCommand(commandName, sock, msg, args) {
     const chatId = msg.key.remoteJid;
     const command = commands.get(commandName.toLowerCase());
 
-    if (!command) {
-    // ❌ Ignore if not a valid command
-    return;
-}
+    if (!command) return;
 
-try {
-    let metadata = null;
-    if (chatId.endsWith('@g.us')) {
-        try {
-            metadata = await sock.groupMetadata(chatId);
-        } catch (err) {
-            console.error(`⚠️ Failed to fetch group metadata for ${chatId}`, err);
+    try {
+        let metadata = null;
+        if (chatId.endsWith('@g.us')) {
+            try {
+                metadata = await sock.groupMetadata(chatId);
+            } catch (err) {
+                console.error(`⚠️ Failed to fetch group metadata for ${chatId}`, err);
+            }
         }
+        await command.execute(sock, msg, args, metadata);
+    } catch (err) {
+        console.error(`❌ Error executing ${commandName}:`, err);
+        await sock.sendMessage(chatId, { text: `❌ Error running *${commandName}* command.` }, { quoted: msg });
     }
-    await command.execute(sock, msg, args, metadata);
-} catch (err) {
-    console.error(`❌ Error executing ${commandName}:`, err);
-    await sock.sendMessage(chatId, { text: `❌ Error running *${commandName}* command.` }, { quoted: msg });
-}
-
 }
 
 // ====== MAIN SOCKET ======
@@ -153,11 +138,11 @@ const startSock = async () => {
             console.log(`📩 Command from ${msg.key.fromMe ? 'SELF 🐺' : sender}: ${textMsg}`);
 
             if (commandName === 'menu') {
-    const { default: getMenu } = await import(`./commands/menus/settingMenu.js?update=${Date.now()}`);
-    const menuText = getMenu(); // call the function
-    await sock.sendMessage(sender, { text: menuText }, { quoted: msg });
-}
-else {
+                const imported = await import(`./commands/menus/settingMenu.js?update=${Date.now()}`);
+                const getMenu = imported.default || imported;
+                const menuText = typeof getMenu === 'function' ? getMenu() : String(getMenu);
+                await sock.sendMessage(sender, { text: menuText }, { quoted: msg });
+            } else {
                 await handleCommand(commandName, sock, msg, args);
             }
         }
