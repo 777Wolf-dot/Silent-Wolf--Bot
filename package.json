@@ -1,0 +1,55 @@
+{
+  "name": "silent-wolf-bot",
+  "version": "1.0.0",
+  "description": "A WhatsApp bot using Baileys",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "baileys",
+    "silent-wolf"
+  ],
+  "author": "YourName",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@hapi/boom": "^10.0.1",
+    "@iamtraction/google-translate": "^2.0.1",
+    "@vitalets/google-translate-api": "^9.2.1",
+    "@whiskeysockets/baileys": "^6.7.18",
+    "axios": "^1.12.2",
+    "chalk": "^5.6.0",
+    "chatgpt": "^5.2.5",
+    "dotenv": "^17.2.3",
+    "form-data": "^4.0.4",
+    "formdata-node": "^6.0.3",
+    "glob": "^11.0.3",
+    "jimp": "^0.16.13",
+    "moment-timezone": "^0.6.0",
+    "node-fetch": "^3.3.2",
+    "pino": "^8.21.0",
+    "qrcode": "^1.5.4",
+    "qrcode-reader": "^1.0.4",
+    "qrcode-terminal": "^0.12.0",
+    "sharp": "^0.32.6",
+    "youtube-dl-exec": "^3.0.24",
+    "youtube-sr": "^4.3.12",
+    "yt-search": "^2.13.1",
+    "ytdl-core": "^4.11.5"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/777Wolf-dot/Silent-Wolf--Bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/777Wolf-dot/Silent-Wolf--Bot/issues"
+  },
+  "homepage": "https://github.com/777Wolf-dot/Silent-Wolf--Bot#readme"
+}
