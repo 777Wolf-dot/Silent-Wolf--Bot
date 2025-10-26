@@ -77,10 +77,11 @@
 ---
 
 
-  <!-- Pair Button -->
-  <br>
+
+    <!-- Pair Button - Larger Size -->
+  <br><br>
   <a href="https://wolfbot-pair-1.onrender.com/">
-    <img src="https://img.shields.io/badge/Pair-33ff33?style=for-the-badge&logo=link&logoColor=white&labelColor=black&color=33ff33&border=1px%20solid%20#33ff33&boxShadow=0%200%2015px%20#33ff33" alt="Pair" style="box-shadow: 0 0 15px #33ff33;"/>
+    <img src="https://img.shields.io/badge/🐺_PAIR_WITH_WOLFBOT-33ff33?style=for-the-badge&logo=link&logoColor=white&labelColor=black&color=33ff33&border=2px%20solid%20#33ff33" alt="Pair with WolfBot" style="height: 70px; box-shadow: 0 0 20px #33ff33, 0 0 30px #33ff33; border-radius: 10px; transform: scale(1.2);"/>
   </a>
 </div> 
 
