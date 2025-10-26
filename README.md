@@ -10,7 +10,7 @@
 
 
 <p align="center">
-  <img style ="width: 500px; height: 600px;" src="https://i.ibb.co/bRq9JNN7/Add-the-text-wolfbo.png" alt="Wolf Bot — Silent Wolf Aura" />
+  <a href="https://ibb.co/1JhW6RRb"><img src="https://i.ibb.co/bRq9JNN7/Add-the-text-wolfbo.png" alt="Add-the-text-wolfbo" border="0"></a>
 </p>
 
 <h1 align="center">
