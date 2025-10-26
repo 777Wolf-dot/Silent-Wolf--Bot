@@ -3,12 +3,7 @@
     <img src="https://readme-typing-svg.demolab.com?font=Rockwell&size=50&pause=1000&color=33ff00&center=true&width=910&height=100&lines=WolfBot;Predator+Bot;Made+By+Silent+Wolf" alt="Typing SVG" style="font-size: 50px;"/>
   </a> 
   
-  <!-- Pair Button -->
-  <br>
-  <a href="https://wolfbot-pair-1.onrender.com/">
-    <img src="https://img.shields.io/badge/Pair-33ff33?style=for-the-badge&logo=link&logoColor=white&labelColor=black&color=33ff33&border=1px%20solid%20#33ff33&boxShadow=0%200%2015px%20#33ff33" alt="Pair" style="box-shadow: 0 0 15px #33ff33;"/>
-  </a>
-</div> 
+
 
 <p align="center">
   <a href="https://ibb.co/1JhW6RRb"><img style ="width: 500px; height: 600px;" src="https://i.ibb.co/bRq9JNN7/Add-the-text-wolfbo.png" alt="Add-the-text-wolfbo" border="0"></a>
@@ -80,6 +75,14 @@
 > 👁️ This bot doesn't crash — it **resets reality**
 
 ---
+
+
+  <!-- Pair Button -->
+  <br>
+  <a href="https://wolfbot-pair-1.onrender.com/">
+    <img src="https://img.shields.io/badge/Pair-33ff33?style=for-the-badge&logo=link&logoColor=white&labelColor=black&color=33ff33&border=1px%20solid%20#33ff33&boxShadow=0%200%2015px%20#33ff33" alt="Pair" style="box-shadow: 0 0 15px #33ff33;"/>
+  </a>
+</div> 
 
 <p align="center">
   👤 Built by <b>Silent Wolf</b><br>
