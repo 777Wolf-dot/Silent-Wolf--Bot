@@ -6,7 +6,7 @@
 
 
 <p align="center">
-  <a href="https://ibb.co/1JhW6RRb"><img style ="width: 500px; height: 600px;" src="https://i.ibb.co/bRq9JNN7/Add-the-text-wolfbo.png" alt="Add-the-text-wolfbo" border="0"></a>
+  <a href="https://ibb.co/1JhW6RRb"><img style ="width: 500px; height: 600px; border-radius: 24px;" src="https://i.ibb.co/bRq9JNN7/Add-the-text-wolfbo.png" alt="Add-the-text-wolfbo" border="0"></a>
 </p>
 
 <h1 align="center">
@@ -86,7 +86,7 @@
 </div> 
 
 <p align="center">
-  👤 Built by <b>Silent Wolf</b> The Alpha Wolf<br>
+  👤 Built by <b>Silent Wolf</b>----- The Alpha Wolf<br>
   💀In co-orperation with <b>Meiser</b> — the King behind the curtain 👑🩸💀<br><br>
   <i>You're not running a bot.<br>You're unleashing a **predator**.</i>
 </p>
