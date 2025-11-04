@@ -10,7 +10,7 @@ export default {
     const botNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net';
 
     if (!isGroup) {
-      return await sock.sendMessage(groupId, { text: '❌ This command can only be used in packs.' }, { quoted: msg });
+      return await sock.sendMessage(groupId, { text: '❌ This command can only be used in packs(Groups).' }, { quoted: msg });
     }
 
     const participants = metadata?.participants || [];

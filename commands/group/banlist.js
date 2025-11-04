@@ -1,5 +1,5 @@
 import fs from 'fs';
-const banFile = './banned.json';
+const banFile = '../../lib/banned.json';
 
 function loadBans() {
     try {

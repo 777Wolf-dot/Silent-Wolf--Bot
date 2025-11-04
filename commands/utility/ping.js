@@ -6,16 +6,46 @@ export default {
   async execute(sock, m, args) {
     const start = Date.now();
 
-    // Send initial response
+    // Initial scanning animation
     await sock.sendMessage(m.key.remoteJid, {
-      text: '🐺 Pinging the Silent Wolf core...'
+      text: `
+╭━━🐺 *WOLFBOT SYSTEM CHECK* 🐺━╮
+┃  ⚙️ Initializing Neural Circuits...
+┃  📡 Tracking Core Signal...
+┃  🧠 Syncing Wolf Consciousness...
+╰━━━━━━━━━━━━━━━╯
+`
     }, { quoted: m });
 
     const latency = Date.now() - start;
 
-    // Final latency message
+    // Determine latency status
+    let statusEmoji, statusText, mood;
+    if (latency <= 100) {
+      statusEmoji = "🟢";
+      statusText = "Lightning Fast";
+      mood = "⚡ Hyper Instinct Mode Activated!";
+    } else if (latency <= 300) {
+      statusEmoji = "🟡";
+      statusText = "Moderate";
+      mood = "🧠 Calculating Precision Hunt...";
+    } else {
+      statusEmoji = "🔴";
+      statusText = "Slow";
+      mood = "🌑 Patience of the Wolf… recalibrating senses.";
+    }
+
+    // Themed response
     await sock.sendMessage(m.key.remoteJid, {
-      text: `⚡ *Silent Wolf Pong!*\n\n📡 *Latency:* ${latency}ms\n🧠 *Status:* Online & Howling!`
+      text: `
+╭━━🌕 *WOLFBOT PONG!* 🌕━━╮
+┃  ⚡ *Latency:* ${latency}ms
+┃  ${statusEmoji} *Status:* ${statusText}
+┃  🐾 *Mode:* ${mood}
+╰━━━━━━━━━━━━━━━━╯
+
+_🐺 The Moon Watches — The Hunt Continues..._
+`
     }, { quoted: m });
   }
 };

@@ -1,5 +1,5 @@
 import fs from 'fs';
-const banFile = './banned.json';
+const banFile = '../../lib/banned.json';
 
 function saveBans(bans) {
     fs.writeFileSync(banFile, JSON.stringify(bans, null, 2));
