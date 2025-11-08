@@ -251,175 +251,175 @@
 
 
 
-// // commands/menus/settingMenu.js
-// // Premium Wolf Bot Command Menu - Borderless Right Side
+// // // commands/menus/settingMenu.js
+// // // Premium Wolf Bot Command Menu - Borderless Right Side
 
 
 
 
 
-export default () => {
-    return `
-🐺🌕 *WOLF BOT COMMAND CENTER* 🌕🐺
+// export default () => {
+//     return `
+// 🐺🌕 *WOLF BOT COMMAND CENTER* 🌕🐺
 
-┌────────────────
-│ 🏠 *GROUP MANAGEMENT* 🏠 
-├────────────────
-│ 🛡️ *ADMIN & MODERATION* 🛡️ 
-├────────────────
-│ • add                     
-│ • promote                 
-│ • demote                  
-│ • kick                    
-│ • ban                     
-│ • unban                   
-│ • banlist                 
-│ • clearbanlist            
-│ • warn                    
-│ • unwarn                  
-│ • clearwarns              
-│ • mute                    
-│ • unmute                  
-│ • gctime                  
-│ • lock                    
-│ • unlock                  
-├────────────────
-│ 🚫 *AUTO-MODERATION* 🚫   
-├────────────────
-│ • antilink                
-│ • antisticker             
-│ • antiimage               
-│ • antivideo               
-├────────────────
-│ 📊 *GROUP INFO & TOOLS* 📊 
-├────────────────
-│ • groupinfo               
-│ • tagadmin                
-│ • tagall                  
-│ • hidetag                 
-│ • link                    
-│ • invite                  
-│ • revoke                  
-│ • setname                 
-│ • setdesc                 
-│ • setgcpp                 
-│ • welcome                 
-│ • goodbye                 
-│ • fangtrace               
-│ • disp                    
-└────────────────
+// ┌────────────────
+// │ 🏠 *GROUP MANAGEMENT* 🏠 
+// ├────────────────
+// │ 🛡️ *ADMIN & MODERATION* 🛡️ 
+// ├────────────────
+// │ • add                     
+// │ • promote                 
+// │ • demote                  
+// │ • kick                    
+// │ • ban                     
+// │ • unban                   
+// │ • banlist                 
+// │ • clearbanlist            
+// │ • warn                    
+// │ • unwarn                  
+// │ • clearwarns              
+// │ • mute                    
+// │ • unmute                  
+// │ • gctime                  
+// │ • lock                    
+// │ • unlock                  
+// ├────────────────
+// │ 🚫 *AUTO-MODERATION* 🚫   
+// ├────────────────
+// │ • antilink                
+// │ • antisticker             
+// │ • antiimage               
+// │ • antivideo               
+// ├────────────────
+// │ 📊 *GROUP INFO & TOOLS* 📊 
+// ├────────────────
+// │ • groupinfo               
+// │ • tagadmin                
+// │ • tagall                  
+// │ • hidetag                 
+// │ • link                    
+// │ • invite                  
+// │ • revoke                  
+// │ • setname                 
+// │ • setdesc                 
+// │ • setgcpp                 
+// │ • welcome                 
+// │ • goodbye                 
+// │ • fangtrace               
+// │ • disp                    
+// └────────────────
 
-┌────────────────
-│ 👑 *OWNER CONTROLS* 👑    
-├────────────────
-│ ⚡ *CORE MANAGEMENT* ⚡    
-├────────────────
-│ • setprefix               
-│ • setantilink             
-│ • block                   
-│ • unblock                 
-│ • silent                  
-│ • default                 
-│ • runcode                 
-├────────────────
-│ 🔄 *SYSTEM & MAINTENANCE* 🛠️ 
-├────────────────
-│ • restart                 
-│ • update                  
-│ • gcrestart               
-│ • backup                  
-│ • restore                 
-│ • cleardb                 
-│ • cleartemp               
-└────────────────
+// ┌────────────────
+// │ 👑 *OWNER CONTROLS* 👑    
+// ├────────────────
+// │ ⚡ *CORE MANAGEMENT* ⚡    
+// ├────────────────
+// │ • setprefix               
+// │ • setantilink             
+// │ • block                   
+// │ • unblock                 
+// │ • silent                  
+// │ • default                 
+// │ • runcode                 
+// ├────────────────
+// │ 🔄 *SYSTEM & MAINTENANCE* 🛠️ 
+// ├────────────────
+// │ • restart                 
+// │ • update                  
+// │ • gcrestart               
+// │ • backup                  
+// │ • restore                 
+// │ • cleardb                 
+// │ • cleartemp               
+// └────────────────
 
-┌────────────────
-│ ✨ *GENERAL UTILITIES* ✨  
-├────────────────
-│ 🔍 *INFO & SEARCH* 🔎     
-├────────────────
-│ • ping                    
-│ • time                    
-│ • calc                    
-│ • define                  
-│ • dictionary              
-│ • wiki                    
-│ • news                    
-│ • weather                 
-│ • covid                    
-│ • stock                   
-│ • currency                
-├───────────────
-│ 🔗 *CONVERSION & MEDIA* 📁 
-├───────────────
-│ • translate               
-│ • convert                 
-│ • shorturl                
-│ • expandurl               
-│ • qrencode                
-│ • qrdecode                
-│ • reverseimage            
-│ • tomp3                   
-│ • tovideo                 
-│ • tosticker               
-├───────────────
-│ 📝 *PERSONAL TOOLS* 📅    
-├───────────────
-│ • reminder                
-│ • todo                    
-└───────────────
+// ┌────────────────
+// │ ✨ *GENERAL UTILITIES* ✨  
+// ├────────────────
+// │ 🔍 *INFO & SEARCH* 🔎     
+// ├────────────────
+// │ • ping                    
+// │ • time                    
+// │ • calc                    
+// │ • define                  
+// │ • dictionary              
+// │ • wiki                    
+// │ • news                    
+// │ • weather                 
+// │ • covid                    
+// │ • stock                   
+// │ • currency                
+// ├───────────────
+// │ 🔗 *CONVERSION & MEDIA* 📁 
+// ├───────────────
+// │ • translate               
+// │ • convert                 
+// │ • shorturl                
+// │ • expandurl               
+// │ • qrencode                
+// │ • qrdecode                
+// │ • reverseimage            
+// │ • tomp3                   
+// │ • tovideo                 
+// │ • tosticker               
+// ├───────────────
+// │ 📝 *PERSONAL TOOLS* 📅    
+// ├───────────────
+// │ • reminder                
+// │ • todo                    
+// └───────────────
 
-┌───────────────
-│ 🤖 *MEDIA & AI COMMANDS* 🧠 
-├───────────────
-│ ⬇️ *MEDIA DOWNLOADS* 📥    
-├───────────────
-│ • ytdl                    
-│ • spotifydl               
-│ • tiktokdl                
-│ • instadl                 
-│ • twitterdl               
-│ • mediafire               
-├───────────────
-│ 🎨 *AI GENERATION* 💡    
-├───────────────
-│ • gemini                  
-│ • gpt                     
-│ • deepseek                
-│ • chat                    
-│ • summary                 
-│ • imagine                 
-│ • dalle                   
-└───────────────
+// ┌───────────────
+// │ 🤖 *MEDIA & AI COMMANDS* 🧠 
+// ├───────────────
+// │ ⬇️ *MEDIA DOWNLOADS* 📥    
+// ├───────────────
+// │ • ytdl                    
+// │ • spotifydl               
+// │ • tiktokdl                
+// │ • instadl                 
+// │ • twitterdl               
+// │ • mediafire               
+// ├───────────────
+// │ 🎨 *AI GENERATION* 💡    
+// ├───────────────
+// │ • gemini                  
+// │ • gpt                     
+// │ • deepseek                
+// │ • chat                    
+// │ • summary                 
+// │ • imagine                 
+// │ • dalle                   
+// └───────────────
 
-┌───────────────
-│ 🛡️ *SECURITY & HACKING* 🔒 
-├───────────────
-│ 🌐 *NETWORK & INFO* 📡   
-├───────────────
-│ • ipinfo              
-│ • whois               
-│ • dnslookup           
-│ • host                
-│ • reverseip           
-│ • ssllabs             
-│ • shodan              
-├────────────────
-│ 🔑 *VULNERABILITY & SCAN* ⚙️ 
-├────────────────
-│ • pwcheck             
-│ • breach              
-│ • portscan            
-│ • httpheaders         
-│ • subdomains          
-│ • encode              
-│ • decode              
-│ • consent             
-│ • scan-now            
-│ • scan-status         
-│ • security-tips       
-└────────────────
+// ┌───────────────
+// │ 🛡️ *SECURITY & HACKING* 🔒 
+// ├───────────────
+// │ 🌐 *NETWORK & INFO* 📡   
+// ├───────────────
+// │ • ipinfo              
+// │ • whois               
+// │ • dnslookup           
+// │ • host                
+// │ • reverseip           
+// │ • ssllabs             
+// │ • shodan              
+// ├────────────────
+// │ 🔑 *VULNERABILITY & SCAN* ⚙️ 
+// ├────────────────
+// │ • pwcheck             
+// │ • breach              
+// │ • portscan            
+// │ • httpheaders         
+// │ • subdomains          
+// │ • encode              
+// │ • decode              
+// │ • consent             
+// │ • scan-now            
+// │ • scan-status         
+// │ • security-tips       
+// └────────────────
 
-🐺🌕*POWERED BY WOLF TECH*🌕🐺
-`;
-};
+// 🐺🌕*POWERED BY WOLF TECH*🌕🐺
+// `;
+// };

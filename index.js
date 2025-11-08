@@ -495,8 +495,6 @@
 
 
 
-
-
 // ====== WOLF BOT - index.js ======
 // Fast, stable & themed. Supports QR or Pair Code login.
 // Owner: Auto-detected 🐺
@@ -505,6 +503,7 @@ import menu from './commands/menus/menu.js';
 import { withPerformance } from './commands/speed/performanceWrapper.js';
 import { loadImages, images } from './commands/speed/imageLoader.js';
 import { saveSession, loadSession } from './supabase.js'; // <-- Supabase integration
+import autoreactstatus from "./commands/owner/autoreactstatus.js";
 
 import pkg from '@whiskeysockets/baileys';
 const {
@@ -663,7 +662,6 @@ async function startSock(mode = 'qr', phoneNumber = null) {
         if (connection === 'open') {
             const currentTime = moment().format('h:mm:ss A');
 
-            // 🐺 AUTO OWNER UPDATE — detect the number of the linked account
             OWNER_JID = sock.user.id;
             OWNER_NUMBER = OWNER_JID.split('@')[0];
             fs.writeFileSync('./owner.json', JSON.stringify({ OWNER_NUMBER, OWNER_JID }, null, 2));
@@ -680,7 +678,6 @@ async function startSock(mode = 'qr', phoneNumber = null) {
 ╚════════════════════════════════════════════════════════╝
 `));
 
-            // 📨 Send DM to Owner
             try {
                 await sock.sendMessage(OWNER_JID, {
                     text: `╔══════════════╗
@@ -713,14 +710,13 @@ async function startSock(mode = 'qr', phoneNumber = null) {
         console.log(chalk.green('💾 Credentials updated and saved to Supabase.'));
     });
 
-    // ====== MESSAGES ======
+    // ====== MESSAGE HANDLER ======
     sock.ev.on('messages.upsert', async ({ messages, type }) => {
         if (type !== 'notify') return;
         const msg = messages[0];
         if (!msg.message) return;
 
         const chatId = msg.key.remoteJid;
-        const sender = msg.key.participant || msg.key.remoteJid;
         const textMsg =
             msg.message.conversation ||
             msg.message.extendedTextMessage?.text ||
@@ -743,14 +739,27 @@ async function startSock(mode = 'qr', phoneNumber = null) {
                 await handleCommand(commandName, sock, msg, args);
             }
         } catch (err) {
-            if (err.message.includes('Bad MAC')) {
-                console.warn(`⚠️ Failed to decrypt message from ${chatId} due to session mismatch.`);
-            } else if (err.message.includes('Closing open session')) {
-                console.info(`ℹ️ Session replaced by new prekey bundle for ${chatId}.`);
-            } else {
-                console.error(`❌ Error executing ${commandName}:`, err);
-                await sock.sendMessage(chatId, { text: `❌ Error running *${commandName}*.` }, { quoted: msg });
+            console.error(`❌ Error executing ${commandName}:`, err);
+            await sock.sendMessage(chatId, { text: `❌ Error running *${commandName}*.` }, { quoted: msg });
+        }
+    });
+
+
+
+
+
+
+    
+    // ====== AUTO REACT TO STATUS ======
+    sock.ev.on('messages.update', async (updates) => {
+        try {
+            for (const update of updates) {
+                const jid = update.key?.remoteJid;
+                if (!jid || !jid.endsWith('@status')) continue;
+                await autoreactstatus.onStatus(sock, update);
             }
+        } catch (err) {
+            console.error("❌ AutoReactStatus error:", err);
         }
     });
 

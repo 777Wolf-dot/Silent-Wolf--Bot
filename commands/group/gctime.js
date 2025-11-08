@@ -4,17 +4,28 @@ export default {
   category: "group",
   async execute(sock, m, args) {
     try {
-      if (!m.chat) {
-        return console.error("❌ Error: m.chat is undefined");
-      }
-
-      const metadata = await sock.groupMetadata(m.chat);
-      if (!metadata || !metadata.creation) {
-        await sock.sendMessage(m.chat, { text: "❌ Couldn't fetch group metadata." });
+      // Get chat ID safely
+      const chatId = m.key?.remoteJid;
+      if (!chatId) {
+        console.error("❌ Error: chatId is undefined");
         return;
       }
 
-      const creationTime = metadata.creation;
+      // Only works for group chats
+      if (!chatId.endsWith("@g.us")) {
+        await sock.sendMessage(chatId, { text: "❌ This command works only in groups." }, { quoted: m });
+        return;
+      }
+
+      // Fetch group metadata
+      const metadata = await sock.groupMetadata(chatId);
+      if (!metadata?.creation) {
+        await sock.sendMessage(chatId, { text: "❌ Couldn't fetch group metadata." }, { quoted: m });
+        return;
+      }
+
+      // Format creation time
+      const creationTime = metadata.creation; // Unix timestamp (seconds)
       const date = new Date(creationTime * 1000);
       const formattedDate = date.toLocaleString("en-KE", {
         timeZone: "Africa/Nairobi",
@@ -26,13 +37,16 @@ export default {
         minute: "2-digit",
       });
 
-      await sock.sendMessage(m.chat, {
+      // Send result
+      await sock.sendMessage(chatId, {
         text: `📅 Group was created on: *${formattedDate}*`,
-      }, { quoted: m.key ? m : undefined }); // Only quote if safe
+      }, { quoted: m });
+
     } catch (err) {
       console.error("❌ Error in gctime:", err);
-      if (m.chat) {
-        await sock.sendMessage(m.chat, { text: "❌ Failed to get group creation time." });
+      const chatId = m.key?.remoteJid;
+      if (chatId) {
+        await sock.sendMessage(chatId, { text: "❌ Failed to get group creation time." }, { quoted: m });
       }
     }
   },
