@@ -1,0 +1,24 @@
+{
+  "5": {
+    "user": true,
+    "owner": true,
+    "mode": true,
+    "host": true,
+    "speed": true,
+    "prefix": true,
+    "uptime": true,
+    "version": true,
+    "ram": true
+  },
+  "6": {
+    "user": true,
+    "owner": true,
+    "mode": true,
+    "host": true,
+    "speed": true,
+    "prefix": true,
+    "uptime": true,
+    "version": true,
+    "ram": true
+  }
+}

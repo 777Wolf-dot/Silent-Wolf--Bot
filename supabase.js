@@ -1,169 +1,131 @@
-// supabase.js
+// ====== SUPABASE HELPER (FIXED) ======
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
-
 dotenv.config();
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/**
- * Save a session to Supabase
- * @param {string} name - session name
- * @param {object} data - session data (Baileys auth state)
- */
-export async function saveSession(name, data) {
-  const { error } = await supabase
-    .from('whatsapp_sessions')
-    .upsert({
-      session_name: name,
-      session_data: data,
-      updated_at: new Date()
-    }, { onConflict: 'session_name' });
+// Utility to convert Baileys key store for safe Supabase storage
+async function serializeSession(state) {
+  return {
+    creds: state.creds,
+    keys: Object.fromEntries(await state.keys.entries()), // convert Maps -> plain object
+  };
+}
 
-  if (error) console.error('❌ Failed to save session to Supabase:', error);
+// Utility to restore serialized key store to Baileys-compatible format
+function deserializeSession(data) {
+  if (!data || !data.creds || !data.keys) return null;
+  return {
+    creds: data.creds,
+    keys: new Map(Object.entries(data.keys)), // restore plain object -> Map
+  };
 }
 
 /**
- * Load a session from Supabase
- * @param {string} name - session name
- * @returns {object|null} - session data or null
+ * Save bot session to Supabase
+ * @param {string} key - session key (e.g., 'main')
+ * @param {object} session - Baileys auth state
  */
-export async function loadSession(name) {
-  const { data, error } = await supabase
-    .from('whatsapp_sessions')
-    .select('session_data')
-    .eq('session_name', name)
-    .single();
+export async function saveSession(key, session) {
+  try {
+    const serialized = await serializeSession(session);
+    const { error } = await supabase
+      .from('bot_sessions')
+      .upsert({ session_id: key, session_data: serialized })
+      .eq('session_id', key);
 
-  if (error) {
-    if (error.code !== 'PGRST116') // ignore "no rows" error
-      console.error('❌ Failed to load session from Supabase:', error);
+    if (error) throw error;
+    console.log(`💾 Session [${key}] saved to Supabase.`);
+  } catch (err) {
+    console.error('❌ Failed to save session to Supabase:', err);
+  }
+}
+
+/**
+ * Load bot session from Supabase
+ * @param {string} key - session key
+ * @returns {object|null}
+ */
+export async function loadSession(key) {
+  try {
+    const { data, error } = await supabase
+      .from('bot_sessions')
+      .select('*')
+      .eq('session_id', key)
+      .single();
+
+    if (error && error.code !== 'PGRST116') throw error;
+    return data ? deserializeSession(data.session_data) : null;
+  } catch (err) {
+    console.error('❌ Failed to load session from Supabase:', err);
     return null;
   }
-
-  return data?.session_data ?? null;
 }
 
+/**
+ * Get all bot sessions
+ * @returns {Array<{ session_id: string, session_data: object }>}
+ */
+export async function getAllSessions() {
+  try {
+    const { data, error } = await supabase
+      .from('bot_sessions')
+      .select('*');
 
+    if (error) throw error;
 
+    return (data || []).map(sess => ({
+      session_id: sess.session_id,
+      session_data: deserializeSession(sess.session_data),
+    }));
+  } catch (err) {
+    console.error('❌ Failed to fetch all sessions:', err);
+    return [];
+  }
+}
 
+/**
+ * Remove session (optional helper)
+ * @param {string} key
+ */
+export async function removeSession(key) {
+  try {
+    const { error } = await supabase.from('bot_sessions').delete().eq('session_id', key);
+    if (error) throw error;
+    console.log(`🗑️ Session [${key}] removed from Supabase.`);
+  } catch (err) {
+    console.error('❌ Failed to remove session:', err);
+  }
+}
 
+/**
+ * Link a user to the bot (store their JID for notifications)
+ * @param {string} jid - WhatsApp JID (number@c.us)
+ */
+export async function linkUser(jid) {
+  try {
+    const { error } = await supabase.from('linked_users').upsert({ jid }).eq('jid', jid);
+    if (error) throw error;
+    console.log(`✅ Linked user saved: ${jid}`);
+  } catch (err) {
+    console.error('❌ Failed to link user:', err);
+  }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // supabase.js
-// import { createClient } from '@supabase/supabase-js';
-// import dotenv from 'dotenv';
-// import crypto from 'crypto';
-
-// dotenv.config();
-
-// // Create Supabase client
-// const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
-
-// // --- AES-192-CBC Decryption Setup ---
-// if (!process.env.SESSION_ENCRYPTION_KEY) {
-//   console.error('❌ Missing SESSION_ENCRYPTION_KEY in .env');
-//   process.exit(1);
-// }
-// const key = Buffer.from(process.env.SESSION_ENCRYPTION_KEY, 'base64');
-
-// function decryptBuffer(encryptedBase64) {
-//   try {
-//     const data = Buffer.from(encryptedBase64, 'base64');
-//     const iv = data.slice(0, 16);
-//     const encrypted = data.slice(16);
-//     const decipher = crypto.createDecipheriv('aes-192-cbc', key, iv);
-//     const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
-//     return decrypted;
-//   } catch (err) {
-//     console.error('❌ Decryption failed:', err.message);
-//     return null;
-//   }
-// }
-
-// // --- Supabase Session Handling ---
-
-// /**
-//  * Save a session to Supabase
-//  * @param {string} name - session name
-//  * @param {object} data - session data (Baileys auth state)
-//  */
-// export async function saveSession(name, data) {
-//   const { error } = await supabase
-//     .from('whatsapp_sessions')
-//     .upsert(
-//       {
-//         session_name: name,
-//         session_data: data,
-//         updated_at: new Date(),
-//       },
-//       { onConflict: 'session_name' }
-//     );
-
-//   if (error) console.error('❌ Failed to save session to Supabase:', error);
-//   else console.log('✅ Session saved to Supabase');
-// }
-
-// /**
-//  * Load a session from Supabase and decrypt it
-//  * @param {string} name - session name
-//  * @returns {object|null} - session data or null
-//  */
-// export async function loadSession(name) {
-//   const { data, error } = await supabase
-//     .from('whatsapp_sessions')
-//     .select('session_data')
-//     .eq('session_name', name)
-//     .single();
-
-//   if (error) {
-//     if (error.code !== 'PGRST116')
-//       console.error('❌ Failed to load session from Supabase:', error);
-//     return null;
-//   }
-
-//   const encryptedData = data?.session_data;
-//   if (!encryptedData) {
-//     console.error('⚠️ No session data found for:', name);
-//     return null;
-//   }
-
-//   const decryptedBuffer = decryptBuffer(encryptedData);
-//   if (!decryptedBuffer) return null;
-
-//   try {
-//     const sessionJSON = JSON.parse(decryptedBuffer.toString());
-//     console.log('✅ Session decrypted successfully');
-//     return sessionJSON;
-//   } catch (err) {
-//     console.error('❌ Failed to parse decrypted session JSON:', err.message);
-//     return null;
-//   }
-// }
+/**
+ * Get all users who have linked the bot
+ * @returns {Array<{jid: string}>}
+ */
+export async function getAllLinkedUsers() {
+  try {
+    const { data, error } = await supabase.from('linked_users').select('jid');
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.error('❌ Failed to fetch linked users:', err);
+    return [];
+  }
+}
