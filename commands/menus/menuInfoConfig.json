@@ -25,7 +25,7 @@
   },
   "style7": {
     "user": true,
-    "owner": true,
+    "owner": false,
     "mode": true,
     "host": true,
     "speed": true,
