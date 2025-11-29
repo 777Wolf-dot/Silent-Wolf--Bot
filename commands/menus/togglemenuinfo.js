@@ -154,22 +154,23 @@ import { menuToggles, toggleField, getCurrentMenuStyle, getAllFieldsStatus } fro
 export default {
   name: "togglemenuinfo",
   description: "Toggle info sections (user, owner, uptime, etc.) for menu styles 5, 6, and 7.",
+  alias: "tmi, togglemenu",
   category: "settings",
   
   async execute(sock, m, args) {
     const jid = m.key.remoteJid;
     const field = args[0]?.toLowerCase();
 
-    // Check if user is owner
-    const isOwner = m.key.fromMe || (global.owner && m.sender.includes(global.owner));
-    if (!isOwner) {
-      await sock.sendMessage(
-        jid,
-        { text: "❌ This command is only available to the bot owner." },
-        { quoted: m }
-      );
-      return;
-    }
+    // // Check if user is owner
+    // const isOwner = m.key.fromMe || (global.owner && m.sender.includes(global.owner));
+    // if (!isOwner) {
+    //   await sock.sendMessage(
+    //     jid,
+    //     { text: "❌ This command is only available to the bot owner." },
+    //     { quoted: m }
+    //   );
+    //   return;
+    // }
 
     // Get the CURRENT menu style dynamically (await the async function)
     const currentMenuStyle = await getCurrentMenuStyle();

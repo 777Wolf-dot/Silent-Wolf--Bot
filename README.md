@@ -48,9 +48,10 @@
 
 <p align="center">
 
-  <a href="https://heroku.com/deploy" target="_blank">
-    <img src="https://img.shields.io/badge/Deploy_to_Heroku-7056bf?style=for-the-badge&logo=heroku&logoColor=white" alt="Deploy to Heroku">
-  </a>
+<a href="https://heroku.com/deploy?template=https://github.com/777Wolf-dot/Silent-Wolf--Bot" target="_blank">
+  <img src="https://img.shields.io/badge/Deploy_to_Heroku-7056bf?style=for-the-badge&logo=heroku&logoColor=white" alt="Deploy to Heroku">
+</a>
+
 
   <a href="https://replit.com/~" target="_blank">
     <img src="https://img.shields.io/badge/Deploy_to_Replit-0d101e?style=for-the-badge&logo=replit&logoColor=white" alt="Deploy to Replit">
