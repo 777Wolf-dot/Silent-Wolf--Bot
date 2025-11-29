@@ -53,9 +53,10 @@
 </a>
 
 
-  <a href="https://replit.com/~" target="_blank">
-    <img src="https://img.shields.io/badge/Deploy_to_Replit-0d101e?style=for-the-badge&logo=replit&logoColor=white" alt="Deploy to Replit">
-  </a>
+<a href="https://replit.com/new/nodejs" target="_blank">
+  <img src="https://img.shields.io/badge/Deploy_to_Replit-0d101e?style=for-the-badge&logo=replit&logoColor=white" alt="Deploy to Replit">
+</a>
+
 
   <a href="https://katabump.com" target="_blank">
     <img src="https://img.shields.io/badge/Deploy_to_Katabump-ff0055?style=for-the-badge&logo=render&logoColor=white" alt="Deploy to Katabump">
