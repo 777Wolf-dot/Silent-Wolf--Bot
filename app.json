@@ -2,7 +2,7 @@
   "name": "WolfBot",
   "description": "A powerful Baileys WhatsApp bot with wolf-themed features.",
   "repository": "https://github.com/777Wolf-dot/Silent-Wolf--Bot",
-  "logo": "https://i.imgur.com/vyFq1NB.png",
+  "logo": "https://i.ibb.co/HDCwvyhT/wolfbot.jpg",
   "keywords": ["whatsapp", "bot", "baileys", "wolf", "nodejs"],
 
   "env": {
@@ -10,51 +10,17 @@
       "description": "Enter your WhatsApp number in international format (e.g. 2547xxxxxxx)",
       "required": true
     },
-    "BOT_NAME": {
-      "description": "Name of your bot",
-      "value": "Silent Wolf Bot",
-      "required": false
-    },
-    "OWNER_NAME": {
-      "description": "Name to display in bot menus",
-      "required": false
-    },
-    "PREFIX": {
-      "description": "Command prefix",
-      "value": ".",
-      "required": false
-    },
+   
     "SESSION_ID": {
       "description": "Paste your generated Session ID here (optional)",
       "required": false
-    },
-    "MODE": {
-      "description": "Choose bot mode",
-      "value": "public",
-      "options": ["public", "private"],
-      "required": false
-    },
-    "AUTO_STATUS_VIEW": {
-      "description": "Automatically view statuses (true/false)",
-      "value": "false",
-      "required": false
-    },
-    "AUTO_REACT_STATUS": {
-      "description": "Automatically react to statuses (true/false)",
-      "value": "false",
-      "required": false
-    },
-    "ANTI_DELETE": {
-      "description": "Recover deleted messages (true/false)",
-      "value": "true",
-      "required": false
-    },
-    "WOLF_THEME": {
-      "description": "Enable Silent Wolf UI theme (true/false)",
-      "value": "true",
-      "required": false
     }
-  },
+   
+      },
+    
+    
+    
+  
 
   "buildpacks": [
     { "url": "heroku/nodejs" }

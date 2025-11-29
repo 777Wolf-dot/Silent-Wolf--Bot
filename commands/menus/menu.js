@@ -2072,7 +2072,7 @@ export default {
 > │ • fangtrace               
 > │ • disp                    
 > └────────────────
-> 
+
 > ┌────────────────
 > │ 👑 *OWNER CONTROLS* 👑    
 > ├────────────────
@@ -2096,7 +2096,7 @@ export default {
 > │ • cleardb                 
 > │ • cleartemp               
 > └────────────────
-> 
+
 > ┌────────────────
 > │ ✨ *GENERAL UTILITIES* ✨  
 > ├────────────────
@@ -2137,8 +2137,8 @@ export default {
 > │ 🎵 *MUSIC & FUN* 🎶
 > ├────────────────
 > │ • play
-> 
-> 
+
+
 > ┌───────────────
 > │ 🤖 *MEDIA & AI COMMANDS* 🧠 
 > ├───────────────
@@ -2161,7 +2161,7 @@ export default {
 > │ • imagine                 
 > │ • dalle                   
 > └───────────────
-> 
+
 > ┌───────────────
 > │ 🛡️ *SECURITY & HACKING* 🔒 
 > ├───────────────
@@ -2189,7 +2189,7 @@ export default {
 > │ • scan-status         
 > │ • security-tips       
 > └────────────────
-> 
+
 > 🐺🌕*POWERED BY WOLF TECH*🌕🐺
 `;
 
