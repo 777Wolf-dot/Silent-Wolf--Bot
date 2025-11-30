@@ -11,7 +11,7 @@ const stylePath = path.join(__dirname, "current_style.json");
 export default {
   name: "menustyle",
   alias: ["setmenustyle", "changemenustyle"],
-  description: "Switch between Wolf menu styles (1–4)",
+  description: "Switch between Wolf menu styles (1–7)",
   category: "owner",
 
   async execute(sock, m, args) {
@@ -23,7 +23,7 @@ export default {
       await sock.sendMessage(
         jid,
         {
-          text: `🧭 *Usage:* .menustyle <1|2|3|4>\n\n1️⃣ Image Menu\n2️⃣ Text Only\n3️⃣ Full Descriptions\n4️⃣ Ad Style`,
+          text: `🧭 *Usage:* .menustyle <1|2|3|4|5|6|7>\n\n1️⃣ Image Menu\n2️⃣ Text Only\n3️⃣ Full Descriptions\n4️⃣ Ad Style\n5 Faded\n6 Faded + Image\n Image + Text`,
         },
         { quoted: m }
       );

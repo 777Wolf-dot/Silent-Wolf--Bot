@@ -2253,8 +2253,7 @@ export default {
             }
           }
 
-          const commandsText = `🐺🌕 *WOLF BOT* 🌕🐺*
-┌────────────────
+          const commandsText = `┌────────────────
 │ 🏠 GROUP MANAGEMENT 🏠 
 ├────────────────
 │ 🛡️ ADMIN & MODERATION 🛡️ 
@@ -2380,6 +2379,85 @@ export default {
 │ iplookup                
 │ getip                   
 └───────────────
+
+┌────────────────
+│ 🎨 LOGO DESIGN STUDIO 🎨
+├────────────────
+│ 🌟 PREMIUM METALS 🌟    
+├────────────────
+│ goldlogo                
+│ silverlogo              
+│ platinumlogo            
+│ chromelogo              
+│ diamondlogo             
+│ bronzelogo              
+│ steelogo                
+│ copperlogo              
+│ titaniumlogo            
+├────────────────
+│ 🔥 ELEMENTAL EFFECTS 🔥  
+├────────────────
+│ firelogo                
+│ icelogo                 
+│ iceglowlogo             
+│ lightninglogo           
+│ aqualogo                
+│ rainbowlogo             
+│ sunlogo                 
+│ moonlogo                
+│ volcanologo             
+│ thunderlogo             
+│ windlogo                
+│ earthlogo               
+│ waterlogo               
+│ forestlogo              
+├────────────────
+│ 🎭 MYTHICAL & MAGICAL 🧙  
+├────────────────
+│ dragonlogo              
+│ phoenixlogo             
+│ wizardlogo              
+│ crystallogo             
+│ magiclogo               
+│ darkmagiclogo           
+├────────────────
+│ 🌌 DARK & GOTHIC 🌑     
+├────────────────
+│ shadowlogo              
+│ smokelogo               
+│ bloodlogo               
+│ shadowflamelogo         
+│ venomlogo               
+│ skullogo                
+│ nightlogo               
+│ hellfirelogo            
+├────────────────
+│ 💫 GLOW & NEON EFFECTS 🌈  
+├────────────────
+│ neonlogo                
+│ glowlogo                
+│ lightlogo               
+│ neonflamelogo           
+├────────────────
+│ 🤖 TECH & FUTURISTIC 🚀  
+├────────────────
+│ cyberlogo               
+│ matrixlogo              
+│ techlogo                
+│ hologramlogo            
+│ vaporlogo               
+│ pixelogo                
+│ futuristiclogo          
+│ digitalogo              
+├────────────────
+│ 🎪 ART & POP CULTURE 🎭  
+├────────────────
+│ cartoonlogo             
+│ comiclogo               
+│ graffitilogo            
+│ retrologo               
+│ popartlogo              
+└────────────────
 
 🐺🌕 POWERED BY WOLF TECH 🌕🐺
 `;
