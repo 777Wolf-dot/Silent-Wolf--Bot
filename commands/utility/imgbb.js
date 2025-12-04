@@ -322,7 +322,7 @@ export default {
             `🌐 *Direct URL:*\n${result.url}\n\n` +
             `🆔 *Image ID:* ${result.id}\n` +
             `🗑 *Delete URL:* ${result.deleteUrl}\n\n` +
-            `Use it in your bot with:\n${global.prefix}setmenuimage ${result.url}`,
+            ``,
           edit: processingMsg.key
         }
       );

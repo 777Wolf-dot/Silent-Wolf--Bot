@@ -1,248 +1,128 @@
-import { downloadMediaMessage } from '@whiskeysockets/baileys';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { downloadContentFromMessage } from '@whiskeysockets/baileys';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Global storage for view once messages
-if (!global.viewOnceMessages) {
-    global.viewOnceMessages = new Map();
+// Helper function to check if text is emoji
+function isEmoji(text) {
+    if (!text || typeof text !== 'string') return false;
+    const trimmed = text.trim();
+    
+    // Common emoji patterns
+    const emojiRegex = /^[\p{Emoji}\u200d]+$/u;
+    const commonEmojis = ['😂', '❤️', '😍', '🔥', '👍', '👎', '😮', '😢', '😡', '🎉', '🤔', '👀'];
+    
+    return (emojiRegex.test(trimmed) && trimmed.length <= 5) || commonEmojis.includes(trimmed);
 }
 
 export default {
     name: 'vv',
-    description: 'Download view once media and handle emoji replies to user DM',
+    description: 'Download view once media and auto-send to DM when replied with emoji',
     category: 'utility',
     
-    // Use execute instead of handle to match your bot's structure
-    async execute(message, bot, args) {
+    // Universal handler that detects both command and emoji replies
+    async execute(sock, chatId, message, args, m) {
         try {
-            const chat = await message.getChat();
-            const quotedMessage = message.hasQuotedMsg ? await message.getQuotedMessage() : null;
-
-            // Handle direct vv command on view once media
-            if (quotedMessage && quotedMessage.type === 'view_once') {
-                await this.downloadAndSendViewOnce(quotedMessage, message, bot, 'command');
-            } 
-            // Handle view once message directly
-            else if (message.type === 'view_once') {
-                await this.downloadAndSendViewOnce(message, message, bot, 'command');
-            }
-            else {
-                await message.reply('❌ Please reply to a view once message with `.vv` or use this command on a view once message.');
-            }
-
-        } catch (error) {
-            console.error('Error in vv command:', error);
-            await message.reply('❌ An error occurred while processing the media.');
-        }
-    },
-
-    // Main function to download and handle view once media
-    async downloadAndSendViewOnce(targetMessage, originalMessage, bot, triggerType = 'command') {
-        try {
-            // Download the media
-            const media = await downloadMediaMessage(targetMessage, 'buffer', {});
+            const msgText = message.message?.conversation || 
+                           message.message?.extendedTextMessage?.text || 
+                           '';
             
-            if (!media) {
-                await originalMessage.reply('❌ Failed to download media.');
+            // Check if it's the .vv command
+            const isVvCommand = msgText.startsWith('.vv');
+            
+            // Check if it's an emoji reply
+            const isEmojiReply = !isVvCommand && isEmoji(msgText);
+            
+            // Get quoted message
+            const quoted = m?.quoted || message.message?.extendedTextMessage?.contextInfo?.quotedMessage;
+            
+            if (!quoted) {
+                if (isVvCommand) {
+                    await sock.sendMessage(chatId, { text: '❌ Please reply to a view-once image or video.' });
+                }
                 return;
             }
-
-            // Get file extension and create filename
-            const mimeType = targetMessage.mimetype || 'image/jpeg';
-            const ext = mimeType.split('/')[1] || 'jpg';
-            const timestamp = Date.now();
-            const filename = `view_once_${timestamp}.${ext}`;
-            const filePath = path.join(process.cwd(), 'media', 'view_once', filename);
-
-            // Ensure directory exists
-            const dir = path.dirname(filePath);
-            if (!fs.existsSync(dir)) {
-                fs.mkdirSync(dir, { recursive: true });
-            }
-
-            // Save file
-            fs.writeFileSync(filePath, media);
-
-            // Store message info for emoji reply handling
-            this.storeViewOnceMessage(targetMessage.id._serialized, {
-                filename: filename,
-                filePath: filePath,
-                sender: originalMessage.author || originalMessage.from,
-                timestamp: timestamp,
-                chatId: (await originalMessage.getChat()).id._serialized,
-                mimeType: mimeType,
-                mediaBuffer: media // Store buffer for immediate use
-            });
-
-            if (triggerType === 'command') {
-                // Send confirmation with media to current chat
-                await originalMessage.reply(`✅ View once media saved!\n📁 Filename: ${filename}`);
-                
-                // Send the actual media back to chat
-                const mediaMessage = {
-                    [mimeType.split('/')[0]]: media
-                };
-                
-                await originalMessage.reply(mediaMessage, (await originalMessage.getChat()).id._serialized, {
-                    caption: `📸 View Once Media\n⏰ ${new Date().toLocaleString()}`
-                });
-            } else if (triggerType === 'emoji') {
-                // For emoji replies, send to user's DM only
-                await this.sendToUserDM(media, filename, mimeType, targetMessage, originalMessage, bot);
-                await originalMessage.react('✅');
-            }
-
-        } catch (error) {
-            console.error('Error downloading view once media:', error);
-            if (triggerType === 'command') {
-                await originalMessage.reply('❌ Failed to process view once media.');
-            }
-        }
-    },
-
-    // Send media to user's DM (the person who sent the emoji)
-    async sendToUserDM(media, filename, mimeType, targetMessage, originalMessage, bot) {
-        try {
-            const userId = originalMessage.author || originalMessage.from;
             
-            if (!userId) {
-                console.error('User ID not found');
-                return false;
-            }
-
-            const mediaType = mimeType.split('/')[0];
-            const mediaMessage = {
-                [mediaType]: media
-            };
-
-            const caption = `🔒 View Once Media Saved\n\n` +
-                           `💬 Triggered by: ${originalMessage.body}\n` +
-                           `⏰ Time: ${new Date().toLocaleString()}\n` +
-                           `📁 Filename: ${filename}`;
-
-            // Send to user's DM (private chat)
-            await bot.sendMessage(userId, mediaMessage, { caption: caption });
+            const quotedMsg = quoted.message || quoted;
+            const imageMsg = quotedMsg.imageMessage;
+            const videoMsg = quotedMsg.videoMessage;
             
-            console.log(`View once media sent to user DM via emoji reply: ${filename}`);
-            return true;
-
-        } catch (error) {
-            console.error('Error sending to user DM:', error);
-            return false;
-        }
-    },
-
-    // Store view once message info for emoji reply handling
-    storeViewOnceMessage(messageId, messageInfo) {
-        // Store for 2 hours (longer for reply handling)
-        global.viewOnceMessages.set(messageId, messageInfo);
-        
-        // Auto cleanup after 2 hours
-        setTimeout(() => {
-            if (global.viewOnceMessages.has(messageId)) {
-                const storedInfo = global.viewOnceMessages.get(messageId);
-                // Optional: Delete the file too
-                try {
-                    if (fs.existsSync(storedInfo.filePath)) {
-                        fs.unlinkSync(storedInfo.filePath);
-                    }
-                } catch (e) {
-                    console.log('Error deleting file during cleanup:', e);
+            // Check if quoted is view-once
+            const isViewOnceImage = imageMsg?.viewOnce;
+            const isViewOnceVideo = videoMsg?.viewOnce;
+            
+            if (!isViewOnceImage && !isViewOnceVideo) {
+                if (isVvCommand) {
+                    await sock.sendMessage(chatId, { text: '❌ The replied message is not a view-once media.' });
                 }
-                global.viewOnceMessages.delete(messageId);
+                return;
             }
-        }, 2 * 60 * 60 * 1000);
-    },
-
-    // Check if text contains only emojis
-    isEmojiOnly(text) {
-        if (!text) return false;
-        
-        // Common emojis that trigger the feature
-        const triggerEmojis = [
-            '⭐', '💾', '📥', '🔖', '📸', '❤️', '🔥', '😍', 
-            '👍', '📷', '🎥', '📹', '😊', '😂', '🤩', '👏',
-            '🎉', '💯', '👌', '🫡', '🙏', '🥰', '🤗', '😎'
-        ];
-        
-        // Check if message is exactly one of the trigger emojis
-        const trimmedText = text.trim();
-        return triggerEmojis.includes(trimmedText) || 
-               (trimmedText.length <= 3 && /^\p{Emoji}+$/u.test(trimmedText)); // Any emoji (1-3 chars)
-    },
-
-    // Auto-initialize when command is loaded
-    init(bot) {
-        console.log('🔄 vv.js command initialized with auto-reply detection');
-        
-        // Store bot instance for event listeners
-        this.bot = bot;
-        
-        // Listen to all messages to detect emoji replies
-        if (bot.ev) {
-            bot.ev.on('messages.upsert', async ({ messages }) => {
-                try {
-                    for (const message of messages) {
-                        if (message.key && message.message) {
-                            await this.checkForEmojiReply(message, bot);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error in vv.js auto-reply detection:', error);
+            
+            let buffer, type, caption;
+            
+            // Download media
+            if (isViewOnceImage) {
+                const stream = await downloadContentFromMessage(imageMsg, 'image');
+                buffer = Buffer.from([]);
+                for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+                type = 'image';
+                caption = imageMsg.caption || '📸 Downloaded from view-once';
+            } else {
+                const stream = await downloadContentFromMessage(videoMsg, 'video');
+                buffer = Buffer.from([]);
+                for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+                type = 'video';
+                caption = videoMsg.caption || '🎥 Downloaded from view-once';
+            }
+            
+            // If it's .vv command, send to current chat
+            if (isVvCommand) {
+                if (type === 'image') {
+                    await sock.sendMessage(chatId, { image: buffer, caption: caption });
+                } else {
+                    await sock.sendMessage(chatId, { video: buffer, caption: caption });
                 }
-            });
-        }
-    },
-
-    // Check if message is an emoji reply to view once media
-    async checkForEmojiReply(message, bot) {
-        try {
-            // Check if message has quoted message
-            const contextInfo = message.message.extendedTextMessage?.contextInfo;
-            if (!contextInfo || !contextInfo.stanzaId) return;
-
-            const quotedMessageId = contextInfo.stanzaId;
-            const replyText = message.message.conversation || 
-                             message.message.extendedTextMessage?.text || 
-                             '';
-
-            // Check if reply is emoji-only
-            if (!this.isEmojiOnly(replyText)) return;
-
-            // Check if quoted message is view once
-            const quotedMessageInfo = global.viewOnceMessages.get(quotedMessageId);
-            if (quotedMessageInfo) {
-                console.log(`🎯 Auto-detected emoji reply to view once: ${replyText}`);
+                return { success: true, type: type };
+            }
+            
+            // If it's emoji reply, send to sender's DM
+            if (isEmojiReply) {
+                const senderJid = message.key?.participant || message.key?.remoteJid;
                 
-                // Use stored media buffer to send to user's DM
-                await this.sendToUserDM(
-                    quotedMessageInfo.mediaBuffer,
-                    quotedMessageInfo.filename,
-                    quotedMessageInfo.mimeType,
-                    { id: { _serialized: quotedMessageId } },
-                    message,
-                    bot
-                );
-
-                // React with ✅ to confirm
-                try {
-                    await bot.sendMessage(message.key.remoteJid, {
-                        react: {
-                            text: '✅',
-                            key: message.key
-                        }
+                if (type === 'image') {
+                    await sock.sendMessage(senderJid, {
+                        image: buffer,
+                        caption: `${caption}\n\nReplied with: ${msgText}`
                     });
-                } catch (reactError) {
-                    console.log('Could not send reaction:', reactError);
+                } else {
+                    await sock.sendMessage(senderJid, {
+                        video: buffer,
+                        caption: `${caption}\n\nReplied with: ${msgText}`
+                    });
                 }
+                
+                // Optional: Send confirmation in chat
+                const senderName = senderJid.split('@')[0];
+                await sock.sendMessage(chatId, {
+                    text: `✅ View-once media sent to @${senderName}'s DM! (Replied with ${msgText})`,
+                    mentions: [senderJid]
+                });
+                
+                return { success: true, type: 'emoji-reply', dm: true };
             }
-
+            
         } catch (error) {
-            console.error('Error checking for emoji reply:', error);
+            console.error('ViewOnce handler error:', error);
+            
+            // Only send error if it was a .vv command
+            const msgText = message.message?.conversation || 
+                           message.message?.extendedTextMessage?.text || 
+                           '';
+            
+            if (msgText.startsWith('.vv')) {
+                await sock.sendMessage(chatId, { 
+                    text: '❌ Failed to process. Media may have expired.' 
+                });
+            }
+            
+            return { success: false, error: error.message };
         }
     }
 };

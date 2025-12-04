@@ -1621,6 +1621,7 @@ export default {
         case 2: {
           // ... existing style 2 code (no info by default) ...
 
+
           
           // 📝 Text Only
           const text = `🐺🌕 *WOLF BOT* 🌕🐺
@@ -1754,13 +1755,358 @@ export default {
 
         case 3: {
           // ... existing style 3 code (no info by default) ...
-          break;
-        }
+          const text = `│────── WOLF MENU ──────
 
-        case 4: {
-          // ... existing style 4 code (no info by default) ...
+│ ┌── GROUP MANAGEMENT ──
+│ │ add
+│ │ promote
+│ │ demote
+│ │ kick
+│ │ ban
+│ │ unban
+│ │ banlist
+│ │ clearbanlist
+│ │ warn
+│ │ mute
+│ │ unmute
+│ │ gctime
+│ │ antisticker
+│ │ groupinfo
+│ │ tagadmin
+│ │ tagall
+│ │ hidetag
+│ │ link
+│ │ invite
+│ │ revoke
+│ │ setdesc
+│ │ fangtrace
+│ │ disp
+│ │ kickall
+│ │ getgpp
+│ │ vcf
+│ └─────────────────
+
+│ ┌── OWNER CONTROLS ──
+│ │ setprefix
+│ │ block
+│ │ unblock
+│ │ silent
+│ │ setownername
+│ │ setpp
+│ │ restart
+│ │ autotype
+│ └─────────────────
+
+│ ┌── GENERAL UTILITIES ─
+│ │ ping
+│ │ time
+│ │ uptime
+│ │ about
+│ │ repo
+│ │ alive
+│ │ define
+│ │ wiki
+│ │ news
+│ │ weather
+│ │ covid
+│ │ quote
+│ │ translate
+│ │ shorturl
+│ │ qrencode
+│ │ qrdecode
+│ │ reverseimage
+│ │ toaudio
+│ │ tovoice
+│ │ save
+│ │ goodmorning
+│ │ goodnight
+│ └─────────────────
+
+│ ┌── MUSIC & FUN ──
+│ │ play
+│ │ song
+│ │ bassboost
+│ │ trebleboost
+│ └─────────────────
+
+│ ┌── MEDIA & AI ──
+│ │ tiktokdl
+│ │ gemini
+│ │ gpt
+│ │ deepseek
+│ │ wolfbot
+│ └─────────────────
+
+│ ┌── SECURITY & HACKING ──
+│ │ ipinfo
+│ │ shodan
+│ │ iplookup
+│ │ getip
+│ └─────────────────
+
+│ ┌── LOGO DESIGN ──
+│ │ goldlogo
+│ │ silverlogo
+│ │ platinumlogo
+│ │ chromelogo
+│ │ diamondlogo
+│ │ bronzelogo
+│ │ steelogo
+│ │ copperlogo
+│ │ titaniumlogo
+│ │ firelogo
+│ │ icelogo
+│ │ iceglowlogo
+│ │ lightninglogo
+│ │ aqualogo
+│ │ rainbowlogo
+│ │ sunlogo
+│ │ moonlogo
+│ │ volcanologo
+│ │ thunderlogo
+│ │ windlogo
+│ │ earthlogo
+│ │ waterlogo
+│ │ forestlogo
+│ │ dragonlogo
+│ │ phoenixlogo
+│ │ wizardlogo
+│ │ crystallogo
+│ │ magiclogo
+│ │ darkmagiclogo
+│ │ shadowlogo
+│ │ smokelogo
+│ │ bloodlogo
+│ │ shadowflamelogo
+│ │ venomlogo
+│ │ skullogo
+│ │ nightlogo
+│ │ hellfirelogo
+│ │ neonlogo
+│ │ glowlogo
+│ │ lightlogo
+│ │ neonflamelogo
+│ │ cyberlogo
+│ │ matrixlogo
+│ │ techlogo
+│ │ hologramlogo
+│ │ vaporlogo
+│ │ pixelogo
+│ │ futuristiclogo
+│ │ digitalogo
+│ │ cartoonlogo
+│ │ comiclogo
+│ │ graffitilogo
+│ │ retrologo
+│ │ popartlogo
+│ └─────────────────
+
+│── 🐺 POWERED BY WOLFTECH 🐺 ──
+
+`
+ await sock.sendMessage(jid, { text }, { quoted: m });
           break;
         }
+        case 4: {
+          // 🖼️ Full info + image + commands
+
+
+
+          const start = performance.now();
+          const uptime = process.uptime();
+          const h = Math.floor(uptime / 3600);
+          const mnt = Math.floor((uptime % 3600) / 60);
+          const s = Math.floor(uptime % 60);
+          const uptimeStr = `${h}h ${mnt}m ${s}s`;
+          const speed = (performance.now() - start).toFixed(2);
+          const usedMem = (process.memoryUsage().rss / 1024 / 1024).toFixed(1);
+          const totalMem = (os.totalmem() / 1024 / 1024 / 1024).toFixed(0);
+          const memPercent = Math.min(((usedMem / (totalMem * 1024)) * 100).toFixed(0), 100);
+          const memBar = "█".repeat(Math.floor(memPercent / 10)) + "░".repeat(10 - Math.floor(memPercent / 10));
+
+          const ownerNumber = global.owner || process.env.OWNER_NUMBER || "Unknown";
+          const host = process.env.REPL_ID ? "Replit" : process.env.HEROKU_APP_NAME ? "Heroku" : process.env.RENDER ? "Render" : "Panel";
+          const prefix = global.prefix || ".";
+          const version = global.version || "v2.6.2";
+
+          const imgPath1 = path.join(__dirname, "media", "wolfbot.jpg");
+          const imgPath2 = path.join(__dirname, "../media/wolfbot.jpg");
+          const imagePath = fs.existsSync(imgPath1) ? imgPath1 : fs.existsSync(imgPath2) ? imgPath2 : null;
+          if (!imagePath) {
+            await sock.sendMessage(jid, { text: "⚠️ Image 'wolfbot.jpg' not found!" }, { quoted: m });
+            return;
+          }
+          const buffer = fs.readFileSync(imagePath);
+
+          const infoCaption = `
+────────────────
+┃ User: ${m.pushName || "Anonymous"}
+┃ Owner: ${ownerNumber}
+┃ Mode: ${global.mode || "private"}
+┃ Host: ${host}
+┃ Speed: ${speed} ms
+┃ Prefix: [ ${prefix} ]
+┃ Uptime: ${uptimeStr}
+┃ Version: ${version}
+┃ Usage: ${usedMem} MB of ${totalMem} GB
+┃ RAM: ${memBar} ${memPercent}%
+└────────────────
+`;
+
+          const commandsText = `│────── WOLF MENU ──────
+
+│ ┌── GROUP MANAGEMENT ──
+│ │ add
+│ │ promote
+│ │ demote
+│ │ kick
+│ │ ban
+│ │ unban
+│ │ banlist
+│ │ clearbanlist
+│ │ warn
+│ │ mute
+│ │ unmute
+│ │ gctime
+│ │ antisticker
+│ │ groupinfo
+│ │ tagadmin
+│ │ tagall
+│ │ hidetag
+│ │ link
+│ │ invite
+│ │ revoke
+│ │ setdesc
+│ │ fangtrace
+│ │ disp
+│ │ kickall
+│ │ getgpp
+│ │ vcf
+│ └─────────────────
+
+│ ┌── OWNER CONTROLS ──
+│ │ setprefix
+│ │ block
+│ │ unblock
+│ │ silent
+│ │ setownername
+│ │ setpp
+│ │ restart
+│ │ autotype
+│ └─────────────────
+
+│ ┌── GENERAL UTILITIES ─
+│ │ ping
+│ │ time
+│ │ uptime
+│ │ about
+│ │ repo
+│ │ alive
+│ │ define
+│ │ wiki
+│ │ news
+│ │ weather
+│ │ covid
+│ │ quote
+│ │ translate
+│ │ shorturl
+│ │ qrencode
+│ │ qrdecode
+│ │ reverseimage
+│ │ toaudio
+│ │ tovoice
+│ │ save
+│ │ goodmorning
+│ │ goodnight
+│ └─────────────────
+
+│ ┌── MUSIC & FUN ──
+│ │ play
+│ │ song
+│ │ bassboost
+│ │ trebleboost
+│ └─────────────────
+
+│ ┌── MEDIA & AI ──
+│ │ tiktokdl
+│ │ gemini
+│ │ gpt
+│ │ deepseek
+│ │ wolfbot
+│ └─────────────────
+
+│ ┌── SECURITY & HACKING ──
+│ │ ipinfo
+│ │ shodan
+│ │ iplookup
+│ │ getip
+│ └─────────────────
+
+│ ┌── LOGO DESIGN ──
+│ │ goldlogo
+│ │ silverlogo
+│ │ platinumlogo
+│ │ chromelogo
+│ │ diamondlogo
+│ │ bronzelogo
+│ │ steelogo
+│ │ copperlogo
+│ │ titaniumlogo
+│ │ firelogo
+│ │ icelogo
+│ │ iceglowlogo
+│ │ lightninglogo
+│ │ aqualogo
+│ │ rainbowlogo
+│ │ sunlogo
+│ │ moonlogo
+│ │ volcanologo
+│ │ thunderlogo
+│ │ windlogo
+│ │ earthlogo
+│ │ waterlogo
+│ │ forestlogo
+│ │ dragonlogo
+│ │ phoenixlogo
+│ │ wizardlogo
+│ │ crystallogo
+│ │ magiclogo
+│ │ darkmagiclogo
+│ │ shadowlogo
+│ │ smokelogo
+│ │ bloodlogo
+│ │ shadowflamelogo
+│ │ venomlogo
+│ │ skullogo
+│ │ nightlogo
+│ │ hellfirelogo
+│ │ neonlogo
+│ │ glowlogo
+│ │ lightlogo
+│ │ neonflamelogo
+│ │ cyberlogo
+│ │ matrixlogo
+│ │ techlogo
+│ │ hologramlogo
+│ │ vaporlogo
+│ │ pixelogo
+│ │ futuristiclogo
+│ │ digitalogo
+│ │ cartoonlogo
+│ │ comiclogo
+│ │ graffitilogo
+│ │ retrologo
+│ │ popartlogo
+│ └─────────────────
+
+│── 🐺 POWERED BY WOLFTECH 🐺 ──
+
+`;
+
+          await sock.sendMessage(jid, { image: buffer, caption: infoCaption + commandsText, mimetype: "image/jpeg" }, { quoted: m });
+          break;
+        }
+       
 
         case 5: {
           // 📝 Full info + commands (with individual toggles)
@@ -2480,6 +2826,10 @@ export default {
         default:
           await sock.sendMessage(jid, { text: "❌ Unknown menu style. Reverting to default (Style 1)." }, { quoted: m });
           break;
+       
+
+        
+   
       }
 
       console.log("✅ Menu sent successfully");

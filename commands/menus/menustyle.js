@@ -19,7 +19,7 @@ export default {
     const styleNum = parseInt(args[0]);
 
     // Validate input
-    if (!styleNum || styleNum < 1 || styleNum > 7) {
+    if (!styleNum || styleNum < 1 || styleNum > 10) {
       await sock.sendMessage(
         jid,
         {

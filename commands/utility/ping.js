@@ -154,20 +154,20 @@ export default {
     if (latency <= 100) {
       statusEmoji = "🟢";
       statusText = "Lightning Fast";
-      mood = "⚡ Hyper Instinct Mode Activated!";
+      mood = "⚡Hyper Instinct";
     } else if (latency <= 300) {
       statusEmoji = "🟡";
       statusText = "Moderate";
-      mood = "🧠 Calculating Precision Hunt...";
+      mood = "🧠Precision Hunt...";
     } else {
       statusEmoji = "🔴";
       statusText = "Slow";
-      mood = "🌑 Patience of the Wolf… recalibrating senses.";
+      mood = "🌑 Patience.";
     }
 
     // Wait for 1 second total (including time already passed)
     const timePassed = Date.now() - start;
-    const remainingTime = 2000 - timePassed;
+    const remainingTime = 1000 - timePassed;
     if (remainingTime > 0) {
       await new Promise(resolve => setTimeout(resolve, remainingTime));
     }
@@ -180,8 +180,7 @@ export default {
 ┃  ${statusEmoji} *Status:* ${statusText}
 ┃  🐾 *Mode:* ${mood}
 ╰━━━━━━━━━━━━━━━━━━━━╯
-
-_🐺 The Moon Watches — The Hunt Continues..._
+_🐺 The Moon Watches — ..._
 `,
       edit: loadingMessage.key
     }, { quoted: m });
