@@ -553,464 +553,464 @@
 
 
 
-// ====== WOLF BOT - index.js ======
-// Fast, stable & themed. Supports QR or Pair Code login.
+// // ====== WOLF BOT - index.js ======
+// // Fast, stable & themed. Supports QR or Pair Code login.
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import fs from 'fs';
-import path from 'path';
-import dotenv from 'dotenv';
-import chalk from 'chalk';
-import qrcode from 'qrcode-terminal';
-import readline from 'readline';
-import moment from 'moment';
-import pkg from '@whiskeysockets/baileys';
+// import { fileURLToPath } from 'url';
+// import { dirname } from 'path';
+// import fs from 'fs';
+// import path from 'path';
+// import dotenv from 'dotenv';
+// import chalk from 'chalk';
+// import qrcode from 'qrcode-terminal';
+// import readline from 'readline';
+// import moment from 'moment';
+// import pkg from '@whiskeysockets/baileys';
 
 
-const {
-    default: makeWASocket,
-    useMultiFileAuthState,
-    DisconnectReason,
-    fetchLatestBaileysVersion,
-    makeCacheableSignalKeyStore,
-    Browsers
-} = pkg;
+// const {
+//     default: makeWASocket,
+//     useMultiFileAuthState,
+//     DisconnectReason,
+//     fetchLatestBaileysVersion,
+//     makeCacheableSignalKeyStore,
+//     Browsers
+// } = pkg;
 
-import P from 'pino';
+// import P from 'pino';
 
-// ====== CONFIGURATION ======
-dotenv.config();
+// // ====== CONFIGURATION ======
+// dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
-const PREFIX = process.env.PREFIX || '.';
-const BOT_NAME = process.env.BOT_NAME || 'Silent Wolf';
-const VERSION = '1.0.0';
+// const PREFIX = process.env.PREFIX || '.';
+// const BOT_NAME = process.env.BOT_NAME || 'Silent Wolf';
+// const VERSION = '1.0.0';
 
-// Global variables
-let OWNER_NUMBER = null;
-let OWNER_JID = null;
-let SOCKET_INSTANCE = null;
+// // Global variables
+// let OWNER_NUMBER = null;
+// let OWNER_JID = null;
+// let SOCKET_INSTANCE = null;
 
-console.log(chalk.cyan(`
-╔════════════════════════════════════════════════╗
-║   🐺 ${chalk.bold(BOT_NAME.toUpperCase())} — ${chalk.green('STARTING')}  
-║   ⚙️ Version : ${VERSION}
-║   💬 Prefix  : "${PREFIX}"
-╚════════════════════════════════════════════════╝
-`));
+// console.log(chalk.cyan(`
+// ╔════════════════════════════════════════════════╗
+// ║   🐺 ${chalk.bold(BOT_NAME.toUpperCase())} — ${chalk.green('STARTING')}  
+// ║   ⚙️ Version : ${VERSION}
+// ║   💬 Prefix  : "${PREFIX}"
+// ╚════════════════════════════════════════════════╝
+// `));
 
-// ====== COMMAND SYSTEM ======
-const commands = new Map();
+// // ====== COMMAND SYSTEM ======
+// const commands = new Map();
 
-async function loadCommandsFromFolder(folderPath) {
-    const absolutePath = path.resolve(folderPath);
+// async function loadCommandsFromFolder(folderPath) {
+//     const absolutePath = path.resolve(folderPath);
     
-    try {
-        const items = fs.readdirSync(absolutePath);
+//     try {
+//         const items = fs.readdirSync(absolutePath);
         
-        for (const item of items) {
-            const fullPath = path.join(absolutePath, item);
-            const stat = fs.statSync(fullPath);
+//         for (const item of items) {
+//             const fullPath = path.join(absolutePath, item);
+//             const stat = fs.statSync(fullPath);
             
-            if (stat.isDirectory()) {
-                // Recursively load commands from subdirectories
-                await loadCommandsFromFolder(fullPath);
-            } else if (item.endsWith('.js')) {
-                try {
-                    // Import the command module
-                    const commandModule = await import(`file://${fullPath}`);
-                    const command = commandModule.default;
+//             if (stat.isDirectory()) {
+//                 // Recursively load commands from subdirectories
+//                 await loadCommandsFromFolder(fullPath);
+//             } else if (item.endsWith('.js')) {
+//                 try {
+//                     // Import the command module
+//                     const commandModule = await import(`file://${fullPath}`);
+//                     const command = commandModule.default;
                     
-                    if (command && command.name) {
-                        // Add main command name
-                        commands.set(command.name.toLowerCase(), command);
-                        console.log(chalk.green(`✅ Loaded command: ${command.name}`));
+//                     if (command && command.name) {
+//                         // Add main command name
+//                         commands.set(command.name.toLowerCase(), command);
+//                         console.log(chalk.green(`✅ Loaded command: ${command.name}`));
                         
-                        // Add aliases if they exist
-                        if (Array.isArray(command.alias)) {
-                            command.alias.forEach(alias => {
-                                commands.set(alias.toLowerCase(), command);
-                                console.log(chalk.gray(`   ↳ Alias: ${alias}`));
-                            });
-                        }
-                    }
-                } catch (error) {
-                    console.error(chalk.red(`❌ Failed to load command: ${item}`), error);
-                }
-            }
-        }
-    } catch (error) {
-        console.error(chalk.red(`❌ Error reading commands folder: ${folderPath}`), error);
-    }
-}
+//                         // Add aliases if they exist
+//                         if (Array.isArray(command.alias)) {
+//                             command.alias.forEach(alias => {
+//                                 commands.set(alias.toLowerCase(), command);
+//                                 console.log(chalk.gray(`   ↳ Alias: ${alias}`));
+//                             });
+//                         }
+//                     }
+//                 } catch (error) {
+//                     console.error(chalk.red(`❌ Failed to load command: ${item}`), error);
+//                 }
+//             }
+//         }
+//     } catch (error) {
+//         console.error(chalk.red(`❌ Error reading commands folder: ${folderPath}`), error);
+//     }
+// }
 
-async function executeCommand(commandName, sock, msg, args) {
-    const command = commands.get(commandName.toLowerCase());
+// async function executeCommand(commandName, sock, msg, args) {
+//     const command = commands.get(commandName.toLowerCase());
     
-    if (!command) {
-        return false; // Command not found
-    }
+//     if (!command) {
+//         return false; // Command not found
+//     }
     
-    try {
-        // Execute the command with proper parameters
-        await command.execute(sock, msg, args, null, {}); // You can pass additional parameters as needed
-        return true;
-    } catch (error) {
-        console.error(chalk.red(`❌ Error executing command ${commandName}:`), error);
+//     try {
+//         // Execute the command with proper parameters
+//         await command.execute(sock, msg, args, null, {}); // You can pass additional parameters as needed
+//         return true;
+//     } catch (error) {
+//         console.error(chalk.red(`❌ Error executing command ${commandName}:`), error);
         
-        // Send error message to user
-        try {
-            await sock.sendMessage(msg.key.remoteJid, { 
-                text: `❌ Error running *${commandName}*. Please try again later.` 
-            }, { quoted: msg });
-        } catch (sendError) {
-            // Ignore send errors
-        }
+//         // Send error message to user
+//         try {
+//             await sock.sendMessage(msg.key.remoteJid, { 
+//                 text: `❌ Error running *${commandName}*. Please try again later.` 
+//             }, { quoted: msg });
+//         } catch (sendError) {
+//             // Ignore send errors
+//         }
         
-        return false;
-    }
-}
+//         return false;
+//     }
+// }
 
-// ====== PAIRING CODE MANAGER ======
-class PairCodeManager {
-    constructor() {
-        this.rl = readline.createInterface({
-            input: process.stdin,
-            output: process.stdout
-        });
-    }
+// // ====== PAIRING CODE MANAGER ======
+// class PairCodeManager {
+//     constructor() {
+//         this.rl = readline.createInterface({
+//             input: process.stdin,
+//             output: process.stdout
+//         });
+//     }
 
-    async getPhoneNumber() {
-        return new Promise((resolve) => {
-            this.rl.question(chalk.yellow('📱 Enter your WhatsApp number (e.g., 254788710904): '), (number) => {
-                const cleanedNumber = number.trim().replace(/[^0-9]/g, '');
+//     async getPhoneNumber() {
+//         return new Promise((resolve) => {
+//             this.rl.question(chalk.yellow('📱 Enter your WhatsApp number (e.g., 254788710904): '), (number) => {
+//                 const cleanedNumber = number.trim().replace(/[^0-9]/g, '');
                 
-                if (!cleanedNumber || cleanedNumber.length < 10) {
-                    console.log(chalk.red('❌ Invalid phone number. Please try again.'));
-                    this.getPhoneNumber().then(resolve);
-                    return;
-                }
+//                 if (!cleanedNumber || cleanedNumber.length < 10) {
+//                     console.log(chalk.red('❌ Invalid phone number. Please try again.'));
+//                     this.getPhoneNumber().then(resolve);
+//                     return;
+//                 }
                 
-                resolve(cleanedNumber);
-            });
-        });
-    }
+//                 resolve(cleanedNumber);
+//             });
+//         });
+//     }
 
-    close() {
-        if (this.rl) {
-            this.rl.close();
-        }
-    }
-}
+//     close() {
+//         if (this.rl) {
+//             this.rl.close();
+//         }
+//     }
+// }
 
-// ====== CLEAN AUTH FUNCTION ======
-function cleanAuth() {
-    try {
-        if (fs.existsSync('./auth')) {
-            fs.rmSync('./auth', { recursive: true, force: true });
-            console.log(chalk.yellow('🧹 Cleared previous auth session'));
-        }
-        if (fs.existsSync('./owner.json')) {
-            fs.unlinkSync('./owner.json');
-        }
-    } catch (error) {
-        console.log(chalk.yellow('⚠️ Could not clear auth data'));
-    }
-}
+// // ====== CLEAN AUTH FUNCTION ======
+// function cleanAuth() {
+//     try {
+//         if (fs.existsSync('./auth')) {
+//             fs.rmSync('./auth', { recursive: true, force: true });
+//             console.log(chalk.yellow('🧹 Cleared previous auth session'));
+//         }
+//         if (fs.existsSync('./owner.json')) {
+//             fs.unlinkSync('./owner.json');
+//         }
+//     } catch (error) {
+//         console.log(chalk.yellow('⚠️ Could not clear auth data'));
+//     }
+// }
 
-// ====== BOT INITIALIZATION ======
-async function startBot(loginMode = 'qr', phoneNumber = null) {
-    console.log(chalk.magenta('\n🔧 Initializing WhatsApp connection...'));
+// // ====== BOT INITIALIZATION ======
+// async function startBot(loginMode = 'qr', phoneNumber = null) {
+//     console.log(chalk.magenta('\n🔧 Initializing WhatsApp connection...'));
 
-    // Load commands first
-    console.log(chalk.blue('📂 Loading commands...'));
-    await loadCommandsFromFolder('./commands');
-    console.log(chalk.green(`✅ Loaded ${commands.size} commands`));
+//     // Load commands first
+//     console.log(chalk.blue('📂 Loading commands...'));
+//     await loadCommandsFromFolder('./commands');
+//     console.log(chalk.green(`✅ Loaded ${commands.size} commands`));
 
-    // For pair mode, always start fresh
-    if (loginMode === 'pair') {
-        console.log(chalk.yellow('🔄 Starting fresh session for pair code...'));
-        cleanAuth();
-    }
+//     // For pair mode, always start fresh
+//     if (loginMode === 'pair') {
+//         console.log(chalk.yellow('🔄 Starting fresh session for pair code...'));
+//         cleanAuth();
+//     }
 
-    // Load or create auth state
-    let state, saveCreds;
-    try {
-        const authState = await useMultiFileAuthState('./auth');
-        state = authState.state;
-        saveCreds = authState.saveCreds;
-        console.log(chalk.green('✅ Auth state loaded'));
-    } catch (error) {
-        console.error(chalk.red('❌ Auth error:'), error.message);
-        return;
-    }
+//     // Load or create auth state
+//     let state, saveCreds;
+//     try {
+//         const authState = await useMultiFileAuthState('./auth');
+//         state = authState.state;
+//         saveCreds = authState.saveCreds;
+//         console.log(chalk.green('✅ Auth state loaded'));
+//     } catch (error) {
+//         console.error(chalk.red('❌ Auth error:'), error.message);
+//         return;
+//     }
 
-    // Fetch latest version
-    const { version } = await fetchLatestBaileysVersion();
-    console.log(chalk.blue(`📦 Baileys version: ${version}`));
+//     // Fetch latest version
+//     const { version } = await fetchLatestBaileysVersion();
+//     console.log(chalk.blue(`📦 Baileys version: ${version}`));
 
-    // Socket configuration
-    const socketConfig = {
-        version,
-        logger: P({ level: 'silent' }),
-        browser: Browsers.ubuntu('Chrome'),
-        printQRInTerminal: false,
-        auth: {
-            creds: state.creds,
-            keys: makeCacheableSignalKeyStore(state.keys, P({ level: 'fatal' })),
-        },
-        markOnlineOnConnect: true,
-        generateHighQualityLinkPreview: true,
-    };
+//     // Socket configuration
+//     const socketConfig = {
+//         version,
+//         logger: P({ level: 'silent' }),
+//         browser: Browsers.ubuntu('Chrome'),
+//         printQRInTerminal: false,
+//         auth: {
+//             creds: state.creds,
+//             keys: makeCacheableSignalKeyStore(state.keys, P({ level: 'fatal' })),
+//         },
+//         markOnlineOnConnect: true,
+//         generateHighQualityLinkPreview: true,
+//     };
 
-    // Create socket
-    const sock = makeWASocket(socketConfig);
-    SOCKET_INSTANCE = sock;
+//     // Create socket
+//     const sock = makeWASocket(socketConfig);
+//     SOCKET_INSTANCE = sock;
 
-    console.log(chalk.cyan('✅ WhatsApp client created successfully'));
+//     console.log(chalk.cyan('✅ WhatsApp client created successfully'));
 
-    // ====== EVENT HANDLERS ======
+//     // ====== EVENT HANDLERS ======
     
-    sock.ev.on('connection.update', async (update) => {
-        const { connection, qr, lastDisconnect } = update;
+//     sock.ev.on('connection.update', async (update) => {
+//         const { connection, qr, lastDisconnect } = update;
 
-        console.log(chalk.gray(`🔗 Connection state: ${connection || 'undefined'}`));
+//         console.log(chalk.gray(`🔗 Connection state: ${connection || 'undefined'}`));
 
-        // Handle QR code for QR mode
-        if (qr && loginMode === 'qr') {
-            console.log(chalk.yellow('\n📲 QR Code Generated - Scan to connect:\n'));
-            qrcode.generate(qr, { small: true });
-            console.log(chalk.gray('💡 Scan with WhatsApp mobile app'));
-        }
+//         // Handle QR code for QR mode
+//         if (qr && loginMode === 'qr') {
+//             console.log(chalk.yellow('\n📲 QR Code Generated - Scan to connect:\n'));
+//             qrcode.generate(qr, { small: true });
+//             console.log(chalk.gray('💡 Scan with WhatsApp mobile app'));
+//         }
 
-        // Handle pair code generation
-        if (loginMode === 'pair' && phoneNumber && !state.creds.registered && connection === 'connecting') {
-            console.log(chalk.cyan(`\n🔗 Attempting to generate pair code for: ${phoneNumber}`));
+//         // Handle pair code generation
+//         if (loginMode === 'pair' && phoneNumber && !state.creds.registered && connection === 'connecting') {
+//             console.log(chalk.cyan(`\n🔗 Attempting to generate pair code for: ${phoneNumber}`));
             
-            setTimeout(async () => {
-                try {
-                    console.log(chalk.cyan('📞 Requesting pairing code from WhatsApp servers...'));
-                    const code = await sock.requestPairingCode(phoneNumber);
-                    const formattedCode = code.match(/.{1,4}/g)?.join('-') || code;
+//             setTimeout(async () => {
+//                 try {
+//                     console.log(chalk.cyan('📞 Requesting pairing code from WhatsApp servers...'));
+//                     const code = await sock.requestPairingCode(phoneNumber);
+//                     const formattedCode = code.match(/.{1,4}/g)?.join('-') || code;
                     
-                    console.log(chalk.greenBright(`
-╔════════════════════════════════════════════════╗
-║              🔗 PAIRING CODE                   ║
-╠════════════════════════════════════════════════╣
-║ 📞 Phone: ${chalk.cyan(phoneNumber.padEnd(30))}║
-║ 🔑 Code: ${chalk.yellow(formattedCode.padEnd(31))}║
-║ ⏰ Expires: ${chalk.red('10 minutes'.padEnd(27))}║
-╚════════════════════════════════════════════════╝
-`));
+//                     console.log(chalk.greenBright(`
+// ╔════════════════════════════════════════════════╗
+// ║              🔗 PAIRING CODE                   ║
+// ╠════════════════════════════════════════════════╣
+// ║ 📞 Phone: ${chalk.cyan(phoneNumber.padEnd(30))}║
+// ║ 🔑 Code: ${chalk.yellow(formattedCode.padEnd(31))}║
+// ║ ⏰ Expires: ${chalk.red('10 minutes'.padEnd(27))}║
+// ╚════════════════════════════════════════════════╝
+// `));
 
-                    console.log(chalk.blue('\n📱 How to use this code:'));
-                    console.log(chalk.white('1. Open WhatsApp on your phone'));
-                    console.log(chalk.white('2. Go to Settings → Linked Devices → Link a Device'));
-                    console.log(chalk.white(`3. Enter this code: ${chalk.yellow.bold(formattedCode)}`));
-                    console.log(chalk.white('4. Wait for connection confirmation\n'));
+//                     console.log(chalk.blue('\n📱 How to use this code:'));
+//                     console.log(chalk.white('1. Open WhatsApp on your phone'));
+//                     console.log(chalk.white('2. Go to Settings → Linked Devices → Link a Device'));
+//                     console.log(chalk.white(`3. Enter this code: ${chalk.yellow.bold(formattedCode)}`));
+//                     console.log(chalk.white('4. Wait for connection confirmation\n'));
                     
-                    console.log(chalk.gray('⏳ Waiting for you to enter the code in WhatsApp...'));
+//                     console.log(chalk.gray('⏳ Waiting for you to enter the code in WhatsApp...'));
 
-                } catch (error) {
-                    console.error(chalk.red('❌ Failed to generate pairing code:'), error.message);
-                    console.log(chalk.yellow('💡 The connection might not be ready yet. Retrying QR code mode...'));
+//                 } catch (error) {
+//                     console.error(chalk.red('❌ Failed to generate pairing code:'), error.message);
+//                     console.log(chalk.yellow('💡 The connection might not be ready yet. Retrying QR code mode...'));
                     
-                    loginMode = 'qr';
-                    console.log(chalk.yellow('\n📲 Generating QR Code instead:\n'));
+//                     loginMode = 'qr';
+//                     console.log(chalk.yellow('\n📲 Generating QR Code instead:\n'));
                     
-                    if (update.qr) {
-                        qrcode.generate(update.qr, { small: true });
-                    }
-                }
-            }, 2000);
-        }
+//                     if (update.qr) {
+//                         qrcode.generate(update.qr, { small: true });
+//                     }
+//                 }
+//             }, 2000);
+//         }
 
-        if (connection === 'open') {
-            await handleSuccessfulConnection(sock, loginMode, phoneNumber);
-        }
+//         if (connection === 'open') {
+//             await handleSuccessfulConnection(sock, loginMode, phoneNumber);
+//         }
 
-        if (connection === 'close') {
-            await handleConnectionClose(lastDisconnect, loginMode, phoneNumber);
-        }
-    });
+//         if (connection === 'close') {
+//             await handleConnectionClose(lastDisconnect, loginMode, phoneNumber);
+//         }
+//     });
 
-    sock.ev.on('creds.update', saveCreds);
+//     sock.ev.on('creds.update', saveCreds);
 
-    sock.ev.on('messages.upsert', async ({ messages, type }) => {
-        if (type !== 'notify') return;
+//     sock.ev.on('messages.upsert', async ({ messages, type }) => {
+//         if (type !== 'notify') return;
         
-        const msg = messages[0];
-        if (!msg.message) return;
+//         const msg = messages[0];
+//         if (!msg.message) return;
 
-        await handleIncomingMessage(sock, msg);
-    });
+//         await handleIncomingMessage(sock, msg);
+//     });
 
-    return sock;
-}
+//     return sock;
+// }
 
-// ====== CONNECTION HANDLERS ======
-async function handleSuccessfulConnection(sock, loginMode, phoneNumber) {
-    const currentTime = moment().format('h:mm:ss A');
+// // ====== CONNECTION HANDLERS ======
+// async function handleSuccessfulConnection(sock, loginMode, phoneNumber) {
+//     const currentTime = moment().format('h:mm:ss A');
     
-    OWNER_JID = sock.user.id;
-    OWNER_NUMBER = OWNER_JID.split('@')[0];
+//     OWNER_JID = sock.user.id;
+//     OWNER_NUMBER = OWNER_JID.split('@')[0];
     
-    try {
-        fs.writeFileSync('./owner.json', JSON.stringify({ OWNER_NUMBER, OWNER_JID }, null, 2));
-    } catch (error) {
-        console.log(chalk.yellow('⚠️ Could not save owner data'));
-    }
+//     try {
+//         fs.writeFileSync('./owner.json', JSON.stringify({ OWNER_NUMBER, OWNER_JID }, null, 2));
+//     } catch (error) {
+//         console.log(chalk.yellow('⚠️ Could not save owner data'));
+//     }
 
-    console.log(chalk.greenBright(`
-╔════════════════════════════════════════════════════════╗
-║                    🐺 ${chalk.bold('SILENT WOLF ONLINE')}                    ║
-╠════════════════════════════════════════════════════════╣
-║  ✅ Connected successfully!                            
-║  👑 Owner : +${OWNER_NUMBER}
-║  📱 Device : ${chalk.cyan(`${BOT_NAME} - Chrome`)}       
-║  🕒 Time   : ${chalk.yellow(currentTime)}                 
-║  🔥 Status : ${chalk.redBright('Ready to Hunt!')}         
-║  🔐 Method : ${chalk.cyan(loginMode === 'pair' ? 'Pair Code' : 'QR Code')}         
-╚════════════════════════════════════════════════════════╝
-`));
+//     console.log(chalk.greenBright(`
+// ╔════════════════════════════════════════════════════════╗
+// ║                    🐺 ${chalk.bold('SILENT WOLF ONLINE')}                    ║
+// ╠════════════════════════════════════════════════════════╣
+// ║  ✅ Connected successfully!                            
+// ║  👑 Owner : +${OWNER_NUMBER}
+// ║  📱 Device : ${chalk.cyan(`${BOT_NAME} - Chrome`)}       
+// ║  🕒 Time   : ${chalk.yellow(currentTime)}                 
+// ║  🔥 Status : ${chalk.redBright('Ready to Hunt!')}         
+// ║  🔐 Method : ${chalk.cyan(loginMode === 'pair' ? 'Pair Code' : 'QR Code')}         
+// ╚════════════════════════════════════════════════════════╝
+// `));
 
-    try {
-        await sock.sendMessage(OWNER_JID, {
-            text: `🐺 *${BOT_NAME.toUpperCase()} ONLINE*\n\n✅ Connected successfully!\n👑 Owner: +${OWNER_NUMBER}\n📱 Device: ${BOT_NAME}\n🕒 Time: ${currentTime}\n🔐 Method: ${loginMode === 'pair' ? 'Pair Code' : 'QR Code'}\n🔥 Status: Ready to Hunt!\n\n📂 Commands loaded: ${commands.size}`
-        });
-    } catch (error) {
-        console.log(chalk.yellow('⚠️ Could not send welcome message'));
-    }
-}
+//     try {
+//         await sock.sendMessage(OWNER_JID, {
+//             text: `🐺 *${BOT_NAME.toUpperCase()} ONLINE*\n\n✅ Connected successfully!\n👑 Owner: +${OWNER_NUMBER}\n📱 Device: ${BOT_NAME}\n🕒 Time: ${currentTime}\n🔐 Method: ${loginMode === 'pair' ? 'Pair Code' : 'QR Code'}\n🔥 Status: Ready to Hunt!\n\n📂 Commands loaded: ${commands.size}`
+//         });
+//     } catch (error) {
+//         console.log(chalk.yellow('⚠️ Could not send welcome message'));
+//     }
+// }
 
-async function handleConnectionClose(lastDisconnect, loginMode, phoneNumber) {
-    const statusCode = lastDisconnect?.error?.output?.statusCode;
-    const reason = lastDisconnect?.error?.output?.payload?.message || 'Unknown reason';
+// async function handleConnectionClose(lastDisconnect, loginMode, phoneNumber) {
+//     const statusCode = lastDisconnect?.error?.output?.statusCode;
+//     const reason = lastDisconnect?.error?.output?.payload?.message || 'Unknown reason';
     
-    console.log(chalk.red(`\n❌ Connection closed: ${reason} (Status: ${statusCode})`));
+//     console.log(chalk.red(`\n❌ Connection closed: ${reason} (Status: ${statusCode})`));
     
-    if (statusCode === DisconnectReason.loggedOut || statusCode === 401 || statusCode === 403) {
-        console.log(chalk.yellow('🔓 Logged out. Clearing auth data...'));
-        cleanAuth();
-    }
+//     if (statusCode === DisconnectReason.loggedOut || statusCode === 401 || statusCode === 403) {
+//         console.log(chalk.yellow('🔓 Logged out. Clearing auth data...'));
+//         cleanAuth();
+//     }
     
-    if (loginMode === 'pair' && statusCode) {
-        console.log(chalk.yellow('💡 Pair code mode failed. Switching to QR code mode...'));
-        loginMode = 'qr';
-        phoneNumber = null;
-    }
+//     if (loginMode === 'pair' && statusCode) {
+//         console.log(chalk.yellow('💡 Pair code mode failed. Switching to QR code mode...'));
+//         loginMode = 'qr';
+//         phoneNumber = null;
+//     }
     
-    console.log(chalk.blue('🔄 Restarting in 3 seconds...'));
-    setTimeout(() => startBot(loginMode, phoneNumber), 3000);
-}
+//     console.log(chalk.blue('🔄 Restarting in 3 seconds...'));
+//     setTimeout(() => startBot(loginMode, phoneNumber), 3000);
+// }
 
-// ====== MESSAGE HANDLER ======
-async function handleIncomingMessage(sock, msg) {
-    const chatId = msg.key.remoteJid;
-    const textMsg = msg.message.conversation || 
-                   msg.message.extendedTextMessage?.text || 
-                   msg.message.imageMessage?.caption || 
-                   msg.message.videoMessage?.caption ||
-                   '';
+// // ====== MESSAGE HANDLER ======
+// async function handleIncomingMessage(sock, msg) {
+//     const chatId = msg.key.remoteJid;
+//     const textMsg = msg.message.conversation || 
+//                    msg.message.extendedTextMessage?.text || 
+//                    msg.message.imageMessage?.caption || 
+//                    msg.message.videoMessage?.caption ||
+//                    '';
     
-    if (!textMsg) return;
+//     if (!textMsg) return;
 
-    const fromNumber = chatId.split('@')[0];
+//     const fromNumber = chatId.split('@')[0];
 
-    if (textMsg.startsWith(PREFIX)) {
-        const parts = textMsg.slice(PREFIX.length).trim().split(/\s+/);
-        const commandName = parts[0].toLowerCase();
-        const args = parts.slice(1);
+//     if (textMsg.startsWith(PREFIX)) {
+//         const parts = textMsg.slice(PREFIX.length).trim().split(/\s+/);
+//         const commandName = parts[0].toLowerCase();
+//         const args = parts.slice(1);
         
-        console.log(chalk.magenta(`📩 ${fromNumber} → ${PREFIX}${commandName} ${args.join(' ')}`));
+//         console.log(chalk.magenta(`📩 ${fromNumber} → ${PREFIX}${commandName} ${args.join(' ')}`));
 
-        const commandExecuted = await executeCommand(commandName, sock, msg, args);
+//         const commandExecuted = await executeCommand(commandName, sock, msg, args);
         
         
-    }
-}
+//     }
+// }
 
-// ====== LOGIN SELECTION ======
-async function selectLoginMode() {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
+// // ====== LOGIN SELECTION ======
+// async function selectLoginMode() {
+//     const rl = readline.createInterface({
+//         input: process.stdin,
+//         output: process.stdout
+//     });
 
-    const ask = (question) => new Promise((resolve) => rl.question(question, resolve));
+//     const ask = (question) => new Promise((resolve) => rl.question(question, resolve));
 
-    console.log(chalk.yellow('\n🐺 WOLF BOT LOGIN OPTIONS'));
-    console.log('1) QR Code Login (Recommended)');
-    console.log('2) Pair Code Login (Experimental)');
+//     console.log(chalk.yellow('\n🐺 WOLF BOT LOGIN OPTIONS'));
+//     console.log('1) QR Code Login (Recommended)');
+//     console.log('2) Pair Code Login (Experimental)');
     
-    try {
-        const choice = await ask('Enter 1 or 2 (default 1): ');
-        let mode = 'qr';
-        let phone = null;
+//     try {
+//         const choice = await ask('Enter 1 or 2 (default 1): ');
+//         let mode = 'qr';
+//         let phone = null;
 
-        if (choice === '2') {
-            mode = 'pair';
-            const pairManager = new PairCodeManager();
-            phone = await pairManager.getPhoneNumber();
-            pairManager.close();
+//         if (choice === '2') {
+//             mode = 'pair';
+//             const pairManager = new PairCodeManager();
+//             phone = await pairManager.getPhoneNumber();
+//             pairManager.close();
             
-            if (!phone.match(/^\d{10,15}$/)) {
-                console.log(chalk.red('❌ Invalid phone number. Using QR code mode.'));
-                mode = 'qr';
-                phone = null;
-            }
-        }
+//             if (!phone.match(/^\d{10,15}$/)) {
+//                 console.log(chalk.red('❌ Invalid phone number. Using QR code mode.'));
+//                 mode = 'qr';
+//                 phone = null;
+//             }
+//         }
 
-        rl.close();
-        return { mode, phone };
-    } catch (error) {
-        rl.close();
-        console.log(chalk.yellow('⚠️ Using default QR code mode'));
-        return { mode: 'qr', phone: null };
-    }
-}
+//         rl.close();
+//         return { mode, phone };
+//     } catch (error) {
+//         rl.close();
+//         console.log(chalk.yellow('⚠️ Using default QR code mode'));
+//         return { mode: 'qr', phone: null };
+//     }
+// }
 
-// ====== MAIN APPLICATION START ======
-async function main() {
-    try {
-        console.log(chalk.blue('\n🚀 Starting Wolf Bot...'));
+// // ====== MAIN APPLICATION START ======
+// async function main() {
+//     try {
+//         console.log(chalk.blue('\n🚀 Starting Wolf Bot...'));
         
-        const { mode, phone } = await selectLoginMode();
+//         const { mode, phone } = await selectLoginMode();
         
-        console.log(chalk.gray(`\nStarting with ${mode === 'qr' ? 'QR Code' : 'Pair Code'} mode...`));
+//         console.log(chalk.gray(`\nStarting with ${mode === 'qr' ? 'QR Code' : 'Pair Code'} mode...`));
         
-        await startBot(mode, phone);
+//         await startBot(mode, phone);
         
-    } catch (error) {
-        console.error(chalk.red('💥 FATAL ERROR:'), error);
-        process.exit(1);
-    }
-}
+//     } catch (error) {
+//         console.error(chalk.red('💥 FATAL ERROR:'), error);
+//         process.exit(1);
+//     }
+// }
 
-// Start the application
-main().catch(error => {
-    console.error(chalk.red('💥 CRITICAL ERROR:'), error);
-    process.exit(1);
-});
+// // Start the application
+// main().catch(error => {
+//     console.error(chalk.red('💥 CRITICAL ERROR:'), error);
+//     process.exit(1);
+// });
 
-process.on('uncaughtException', (error) => {
-    console.error(chalk.red('💥 Uncaught Exception:'), error);
-});
+// process.on('uncaughtException', (error) => {
+//     console.error(chalk.red('💥 Uncaught Exception:'), error);
+// });
 
-process.on('unhandledRejection', (error) => {
-    console.error(chalk.red('💥 Unhandled Rejection:'), error);
-});
+// process.on('unhandledRejection', (error) => {
+//     console.error(chalk.red('💥 Unhandled Rejection:'), error);
+// });
 
-process.on('SIGINT', () => {
-    console.log(chalk.yellow('\n\n👋 Shutting down Wolf Bot...'));
-    if (SOCKET_INSTANCE) {
-        SOCKET_INSTANCE.ws.close();
-    }
-    process.exit(0);
-});
+// process.on('SIGINT', () => {
+//     console.log(chalk.yellow('\n\n👋 Shutting down Wolf Bot...'));
+//     if (SOCKET_INSTANCE) {
+//         SOCKET_INSTANCE.ws.close();
+//     }
+//     process.exit(0);
+// });
 
 
 
@@ -4038,3 +4038,659 @@ process.on('SIGINT', () => {
 //     }
 //     process.exit(0);
 // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ====== WOLF BOT - index.js ======
+// Fast, stable & themed. Supports QR, Pair Code, or Session ID login.
+
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+import chalk from 'chalk';
+import qrcode from 'qrcode-terminal';
+import readline from 'readline';
+import moment from 'moment';
+import pkg from '@whiskeysockets/baileys';
+
+const {
+    default: makeWASocket,
+    useMultiFileAuthState,
+    DisconnectReason,
+    fetchLatestBaileysVersion,
+    makeCacheableSignalKeyStore,
+    Browsers
+} = pkg;
+
+import P from 'pino';
+
+// ====== CONFIGURATION ======
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const PREFIX = process.env.PREFIX || '.';
+const BOT_NAME = process.env.BOT_NAME || 'Silent Wolf';
+const VERSION = '1.0.0';
+
+// Global variables
+let OWNER_NUMBER = null;
+let OWNER_JID = null;
+let SOCKET_INSTANCE = null;
+
+console.log(chalk.cyan(`
+╔════════════════════════════════════════════════╗
+║   🐺 ${chalk.bold(BOT_NAME.toUpperCase())} — ${chalk.green('STARTING')}  
+║   ⚙️ Version : ${VERSION}
+║   💬 Prefix  : "${PREFIX}"
+╚════════════════════════════════════════════════╝
+`));
+
+// ====== SESSION ID MANAGER ======
+class SessionIDManager {
+    constructor() {
+        this.rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+        this.sessionIDs = [];
+    }
+
+    async selectSessionMode() {
+        console.log(chalk.yellow('\n🔐 SESSION ID LOGIN OPTIONS'));
+        console.log(chalk.cyan('1)') + ' QR Code Login (Recommended)');
+        console.log(chalk.cyan('2)') + ' Pair Code Login (Experimental)');
+        console.log(chalk.cyan('3)') + ' Use Session ID (Manual)');
+        console.log(chalk.red('4)') + ' Exit\n');
+
+        return new Promise((resolve) => {
+            this.rl.question(chalk.green('📝 Select option (1-4): '), (answer) => {
+                resolve(answer.trim());
+            });
+        });
+    }
+
+    async getSessionCount() {
+        console.log(chalk.yellow('\n🔢 HOW MANY SESSION IDs?'));
+        console.log(chalk.cyan('1)') + ' Two sessions');
+        console.log(chalk.cyan('2)') + ' Three sessions');
+        console.log(chalk.red('3)') + ' Go back\n');
+
+        return new Promise((resolve) => {
+            this.rl.question(chalk.green('📝 Select option (1-3): '), (answer) => {
+                const count = parseInt(answer.trim());
+                if ([1, 2, 3].includes(count)) {
+                    resolve(count);
+                } else {
+                    console.log(chalk.red('❌ Invalid option. Please select 1-3.'));
+                    this.getSessionCount().then(resolve);
+                }
+            });
+        });
+    }
+
+    async inputSessionID(sessionNumber, totalSessions) {
+        return new Promise((resolve) => {
+            this.rl.question(chalk.cyan(`\n📝 Enter Session ID ${sessionNumber}/${totalSessions}: `), (sessionId) => {
+                if (!sessionId.trim()) {
+                    console.log(chalk.red('❌ Session ID cannot be empty.'));
+                    this.inputSessionID(sessionNumber, totalSessions).then(resolve);
+                    return;
+                }
+                console.log(chalk.green(`✅ Session ${sessionNumber} saved`));
+                resolve(sessionId.trim());
+            });
+        });
+    }
+
+    async collectSessionIDs(count) {
+        this.sessionIDs = [];
+        
+        for (let i = 1; i <= count; i++) {
+            const sessionID = await this.inputSessionID(i, count);
+            this.sessionIDs.push(sessionID);
+        }
+        
+        console.log(chalk.green(`\n✅ Successfully collected ${count} session ID(s)`));
+        
+        // Save session IDs to file
+        this.saveSessionIDs();
+        
+        return this.sessionIDs;
+    }
+
+    saveSessionIDs() {
+        try {
+            const sessionData = {
+                sessions: this.sessionIDs,
+                timestamp: new Date().toISOString(),
+                count: this.sessionIDs.length
+            };
+            
+            fs.writeFileSync('./session_ids.json', JSON.stringify(sessionData, null, 2));
+            console.log(chalk.green('💾 Session IDs saved to session_ids.json'));
+        } catch (error) {
+            console.log(chalk.red('❌ Could not save session IDs:'), error.message);
+        }
+    }
+
+    loadSessionIDs() {
+        try {
+            if (fs.existsSync('./session_ids.json')) {
+                const data = JSON.parse(fs.readFileSync('./session_ids.json', 'utf8'));
+                this.sessionIDs = data.sessions || [];
+                console.log(chalk.green(`📂 Loaded ${this.sessionIDs.length} session IDs from file`));
+                return this.sessionIDs;
+            }
+        } catch (error) {
+            console.log(chalk.yellow('⚠️ Could not load session IDs from file'));
+        }
+        return [];
+    }
+
+    async getSessionModeAndIDs() {
+        while (true) {
+            const mode = await this.selectSessionMode();
+            
+            switch (mode) {
+                case '1':
+                    console.log(chalk.blue('\n📲 Starting QR Code mode...'));
+                    this.close();
+                    return { mode: 'qr', sessions: [] };
+                
+                case '2':
+                    console.log(chalk.blue('\n🔗 Starting Pair Code mode...'));
+                    const phoneNumber = await this.getPhoneNumber();
+                    this.close();
+                    return { mode: 'pair', phoneNumber, sessions: [] };
+                
+                case '3':
+                    console.log(chalk.blue('\n🔐 Starting Session ID mode...'));
+                    
+                    // Check if session IDs exist
+                    const existingSessions = this.loadSessionIDs();
+                    if (existingSessions.length > 0) {
+                        const useExisting = await this.askYesNo(`📂 Found ${existingSessions.length} saved session IDs. Use existing? (y/n): `);
+                        if (useExisting) {
+                            console.log(chalk.green('✅ Using saved session IDs'));
+                            this.close();
+                            return { mode: 'session', sessions: existingSessions };
+                        }
+                    }
+                    
+                    // Get new session IDs
+                    const sessionCount = await this.getSessionCount();
+                    
+                    if (sessionCount === 3) {
+                        // Go back
+                        continue;
+                    }
+                    
+                    const sessions = await this.collectSessionIDs(sessionCount === 1 ? 2 : 3);
+                    this.close();
+                    return { mode: 'session', sessions };
+                
+                case '4':
+                    console.log(chalk.yellow('\n👋 Exiting...'));
+                    this.close();
+                    process.exit(0);
+                
+                default:
+                    console.log(chalk.red('❌ Invalid option. Please select 1-4.'));
+            }
+        }
+    }
+
+    async askYesNo(question) {
+        return new Promise((resolve) => {
+            this.rl.question(chalk.yellow(question), (answer) => {
+                resolve(answer.toLowerCase().trim() === 'y' || answer.toLowerCase().trim() === 'yes');
+            });
+        });
+    }
+
+    async getPhoneNumber() {
+        return new Promise((resolve) => {
+            this.rl.question(chalk.yellow('📱 Enter your WhatsApp number (e.g., 254788710904): '), (number) => {
+                const cleanedNumber = number.trim().replace(/[^0-9]/g, '');
+                
+                if (!cleanedNumber || cleanedNumber.length < 10) {
+                    console.log(chalk.red('❌ Invalid phone number. Please try again.'));
+                    this.getPhoneNumber().then(resolve);
+                    return;
+                }
+                
+                resolve(cleanedNumber);
+            });
+        });
+    }
+
+    close() {
+        if (this.rl) {
+            this.rl.close();
+        }
+    }
+}
+
+// ====== SESSION ID AUTH HANDLER ======
+async function useSessionIDAuth(sessionIDs) {
+    try {
+        // Create auth directory if it doesn't exist
+        if (!fs.existsSync('./auth')) {
+            fs.mkdirSync('./auth', { recursive: true });
+        }
+
+        // For each session ID, create auth files
+        for (let i = 0; i < sessionIDs.length; i++) {
+            const sessionID = sessionIDs[i];
+            const sessionDir = `./auth/session_${i + 1}`;
+            
+            if (!fs.existsSync(sessionDir)) {
+                fs.mkdirSync(sessionDir, { recursive: true });
+            }
+            
+            // In a real implementation, you would parse the session ID
+            // and create the appropriate auth files
+            console.log(chalk.cyan(`📁 Setting up session ${i + 1}...`));
+            
+            // This is a simplified example - you would need to implement
+            // the actual session ID parsing based on your auth system
+            const authData = {
+                sessionId: sessionID,
+                timestamp: Date.now(),
+                index: i + 1
+            };
+            
+            fs.writeFileSync(path.join(sessionDir, 'creds.json'), JSON.stringify(authData, null, 2));
+        }
+        
+        // Use the first session for authentication
+        const { state, saveCreds } = await useMultiFileAuthState('./auth/session_1');
+        
+        console.log(chalk.green(`✅ Loaded ${sessionIDs.length} session(s)`));
+        
+        // Save the active session index
+        fs.writeFileSync('./active_session.json', JSON.stringify({
+            activeIndex: 1,
+            totalSessions: sessionIDs.length,
+            lastUpdated: new Date().toISOString()
+        }, null, 2));
+        
+        return { state, saveCreds, totalSessions: sessionIDs.length };
+        
+    } catch (error) {
+        console.error(chalk.red('❌ Session ID auth error:'), error.message);
+        throw error;
+    }
+}
+
+// ====== COMMAND SYSTEM ======
+const commands = new Map();
+
+async function loadCommandsFromFolder(folderPath) {
+    const absolutePath = path.resolve(folderPath);
+    
+    try {
+        const items = fs.readdirSync(absolutePath);
+        
+        for (const item of items) {
+            const fullPath = path.join(absolutePath, item);
+            const stat = fs.statSync(fullPath);
+            
+            if (stat.isDirectory()) {
+                await loadCommandsFromFolder(fullPath);
+            } else if (item.endsWith('.js')) {
+                try {
+                    const commandModule = await import(`file://${fullPath}`);
+                    const command = commandModule.default;
+                    
+                    if (command && command.name) {
+                        commands.set(command.name.toLowerCase(), command);
+                        console.log(chalk.green(`✅ Loaded command: ${command.name}`));
+                        
+                        if (Array.isArray(command.alias)) {
+                            command.alias.forEach(alias => {
+                                commands.set(alias.toLowerCase(), command);
+                                console.log(chalk.gray(`   ↳ Alias: ${alias}`));
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.error(chalk.red(`❌ Failed to load command: ${item}`), error);
+                }
+            }
+        }
+    } catch (error) {
+        console.error(chalk.red(`❌ Error reading commands folder: ${folderPath}`), error);
+    }
+}
+
+async function executeCommand(commandName, sock, msg, args) {
+    const command = commands.get(commandName.toLowerCase());
+    
+    if (!command) {
+        return false;
+    }
+    
+    try {
+        await command.execute(sock, msg, args, null, {});
+        return true;
+    } catch (error) {
+        console.error(chalk.red(`❌ Error executing command ${commandName}:`), error);
+        
+        try {
+            await sock.sendMessage(msg.key.remoteJid, { 
+                text: `❌ Error running *${commandName}*. Please try again later.` 
+            }, { quoted: msg });
+        } catch (sendError) {
+            // Ignore send errors
+        }
+        
+        return false;
+    }
+}
+
+// ====== CLEAN AUTH FUNCTION ======
+function cleanAuth() {
+    try {
+        if (fs.existsSync('./auth')) {
+            fs.rmSync('./auth', { recursive: true, force: true });
+            console.log(chalk.yellow('🧹 Cleared previous auth session'));
+        }
+        if (fs.existsSync('./owner.json')) {
+            fs.unlinkSync('./owner.json');
+        }
+        if (fs.existsSync('./session_ids.json')) {
+            fs.unlinkSync('./session_ids.json');
+        }
+        if (fs.existsSync('./active_session.json')) {
+            fs.unlinkSync('./active_session.json');
+        }
+    } catch (error) {
+        console.log(chalk.yellow('⚠️ Could not clear auth data'));
+    }
+}
+
+// ====== BOT INITIALIZATION ======
+async function startBot(loginData) {
+    console.log(chalk.magenta('\n🔧 Initializing WhatsApp connection...'));
+    
+    console.log(chalk.blue('📂 Loading commands...'));
+    await loadCommandsFromFolder('./commands');
+    console.log(chalk.green(`✅ Loaded ${commands.size} commands`));
+
+    let state, saveCreds, totalSessions = 1;
+
+    // Clean auth for non-session modes
+    if (loginData.mode !== 'session') {
+        console.log(chalk.yellow('🔄 Starting fresh session...'));
+        cleanAuth();
+    }
+
+    try {
+        if (loginData.mode === 'session') {
+            // Use session ID authentication
+            const sessionAuth = await useSessionIDAuth(loginData.sessions);
+            state = sessionAuth.state;
+            saveCreds = sessionAuth.saveCreds;
+            totalSessions = sessionAuth.totalSessions;
+        } else {
+            // Use normal auth
+            const authState = await useMultiFileAuthState('./auth');
+            state = authState.state;
+            saveCreds = authState.saveCreds;
+        }
+        console.log(chalk.green('✅ Auth state loaded'));
+    } catch (error) {
+        console.error(chalk.red('❌ Auth error:'), error.message);
+        return;
+    }
+
+    // Fetch latest version
+    const { version } = await fetchLatestBaileysVersion();
+    console.log(chalk.blue(`📦 Baileys version: ${version}`));
+
+    // Socket configuration
+    const socketConfig = {
+        version,
+        logger: P({ level: 'silent' }),
+        browser: Browsers.ubuntu('Chrome'),
+        printQRInTerminal: false,
+        auth: {
+            creds: state.creds,
+            keys: makeCacheableSignalKeyStore(state.keys, P({ level: 'fatal' })),
+        },
+        markOnlineOnConnect: true,
+        generateHighQualityLinkPreview: true,
+    };
+
+    // Create socket
+    const sock = makeWASocket(socketConfig);
+    SOCKET_INSTANCE = sock;
+
+    console.log(chalk.cyan('✅ WhatsApp client created successfully'));
+
+    // ====== EVENT HANDLERS ======
+    
+    sock.ev.on('connection.update', async (update) => {
+        const { connection, qr, lastDisconnect } = update;
+
+        console.log(chalk.gray(`🔗 Connection state: ${connection || 'undefined'}`));
+
+        // Handle QR code for QR mode
+        if (qr && loginData.mode === 'qr') {
+            console.log(chalk.yellow('\n📲 QR Code Generated - Scan to connect:\n'));
+            qrcode.generate(qr, { small: true });
+            console.log(chalk.gray('💡 Scan with WhatsApp mobile app'));
+        }
+
+        // Handle pair code generation
+        if (loginData.mode === 'pair' && loginData.phoneNumber && !state.creds.registered && connection === 'connecting') {
+            console.log(chalk.cyan(`\n🔗 Attempting to generate pair code for: ${loginData.phoneNumber}`));
+            
+            setTimeout(async () => {
+                try {
+                    console.log(chalk.cyan('📞 Requesting pairing code from WhatsApp servers...'));
+                    const code = await sock.requestPairingCode(loginData.phoneNumber);
+                    const formattedCode = code.match(/.{1,4}/g)?.join('-') || code;
+                    
+                    console.log(chalk.greenBright(`
+╔════════════════════════════════════════════════╗
+║              🔗 PAIRING CODE                   ║
+╠════════════════════════════════════════════════╣
+║ 📞 Phone: ${chalk.cyan(loginData.phoneNumber.padEnd(30))}║
+║ 🔑 Code: ${chalk.yellow(formattedCode.padEnd(31))}║
+║ ⏰ Expires: ${chalk.red('10 minutes'.padEnd(27))}║
+╚════════════════════════════════════════════════╝
+`));
+
+                    console.log(chalk.blue('\n📱 How to use this code:'));
+                    console.log(chalk.white('1. Open WhatsApp on your phone'));
+                    console.log(chalk.white('2. Go to Settings → Linked Devices → Link a Device'));
+                    console.log(chalk.white(`3. Enter this code: ${chalk.yellow.bold(formattedCode)}`));
+                    console.log(chalk.white('4. Wait for connection confirmation\n'));
+                    
+                    console.log(chalk.gray('⏳ Waiting for you to enter the code in WhatsApp...'));
+
+                } catch (error) {
+                    console.error(chalk.red('❌ Failed to generate pairing code:'), error.message);
+                    console.log(chalk.yellow('💡 The connection might not be ready yet. Retrying QR code mode...'));
+                    
+                    loginData.mode = 'qr';
+                    console.log(chalk.yellow('\n📲 Generating QR Code instead:\n'));
+                    
+                    if (update.qr) {
+                        qrcode.generate(update.qr, { small: true });
+                    }
+                }
+            }, 2000);
+        }
+
+        if (connection === 'open') {
+            await handleSuccessfulConnection(sock, loginData);
+        }
+
+        if (connection === 'close') {
+            await handleConnectionClose(lastDisconnect, loginData);
+        }
+    });
+
+    sock.ev.on('creds.update', saveCreds);
+
+    sock.ev.on('messages.upsert', async ({ messages, type }) => {
+        if (type !== 'notify') return;
+        
+        const msg = messages[0];
+        if (!msg.message) return;
+
+        await handleIncomingMessage(sock, msg);
+    });
+
+    return sock;
+}
+
+// ====== CONNECTION HANDLERS ======
+async function handleSuccessfulConnection(sock, loginData) {
+    const currentTime = moment().format('h:mm:ss A');
+    
+    OWNER_JID = sock.user.id;
+    OWNER_NUMBER = OWNER_JID.split('@')[0];
+    
+    try {
+        fs.writeFileSync('./owner.json', JSON.stringify({ OWNER_NUMBER, OWNER_JID }, null, 2));
+    } catch (error) {
+        console.log(chalk.yellow('⚠️ Could not save owner data'));
+    }
+
+    const methodName = loginData.mode === 'qr' ? 'QR Code' : 
+                      loginData.mode === 'pair' ? 'Pair Code' : 
+                      'Session ID';
+    
+    console.log(chalk.greenBright(`
+╔════════════════════════════════════════════════════════╗
+║                    🐺 ${chalk.bold('SILENT WOLF ONLINE')}                    ║
+╠════════════════════════════════════════════════════════╣
+║  ✅ Connected successfully!                            
+║  👑 Owner : +${OWNER_NUMBER}
+║  📱 Device : ${chalk.cyan(`${BOT_NAME} - Chrome`)}       
+║  🕒 Time   : ${chalk.yellow(currentTime)}                 
+║  🔥 Status : ${chalk.redBright('Ready to Hunt!')}         
+║  🔐 Method : ${chalk.cyan(methodName)}         
+╚════════════════════════════════════════════════════════╝
+`));
+
+    try {
+        await sock.sendMessage(OWNER_JID, {
+            text: `🐺 *${BOT_NAME.toUpperCase()} ONLINE*\n\n✅ Connected successfully!\n👑 Owner: +${OWNER_NUMBER}\n📱 Device: ${BOT_NAME}\n🕒 Time: ${currentTime}\n🔐 Method: ${methodName}\n🔥 Status: Ready to Hunt!\n\n📂 Commands loaded: ${commands.size}`
+        });
+    } catch (error) {
+        console.log(chalk.yellow('⚠️ Could not send welcome message'));
+    }
+}
+
+async function handleConnectionClose(lastDisconnect, loginData) {
+    const statusCode = lastDisconnect?.error?.output?.statusCode;
+    const reason = lastDisconnect?.error?.output?.payload?.message || 'Unknown reason';
+    
+    console.log(chalk.red(`\n❌ Connection closed: ${reason} (Status: ${statusCode})`));
+    
+    if (statusCode === DisconnectReason.loggedOut || statusCode === 401 || statusCode === 403) {
+        console.log(chalk.yellow('🔓 Logged out. Clearing auth data...'));
+        cleanAuth();
+    }
+    
+    if (loginData.mode === 'pair' && statusCode) {
+        console.log(chalk.yellow('💡 Pair code mode failed. Switching to QR code mode...'));
+        loginData.mode = 'qr';
+        loginData.phoneNumber = null;
+    }
+    
+    console.log(chalk.blue('🔄 Restarting in 3 seconds...'));
+    setTimeout(() => startBot(loginData), 3000);
+}
+
+// ====== MESSAGE HANDLER ======
+async function handleIncomingMessage(sock, msg) {
+    const chatId = msg.key.remoteJid;
+    const textMsg = msg.message.conversation || 
+                   msg.message.extendedTextMessage?.text || 
+                   msg.message.imageMessage?.caption || 
+                   msg.message.videoMessage?.caption ||
+                   '';
+    
+    if (!textMsg) return;
+
+    const fromNumber = chatId.split('@')[0];
+
+    if (textMsg.startsWith(PREFIX)) {
+        const parts = textMsg.slice(PREFIX.length).trim().split(/\s+/);
+        const commandName = parts[0].toLowerCase();
+        const args = parts.slice(1);
+        
+        console.log(chalk.magenta(`📩 ${fromNumber} → ${PREFIX}${commandName} ${args.join(' ')}`));
+
+        const commandExecuted = await executeCommand(commandName, sock, msg, args);
+        // Command execution handled
+    }
+}
+
+// ====== MAIN APPLICATION START ======
+async function main() {
+    try {
+        console.log(chalk.blue('\n🚀 Starting Wolf Bot...'));
+        
+        const sessionManager = new SessionIDManager();
+        const loginData = await sessionManager.getSessionModeAndIDs();
+        
+        console.log(chalk.gray(`\nStarting with ${loginData.mode === 'qr' ? 'QR Code' : loginData.mode === 'pair' ? 'Pair Code' : 'Session ID'} mode...`));
+        
+        await startBot(loginData);
+        
+    } catch (error) {
+        console.error(chalk.red('💥 FATAL ERROR:'), error);
+        process.exit(1);
+    }
+}
+
+// Start the application
+main().catch(error => {
+    console.error(chalk.red('💥 CRITICAL ERROR:'), error);
+    process.exit(1);
+});
+
+process.on('uncaughtException', (error) => {
+    console.error(chalk.red('💥 Uncaught Exception:'), error);
+});
+
+process.on('unhandledRejection', (error) => {
+    console.error(chalk.red('💥 Unhandled Rejection:'), error);
+});
+
+process.on('SIGINT', () => {
+    console.log(chalk.yellow('\n\n👋 Shutting down Wolf Bot...'));
+    if (SOCKET_INSTANCE) {
+        SOCKET_INSTANCE.ws.close();
+    }
+    process.exit(0);
+});
