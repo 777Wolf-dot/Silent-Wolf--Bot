@@ -1,77 +1,89 @@
 {
-    "name": "silent-wolf-bot",
-    "version": "1.0.0",
-    "description": "A WhatsApp bot using Baileys",
-    "keywords": [
-        "whatsapp",
-        "bot",
-        "baileys",
-        "silent-wolf"
-    ],
-    "homepage": "https://github.com/777Wolf-dot/Silent-Wolf--Bot#readme",
-    "bugs": {
-        "url": "https://github.com/777Wolf-dot/Silent-Wolf--Bot/issues"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/777Wolf-dot/Silent-Wolf--Bot.git"
-    },
-    "license": "MIT",
-    "author": "YourName",
-    "type": "module",
-    "main": "index.js",
-    "directories": {
-        "lib": "lib"
-    },
-    "scripts": {
-        "start": "node index.js",
-        "install-ptero": "npm install --legacy-peer-deps --omit=optional --no-audit --no-fund"
-    },
-    "dependencies": {
-        "@google/generative-ai": "^0.24.1",
-        "@hapi/boom": "^10.0.1",
-        "@iamtraction/google-translate": "^2.0.1",
-        "@whiskeysockets/baileys": "^6.5.0",
-        "axios": "^1.13.2",
-        "chalk": "^5.6.2",
-        "dotenv": "^17.2.3",
-        "execa": "^9.6.0",
-        "express": "^5.1.0",
-        "ffmpeg-static": "^5.3.0",
-        "form-data": "^4.0.5",
-        "glob": "^11.0.3",
-        "jimp": "^1.6.0",
-        "moment": "^2.30.1",
-        "moment-timezone": "^0.6.0",
-        "node-cache": "^5.1.2",
-        "node-fetch": "^3.3.2",
-        "openai": "^6.7.0",
-        "pino": "^8.21.0",
-        "qrcode-terminal": "^0.12.0"
-    },
-    "optionalDependencies": {
-        "@distube/ytdl-core": "^4.16.12",
-        "@supabase/supabase-js": "^2.78.0",
-        "@vitalets/google-translate-api": "^9.2.1",
-        "awesome-phonenumber": "^7.5.0",
-        "canvas": "^3.2.0",
-        "chatgpt": "^5.2.5",
-        "cheerio": "^1.1.2",
-        "formdata-node": "^6.0.3",
-        "gifencoder": "^2.0.1",
-        "play-dl": "^1.9.7",
-        "qrcode": "^1.5.4",
-        "qrcode-reader": "^1.0.4",
-        "sharp": "^0.32.6",
-        "vcards-js": "^2.10.0",
-        "youtube-dl-exec": "^3.0.27",
-        "youtube-sr": "^4.3.12",
-        "yt-dlp-exec": "^1.0.2",
-        "yt-search": "^2.13.1",
-        "ytdl-core": "^4.11.5",
-        "zxcvbn": "^4.4.2"
-    },
-    "engines": {
-        "node": ">=18.0.0"
-    }
+  "name": "silent-wolf-bot",
+  "version": "2.0.0",
+  "description": "A WhatsApp bot using Baileys with auto-restart prefix system",
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "baileys",
+    "silent-wolf",
+    "auto-restart",
+    "prefix"
+  ],
+  "homepage": "https://github.com/777Wolf-dot/Silent-Wolf--Bot#readme",
+  "bugs": {
+    "url": "https://github.com/777Wolf-dot/Silent-Wolf--Bot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/777Wolf-dot/Silent-Wolf--Bot.git"
+  },
+  "license": "MIT",
+  "author": "YourName",
+  "type": "module",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "deploy": "node restart.js",
+    "auto": "node auto_restart.js",
+    "restart": "restart_wrapper.bat",
+    "bot": "node index.js",
+    "setup": "node setup_prefix.js",
+    "windows": "restart_wrapper.bat",
+    "linux": "./restart_wrapper.sh",
+    "dev": "node index.js",
+    "test": "echo \"No tests specified\" && exit 0",
+    "logs": "type bot_restart.log",
+    "status": "node check_status.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@hapi/boom": "^10.0.1",
+    "@iamtraction/google-translate": "^2.0.1",
+    "@whiskeysockets/baileys": "^6.5.0",
+    "axios": "^1.13.2",
+    "chalk": "^5.6.2",
+    "dotenv": "^17.2.3",
+    "execa": "^9.6.0",
+    "express": "^5.1.0",
+    "ffmpeg-static": "^5.3.0",
+    "form-data": "^4.0.5",
+    "glob": "^11.0.3",
+    "jimp": "^1.6.0",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.6.0",
+    "node-cache": "^5.1.2",
+    "node-fetch": "^3.3.2",
+    "openai": "^6.7.0",
+    "pino": "^8.21.0",
+    "qrcode-terminal": "^0.12.0"
+  },
+  "optionalDependencies": {
+    "@distube/ytdl-core": "^4.16.12",
+    "@supabase/supabase-js": "^2.78.0",
+    "@vitalets/google-translate-api": "^9.2.1",
+    "awesome-phonenumber": "^7.5.0",
+    "canvas": "^3.2.0",
+    "chatgpt": "^5.2.5",
+    "cheerio": "^1.1.2",
+    "formdata-node": "^6.0.3",
+    "gifencoder": "^2.0.1",
+    "play-dl": "^1.9.7",
+    "qrcode": "^1.5.4",
+    "qrcode-reader": "^1.0.4",
+    "sharp": "^0.32.6",
+    "vcards-js": "^2.10.0",
+    "youtube-dl-exec": "^3.0.27",
+    "youtube-sr": "^4.3.12",
+    "yt-dlp-exec": "^1.0.2",
+    "yt-search": "^2.13.1",
+    "ytdl-core": "^4.11.5",
+    "zxcvbn": "^4.4.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

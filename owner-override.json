@@ -1,0 +1,5 @@
+{
+    "allowed_numbers": ["254703397679", "163467126378654"],
+    "created_at": "2025-01-15T12:00:00.000Z",
+    "note": "Add phone numbers (without +) that should have owner privileges"
+}
