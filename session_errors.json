@@ -1,0 +1,388 @@
+{
+  "count": 122,
+  "last_error": {
+    "type": "connection_close",
+    "timestamp": "2025-12-08T18:31:54.241Z",
+    "details": {
+      "reason": "Unknown",
+      "loginMode": "pair",
+      "sessionId": "2E314D23196FF3A6F52D6F33B8A1BD28"
+    },
+    "sessionId": "2E314D23196FF3A6F52D6F33B8A1BD28"
+  },
+  "history": [
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:13:37.283Z",
+      "details": {
+        "error": "cleanedCount is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:13:47.290Z",
+      "details": {
+        "error": "cleanedCount is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:13:57.298Z",
+      "details": {
+        "error": "cleanedCount is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:14:07.313Z",
+      "details": {
+        "error": "cleanedCount is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:14:17.315Z",
+      "details": {
+        "error": "cleanedCount is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:14:27.324Z",
+      "details": {
+        "error": "cleanedCount is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:14:37.336Z",
+      "details": {
+        "error": "cleanedCount is not defined"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:14:46.737Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:14:47.243Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:14:47.347Z",
+      "details": {
+        "error": "cleanedCount is not defined"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:14:52.044Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:14:52.549Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:14:54.737Z",
+      "details": {
+        "error": "stopMemoryClearing is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:14:54.895Z",
+      "details": {
+        "error": "stopMemoryClearing is not defined"
+      }
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T07:19:00.065Z",
+      "details": {
+        "statusCode": 515,
+        "reason": "Stream Errored (restart required)",
+        "loginMode": "pair"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:10.160Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:10.268Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:10.427Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:10.876Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:10.903Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:11.447Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:14.841Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:30.876Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:36.144Z",
+      "details": {
+        "error": "No sessions"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:47.796Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:50.901Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:53.028Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:19:55.875Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:20:03.168Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:20:03.673Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:20:08.841Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:20:09.120Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:20:09.574Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:20:10.074Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "unhandled_rejection",
+      "timestamp": "2025-12-08T07:20:41.461Z",
+      "details": {
+        "error": "this.messages.get(...).set is not a function"
+      }
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T07:20:52.380Z",
+      "details": {
+        "statusCode": 401,
+        "reason": "Stream Errored (conflict)",
+        "loginMode": "pair"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:21:01.628Z",
+      "details": {
+        "error": "stopMemoryClearing is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:21:01.814Z",
+      "details": {
+        "error": "stopMemoryClearing is not defined"
+      }
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T07:27:57.519Z",
+      "details": {
+        "statusCode": 515,
+        "reason": "Stream Errored (restart required)",
+        "loginMode": "pair"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:30:33.053Z",
+      "details": {
+        "error": "stopMemoryClearing is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:30:33.209Z",
+      "details": {
+        "error": "stopMemoryClearing is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:31:42.644Z",
+      "details": {
+        "error": "stopMemoryClearing is not defined"
+      }
+    },
+    {
+      "type": "uncaught_exception",
+      "timestamp": "2025-12-08T07:31:42.796Z",
+      "details": {
+        "error": "stopMemoryClearing is not defined"
+      }
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T17:43:15.229Z",
+      "details": {
+        "statusCode": 401,
+        "reason": "Connection Failure",
+        "loginMode": "qr"
+      }
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T17:43:32.230Z",
+      "details": {
+        "statusCode": 515,
+        "reason": "Stream Errored (restart required)",
+        "loginMode": "qr"
+      }
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T17:44:57.429Z",
+      "details": {
+        "statusCode": 515,
+        "reason": "Stream Errored (restart required)",
+        "loginMode": "qr"
+      }
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T17:46:46.587Z",
+      "details": {
+        "statusCode": 515,
+        "reason": "Stream Errored (restart required)",
+        "loginMode": "pair"
+      }
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T18:18:33.090Z",
+      "details": {
+        "statusCode": 428,
+        "reason": "Connection Terminated",
+        "loginMode": "pair"
+      }
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T18:23:47.922Z",
+      "details": {
+        "statusCode": 515,
+        "reason": "Stream Errored (restart required)",
+        "loginMode": "pair",
+        "sessionId": "2E314D23196FF3A6F52D6F33B8A1BD28"
+      },
+      "sessionId": "2E314D23196FF3A6F52D6F33B8A1BD28"
+    },
+    {
+      "type": "connection_close",
+      "timestamp": "2025-12-08T18:31:54.241Z",
+      "details": {
+        "reason": "Unknown",
+        "loginMode": "pair",
+        "sessionId": "2E314D23196FF3A6F52D6F33B8A1BD28"
+      },
+      "sessionId": "2E314D23196FF3A6F52D6F33B8A1BD28"
+    }
+  ]
+}

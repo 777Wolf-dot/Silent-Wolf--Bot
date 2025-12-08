@@ -1,183 +1,183 @@
-// // // // ====== SETPREFIX COMMAND MODULE ======
-// // // // Fixed version that works with your bot
-// // // import fs from 'fs';
-// // // import chalk from 'chalk';
+// // ====== SETPREFIX COMMAND MODULE ======
+// // Fixed version that works with your bot
+// import fs from 'fs';
+// import chalk from 'chalk';
 
-// // // const PREFIX_FILE = './prefix.json';
+// const PREFIX_FILE = './prefix.json';
 
-// // // // Simple function to get stored prefix
-// // // function getStoredPrefix() {
-// // //     try {
-// // //         if (fs.existsSync(PREFIX_FILE)) {
-// // //             const data = JSON.parse(fs.readFileSync(PREFIX_FILE, 'utf8'));
-// // //             return data.prefix;
-// // //         }
-// // //     } catch (error) {
-// // //         // Silent error
-// // //     }
-// // //     return null;
-// // // }
+// // Simple function to get stored prefix
+// function getStoredPrefix() {
+//     try {
+//         if (fs.existsSync(PREFIX_FILE)) {
+//             const data = JSON.parse(fs.readFileSync(PREFIX_FILE, 'utf8'));
+//             return data.prefix;
+//         }
+//     } catch (error) {
+//         // Silent error
+//     }
+//     return null;
+// }
 
-// // // // Simple function to save prefix
-// // // function savePrefix(newPrefix, ownerNumber) {
-// // //     try {
-// // //         const prefixData = {
-// // //             prefix: newPrefix,
-// // //             changedAt: new Date().toISOString(),
-// // //             owner: ownerNumber,
-// // //             version: '1.0'
-// // //         };
-// // //         fs.writeFileSync(PREFIX_FILE, JSON.stringify(prefixData, null, 2));
-// // //         return true;
-// // //     } catch (error) {
-// // //         console.error(chalk.red('❌ Error saving prefix:'), error);
-// // //         return false;
-// // //     }
-// // // }
+// // Simple function to save prefix
+// function savePrefix(newPrefix, ownerNumber) {
+//     try {
+//         const prefixData = {
+//             prefix: newPrefix,
+//             changedAt: new Date().toISOString(),
+//             owner: ownerNumber,
+//             version: '1.0'
+//         };
+//         fs.writeFileSync(PREFIX_FILE, JSON.stringify(prefixData, null, 2));
+//         return true;
+//     } catch (error) {
+//         console.error(chalk.red('❌ Error saving prefix:'), error);
+//         return false;
+//     }
+// }
 
-// // // // Validate prefix
-// // // function isValidPrefix(prefix) {
-// // //     if (!prefix || typeof prefix !== 'string') return false;
-// // //     if (prefix.length > 3) return false;
-// // //     if (prefix.includes(' ')) return false;
-// // //     return /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?a-zA-Z0-9]{1,3}$/.test(prefix);
-// // // }
+// // Validate prefix
+// function isValidPrefix(prefix) {
+//     if (!prefix || typeof prefix !== 'string') return false;
+//     if (prefix.length > 3) return false;
+//     if (prefix.includes(' ')) return false;
+//     return /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?a-zA-Z0-9]{1,3}$/.test(prefix);
+// }
 
-// // // // Command module
-// // // export default {
-// // //     name: 'setprefix',
-// // //     alias: ['prefix', 'changeprefix'],
-// // //     description: 'Change bot command prefix',
+// // Command module
+// export default {
+//     name: 'setprefix',
+//     alias: ['prefix', 'changeprefix'],
+//     description: 'Change bot command prefix',
     
-// // //     async execute(sock, msg, args, currentPrefix, chatBot) {
-// // //         const chatId = msg.key.remoteJid;
-// // //         const fromNumber = chatId.split('@')[0];
+//     async execute(sock, msg, args, currentPrefix, chatBot) {
+//         const chatId = msg.key.remoteJid;
+//         const fromNumber = chatId.split('@')[0];
         
-// // //         console.log(chalk.blue(`🔧 Setprefix from: +${fromNumber}`));
+//         console.log(chalk.blue(`🔧 Setprefix from: +${fromNumber}`));
         
-// // //         // DEBUG: Show what numbers we're comparing
-// // //         console.log(chalk.yellow(`🔍 Owner check debug:`));
-// // //         console.log(chalk.yellow(`  From: +${fromNumber}`));
-// // //         console.log(chalk.yellow(`  Bot Owner: +${chatBot.OWNER_NUMBER || 'Unknown'}`));
+//         // DEBUG: Show what numbers we're comparing
+//         console.log(chalk.yellow(`🔍 Owner check debug:`));
+//         console.log(chalk.yellow(`  From: +${fromNumber}`));
+//         console.log(chalk.yellow(`  Bot Owner: +${chatBot.OWNER_NUMBER || 'Unknown'}`));
         
-// // //         // SIMPLIFIED OWNER CHECK - Use chatBot's isUserAllowed function
-// // //         // This matches how your mode command works
-// // //         try {
-// // //             // First try using chatBot's isUserAllowed if available
-// // //             if (chatBot.isUserAllowed && typeof chatBot.isUserAllowed === 'function') {
-// // //                 const isAllowed = chatBot.isUserAllowed();
-// // //                 console.log(chalk.blue(`🔐 chatBot.isUserAllowed() = ${isAllowed}`));
+//         // SIMPLIFIED OWNER CHECK - Use chatBot's isUserAllowed function
+//         // This matches how your mode command works
+//         try {
+//             // First try using chatBot's isUserAllowed if available
+//             if (chatBot.isUserAllowed && typeof chatBot.isUserAllowed === 'function') {
+//                 const isAllowed = chatBot.isUserAllowed();
+//                 console.log(chalk.blue(`🔐 chatBot.isUserAllowed() = ${isAllowed}`));
                 
-// // //                 if (!isAllowed) {
-// // //                     console.log(chalk.red(`❌ chatBot says user not allowed`));
+//                 if (!isAllowed) {
+//                     console.log(chalk.red(`❌ chatBot says user not allowed`));
                     
-// // //                     await sock.sendMessage(chatId, {
-// // //                         text: `❌ *Permission Denied*\n\nThis command is owner-only.\n\nBot Owner: +${chatBot.OWNER_NUMBER || 'Unknown'}\nYour Number: +${fromNumber}\n\n*Note:* If you just linked this device:\n1. Restart the bot completely\n2. Send any message first\n3. Then try this command`
-// // //                     }, { quoted: msg });
-// // //                     return;
-// // //                 }
-// // //             } 
-// // //             // Fallback: Direct number comparison
-// // //             else if (chatBot.OWNER_NUMBER) {
-// // //                 // Simple normalization
-// // //                 const cleanOwner = chatBot.OWNER_NUMBER.replace(/[^0-9]/g, '');
-// // //                 const cleanSender = fromNumber.replace(/[^0-9]/g, '');
+//                     await sock.sendMessage(chatId, {
+//                         text: `❌ *Permission Denied*\n\nThis command is owner-only.\n\nBot Owner: +${chatBot.OWNER_NUMBER || 'Unknown'}\nYour Number: +${fromNumber}\n\n*Note:* If you just linked this device:\n1. Restart the bot completely\n2. Send any message first\n3. Then try this command`
+//                     }, { quoted: msg });
+//                     return;
+//                 }
+//             } 
+//             // Fallback: Direct number comparison
+//             else if (chatBot.OWNER_NUMBER) {
+//                 // Simple normalization
+//                 const cleanOwner = chatBot.OWNER_NUMBER.replace(/[^0-9]/g, '');
+//                 const cleanSender = fromNumber.replace(/[^0-9]/g, '');
                 
-// // //                 console.log(chalk.blue(`🔐 Comparing: ${cleanOwner} vs ${cleanSender}`));
+//                 console.log(chalk.blue(`🔐 Comparing: ${cleanOwner} vs ${cleanSender}`));
                 
-// // //                 if (cleanSender !== cleanOwner) {
-// // //                     console.log(chalk.red(`❌ Number mismatch`));
-// // //                     await sock.sendMessage(chatId, {
-// // //                         text: `❌ Only bot owner can use this.\nOwner: +${cleanOwner}\nYou: +${cleanSender}`
-// // //                     }, { quoted: msg });
-// // //                     return;
-// // //                 }
-// // //             } else {
-// // //                 console.log(chalk.red(`❌ No owner info available`));
-// // //                 await sock.sendMessage(chatId, {
-// // //                     text: '❌ Bot owner information not available. Please restart bot.'
-// // //                 }, { quoted: msg });
-// // //                 return;
-// // //             }
-// // //         } catch (error) {
-// // //             console.error(chalk.red('❌ Owner check error:'), error);
-// // //             await sock.sendMessage(chatId, {
-// // //                 text: '❌ Error checking permissions. Please try again.'
-// // //             }, { quoted: msg });
-// // //             return;
-// // //         }
+//                 if (cleanSender !== cleanOwner) {
+//                     console.log(chalk.red(`❌ Number mismatch`));
+//                     await sock.sendMessage(chatId, {
+//                         text: `❌ Only bot owner can use this.\nOwner: +${cleanOwner}\nYou: +${cleanSender}`
+//                     }, { quoted: msg });
+//                     return;
+//                 }
+//             } else {
+//                 console.log(chalk.red(`❌ No owner info available`));
+//                 await sock.sendMessage(chatId, {
+//                     text: '❌ Bot owner information not available. Please restart bot.'
+//                 }, { quoted: msg });
+//                 return;
+//             }
+//         } catch (error) {
+//             console.error(chalk.red('❌ Owner check error:'), error);
+//             await sock.sendMessage(chatId, {
+//                 text: '❌ Error checking permissions. Please try again.'
+//             }, { quoted: msg });
+//             return;
+//         }
         
-// // //         console.log(chalk.green(`✅ Owner verified: +${fromNumber}`));
+//         console.log(chalk.green(`✅ Owner verified: +${fromNumber}`));
         
-// // //         // ==== COMMAND LOGIC ====
-// // //         const storedPrefix = getStoredPrefix();
-// // //         const effectivePrefix = storedPrefix || currentPrefix || '.';
+//         // ==== COMMAND LOGIC ====
+//         const storedPrefix = getStoredPrefix();
+//         const effectivePrefix = storedPrefix || currentPrefix || '.';
         
-// // //         // Show help if no args
-// // //         if (args.length === 0) {
-// // //             await sock.sendMessage(chatId, {
-// // //                 text: `🔤 *PREFIX COMMAND*\n\n*Current Prefix:* \`${effectivePrefix}\`\n*Stored Prefix:* ${storedPrefix ? `\`${storedPrefix}\`` : 'None (using default)'}\n\n*Usage:*\n• ${effectivePrefix}setprefix <new_prefix>\n• ${effectivePrefix}setprefix reset\n• ${effectivePrefix}setprefix status\n\n*Examples:*\n${effectivePrefix}setprefix !\n${effectivePrefix}setprefix #\n${effectivePrefix}setprefix reset`
-// // //             }, { quoted: msg });
-// // //             return;
-// // //         }
+//         // Show help if no args
+//         if (args.length === 0) {
+//             await sock.sendMessage(chatId, {
+//                 text: `🔤 *PREFIX COMMAND*\n\n*Current Prefix:* \`${effectivePrefix}\`\n*Stored Prefix:* ${storedPrefix ? `\`${storedPrefix}\`` : 'None (using default)'}\n\n*Usage:*\n• ${effectivePrefix}setprefix <new_prefix>\n• ${effectivePrefix}setprefix reset\n• ${effectivePrefix}setprefix status\n\n*Examples:*\n${effectivePrefix}setprefix !\n${effectivePrefix}setprefix #\n${effectivePrefix}setprefix reset`
+//             }, { quoted: msg });
+//             return;
+//         }
         
-// // //         const action = args[0].toLowerCase();
+//         const action = args[0].toLowerCase();
         
-// // //         // Show status
-// // //         if (action === 'status') {
-// // //             await sock.sendMessage(chatId, {
-// // //                 text: `📊 *PREFIX STATUS*\n\n*Bot Using:* \`${effectivePrefix}\`\n*Stored in File:* ${storedPrefix ? `\`${storedPrefix}\`` : 'None'}\n*Default:* \`.\`\n*Owner:* +${fromNumber}\n\n*Next Commands:*\n\`${effectivePrefix}info\` - Test current prefix\n\`${effectivePrefix}setprefix !\` - Change to !`
-// // //             }, { quoted: msg });
-// // //             return;
-// // //         }
+//         // Show status
+//         if (action === 'status') {
+//             await sock.sendMessage(chatId, {
+//                 text: `📊 *PREFIX STATUS*\n\n*Bot Using:* \`${effectivePrefix}\`\n*Stored in File:* ${storedPrefix ? `\`${storedPrefix}\`` : 'None'}\n*Default:* \`.\`\n*Owner:* +${fromNumber}\n\n*Next Commands:*\n\`${effectivePrefix}info\` - Test current prefix\n\`${effectivePrefix}setprefix !\` - Change to !`
+//             }, { quoted: msg });
+//             return;
+//         }
         
-// // //         // Reset prefix
-// // //         if (action === 'reset') {
-// // //             if (fs.existsSync(PREFIX_FILE)) {
-// // //                 fs.unlinkSync(PREFIX_FILE);
-// // //             }
+//         // Reset prefix
+//         if (action === 'reset') {
+//             if (fs.existsSync(PREFIX_FILE)) {
+//                 fs.unlinkSync(PREFIX_FILE);
+//             }
             
-// // //             await sock.sendMessage(chatId, {
-// // //                 text: `🔄 *PREFIX RESET*\n\n✅ Prefix reset to default: \`.\`\n\nBot will use \`.\` after restart.\nExample: \`.info\` - Show bot info`
-// // //             }, { quoted: msg });
+//             await sock.sendMessage(chatId, {
+//                 text: `🔄 *PREFIX RESET*\n\n✅ Prefix reset to default: \`.\`\n\nBot will use \`.\` after restart.\nExample: \`.info\` - Show bot info`
+//             }, { quoted: msg });
             
-// // //             console.log(chalk.green(`✅ Prefix reset by owner +${fromNumber}`));
-// // //             return;
-// // //         }
+//             console.log(chalk.green(`✅ Prefix reset by owner +${fromNumber}`));
+//             return;
+//         }
         
-// // //         // Validate new prefix
-// // //         if (!isValidPrefix(action)) {
-// // //             await sock.sendMessage(chatId, {
-// // //                 text: `❌ *Invalid Prefix*\n\nPrefix must be:\n• 1-3 characters\n• No spaces\n• Can be: ! @ # $ % ^ & *\n• Or letters/numbers\n\n*Good:* ! # $ & *\n*Bad:* spaced prefix\n*Bad:* verylongprefix`
-// // //             }, { quoted: msg });
-// // //             return;
-// // //         }
+//         // Validate new prefix
+//         if (!isValidPrefix(action)) {
+//             await sock.sendMessage(chatId, {
+//                 text: `❌ *Invalid Prefix*\n\nPrefix must be:\n• 1-3 characters\n• No spaces\n• Can be: ! @ # $ % ^ & *\n• Or letters/numbers\n\n*Good:* ! # $ & *\n*Bad:* spaced prefix\n*Bad:* verylongprefix`
+//             }, { quoted: msg });
+//             return;
+//         }
         
-// // //         // Save new prefix
-// // //         if (savePrefix(action, fromNumber)) {
-// // //             console.log(chalk.green(`✅ Prefix saved as "${action}" by +${fromNumber}`));
+//         // Save new prefix
+//         if (savePrefix(action, fromNumber)) {
+//             console.log(chalk.green(`✅ Prefix saved as "${action}" by +${fromNumber}`));
             
-// // //             await sock.sendMessage(chatId, {
-// // //                 text: `✅ *PREFIX SAVED*\n\n✅ New prefix: \`${action}\`\n\n*IMPORTANT:* Restart the bot for changes to take effect!\n\nAfter restart, use:\n\`${action}info\` - Show bot info\n\`${action}help\` - Show help\n\`${action}mode\` - Change mode`
-// // //             }, { quoted: msg });
+//             await sock.sendMessage(chatId, {
+//                 text: `✅ *PREFIX SAVED*\n\n✅ New prefix: \`${action}\`\n\n*IMPORTANT:* Restart the bot for changes to take effect!\n\nAfter restart, use:\n\`${action}info\` - Show bot info\n\`${action}help\` - Show help\n\`${action}mode\` - Change mode`
+//             }, { quoted: msg });
             
-// // //             // Send reminder after 3 seconds
-// // //             setTimeout(async () => {
-// // //                 try {
-// // //                     await sock.sendMessage(chatId, {
-// // //                         text: `💡 *REMINDER*\n\nDon't forget to restart the bot!\nAfter restart, prefix will be: \`${action}\`\n\nUntil restart, bot still uses: \`${effectivePrefix}\``
-// // //                     });
-// // //                 } catch (error) {
-// // //                     // Ignore
-// // //                 }
-// // //             }, 3000);
-// // //         } else {
-// // //             await sock.sendMessage(chatId, {
-// // //                 text: '❌ Failed to save prefix. Please try again.'
-// // //             }, { quoted: msg });
-// // //         }
-// // //     }
-// // // };
+//             // Send reminder after 3 seconds
+//             setTimeout(async () => {
+//                 try {
+//                     await sock.sendMessage(chatId, {
+//                         text: `💡 *REMINDER*\n\nDon't forget to restart the bot!\nAfter restart, prefix will be: \`${action}\`\n\nUntil restart, bot still uses: \`${effectivePrefix}\``
+//                     });
+//                 } catch (error) {
+//                     // Ignore
+//                 }
+//             }, 3000);
+//         } else {
+//             await sock.sendMessage(chatId, {
+//                 text: '❌ Failed to save prefix. Please try again.'
+//             }, { quoted: msg });
+//         }
+//     }
+// };
 
 
 
@@ -193,317 +193,317 @@
 
 
 
-// // // ====== SETPREFIX COMMAND MODULE ======
-// // // Auto-restart version for panel hosting
-// // import fs from 'fs';
-// // import { exec } from 'child_process';
-// // import chalk from 'chalk';
+// // ====== SETPREFIX COMMAND MODULE ======
+// // Auto-restart version for panel hosting
+// import fs from 'fs';
+// import { exec } from 'child_process';
+// import chalk from 'chalk';
 
-// // const PREFIX_FILE = './prefix.json';
-// // const LOG_FILE = './bot_restart.log';
-// // const PID_FILE = './bot.pid';
+// const PREFIX_FILE = './prefix.json';
+// const LOG_FILE = './bot_restart.log';
+// const PID_FILE = './bot.pid';
 
-// // // Simple function to get stored prefix
-// // function getStoredPrefix() {
-// //     try {
-// //         if (fs.existsSync(PREFIX_FILE)) {
-// //             const data = JSON.parse(fs.readFileSync(PREFIX_FILE, 'utf8'));
-// //             return data.prefix;
-// //         }
-// //     } catch (error) {
-// //         // Silent error
-// //     }
-// //     return null;
-// // }
+// // Simple function to get stored prefix
+// function getStoredPrefix() {
+//     try {
+//         if (fs.existsSync(PREFIX_FILE)) {
+//             const data = JSON.parse(fs.readFileSync(PREFIX_FILE, 'utf8'));
+//             return data.prefix;
+//         }
+//     } catch (error) {
+//         // Silent error
+//     }
+//     return null;
+// }
 
-// // // Save prefix and trigger auto-restart
-// // function savePrefixWithRestart(newPrefix, ownerNumber) {
-// //     try {
-// //         const prefixData = {
-// //             prefix: newPrefix,
-// //             changedAt: new Date().toISOString(),
-// //             owner: ownerNumber,
-// //             version: '2.0',
-// //             restartTriggered: true,
-// //             restartTime: null
-// //         };
+// // Save prefix and trigger auto-restart
+// function savePrefixWithRestart(newPrefix, ownerNumber) {
+//     try {
+//         const prefixData = {
+//             prefix: newPrefix,
+//             changedAt: new Date().toISOString(),
+//             owner: ownerNumber,
+//             version: '2.0',
+//             restartTriggered: true,
+//             restartTime: null
+//         };
         
-// //         fs.writeFileSync(PREFIX_FILE, JSON.stringify(prefixData, null, 2));
+//         fs.writeFileSync(PREFIX_FILE, JSON.stringify(prefixData, null, 2));
         
-// //         // Log the change
-// //         const logEntry = `[${new Date().toISOString()}] PREFIX_CHANGE: "${newPrefix}" by ${ownerNumber}\n`;
-// //         fs.appendFileSync(LOG_FILE, logEntry);
+//         // Log the change
+//         const logEntry = `[${new Date().toISOString()}] PREFIX_CHANGE: "${newPrefix}" by ${ownerNumber}\n`;
+//         fs.appendFileSync(LOG_FILE, logEntry);
         
-// //         return true;
-// //     } catch (error) {
-// //         console.error(chalk.red('❌ Error saving prefix:'), error);
-// //         return false;
-// //     }
-// // }
+//         return true;
+//     } catch (error) {
+//         console.error(chalk.red('❌ Error saving prefix:'), error);
+//         return false;
+//     }
+// }
 
-// // // Trigger bot restart
-// // function triggerBotRestart() {
-// //     return new Promise((resolve) => {
-// //         console.log(chalk.yellow('🔄 Triggering auto-restart...'));
+// // Trigger bot restart
+// function triggerBotRestart() {
+//     return new Promise((resolve) => {
+//         console.log(chalk.yellow('🔄 Triggering auto-restart...'));
         
-// //         // Method 1: If we have a PID file, send restart signal
-// //         if (fs.existsSync(PID_FILE)) {
-// //             try {
-// //                 const pid = parseInt(fs.readFileSync(PID_FILE, 'utf8'));
-// //                 console.log(chalk.blue(`📌 Sending restart signal to PID: ${pid}`));
+//         // Method 1: If we have a PID file, send restart signal
+//         if (fs.existsSync(PID_FILE)) {
+//             try {
+//                 const pid = parseInt(fs.readFileSync(PID_FILE, 'utf8'));
+//                 console.log(chalk.blue(`📌 Sending restart signal to PID: ${pid}`));
                 
-// //                 // Send SIGUSR1 for graceful restart
-// //                 process.kill(pid, 'SIGUSR1');
+//                 // Send SIGUSR1 for graceful restart
+//                 process.kill(pid, 'SIGUSR1');
                 
-// //                 const logEntry = `[${new Date().toISOString()}] RESTART_SIGNAL: Sent to PID ${pid}\n`;
-// //                 fs.appendFileSync(LOG_FILE, logEntry);
+//                 const logEntry = `[${new Date().toISOString()}] RESTART_SIGNAL: Sent to PID ${pid}\n`;
+//                 fs.appendFileSync(LOG_FILE, logEntry);
                 
-// //                 console.log(chalk.green('✅ Restart signal sent'));
-// //                 resolve(true);
-// //                 return;
-// //             } catch (error) {
-// //                 console.log(chalk.yellow('⚠️ Could not send signal, trying fallback...'));
-// //             }
-// //         }
+//                 console.log(chalk.green('✅ Restart signal sent'));
+//                 resolve(true);
+//                 return;
+//             } catch (error) {
+//                 console.log(chalk.yellow('⚠️ Could not send signal, trying fallback...'));
+//             }
+//         }
         
-// //         // Method 2: Try to use pm2 if available
-// //         exec('pm2 list | grep wolf-bot', (err, stdout) => {
-// //             if (!err && stdout.includes('wolf-bot')) {
-// //                 console.log(chalk.blue('📌 Restarting via PM2...'));
-// //                 exec('pm2 restart wolf-bot', (err) => {
-// //                     if (err) {
-// //                         console.log(chalk.yellow('⚠️ PM2 restart failed'));
-// //                         triggerDirectRestart().then(resolve);
-// //                     } else {
-// //                         console.log(chalk.green('✅ PM2 restart initiated'));
-// //                         resolve(true);
-// //                     }
-// //                 });
-// //             } else {
-// //                 triggerDirectRestart().then(resolve);
-// //             }
-// //         });
-// //     });
-// // }
+//         // Method 2: Try to use pm2 if available
+//         exec('pm2 list | grep wolf-bot', (err, stdout) => {
+//             if (!err && stdout.includes('wolf-bot')) {
+//                 console.log(chalk.blue('📌 Restarting via PM2...'));
+//                 exec('pm2 restart wolf-bot', (err) => {
+//                     if (err) {
+//                         console.log(chalk.yellow('⚠️ PM2 restart failed'));
+//                         triggerDirectRestart().then(resolve);
+//                     } else {
+//                         console.log(chalk.green('✅ PM2 restart initiated'));
+//                         resolve(true);
+//                     }
+//                 });
+//             } else {
+//                 triggerDirectRestart().then(resolve);
+//             }
+//         });
+//     });
+// }
 
-// // // Direct restart method
-// // function triggerDirectRestart() {
-// //     return new Promise((resolve) => {
-// //         console.log(chalk.blue('📌 Using direct restart method...'));
+// // Direct restart method
+// function triggerDirectRestart() {
+//     return new Promise((resolve) => {
+//         console.log(chalk.blue('📌 Using direct restart method...'));
         
-// //         // Create restart script
-// //         const restartScript = `
-// // // Auto-generated restart script
-// // setTimeout(() => {
-// //     console.log('🤖 Bot restarting...');
-// //     process.exit(0);
-// // }, 2000);
-// // `;
+//         // Create restart script
+//         const restartScript = `
+// // Auto-generated restart script
+// setTimeout(() => {
+//     console.log('🤖 Bot restarting...');
+//     process.exit(0);
+// }, 2000);
+// `;
         
-// //         fs.writeFileSync('./_restart_timer.js', restartScript);
+//         fs.writeFileSync('./_restart_timer.js', restartScript);
         
-// //         // Schedule restart
-// //         setTimeout(() => {
-// //             console.log(chalk.yellow('⏰ Restart timer expired, exiting...'));
-// //             process.exit(0); // Exit with code 0 for auto-restart
-// //         }, 2000);
+//         // Schedule restart
+//         setTimeout(() => {
+//             console.log(chalk.yellow('⏰ Restart timer expired, exiting...'));
+//             process.exit(0); // Exit with code 0 for auto-restart
+//         }, 2000);
         
-// //         resolve(true);
-// //     });
-// // }
+//         resolve(true);
+//     });
+// }
 
-// // // Validate prefix
-// // function isValidPrefix(prefix) {
-// //     if (!prefix || typeof prefix !== 'string') return false;
-// //     if (prefix.length > 3) return false;
-// //     if (prefix.includes(' ')) return false;
-// //     return /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?a-zA-Z0-9]{1,3}$/.test(prefix);
-// // }
+// // Validate prefix
+// function isValidPrefix(prefix) {
+//     if (!prefix || typeof prefix !== 'string') return false;
+//     if (prefix.length > 3) return false;
+//     if (prefix.includes(' ')) return false;
+//     return /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?a-zA-Z0-9]{1,3}$/.test(prefix);
+// }
 
-// // // Check if auto-restart is available
-// // function isAutoRestartAvailable() {
-// //     // Check various restart methods
-// //     const methods = {
-// //         hasPidFile: fs.existsSync(PID_FILE),
-// //         hasPm2: false, // Will check async
-// //         canExit: true // Always can exit process
-// //     };
+// // Check if auto-restart is available
+// function isAutoRestartAvailable() {
+//     // Check various restart methods
+//     const methods = {
+//         hasPidFile: fs.existsSync(PID_FILE),
+//         hasPm2: false, // Will check async
+//         canExit: true // Always can exit process
+//     };
     
-// //     return methods;
-// // }
+//     return methods;
+// }
 
-// // // Command module
-// // export default {
-// //     name: 'setprefix',
-// //     alias: ['prefix', 'changeprefix', 'botprefix'],
-// //     description: 'Change bot command prefix (auto-restarts)',
+// // Command module
+// export default {
+//     name: 'setprefix',
+//     alias: ['prefix', 'changeprefix', 'botprefix'],
+//     description: 'Change bot command prefix (auto-restarts)',
     
-// //     async execute(sock, msg, args, currentPrefix, chatBot) {
-// //         const chatId = msg.key.remoteJid;
-// //         const fromNumber = chatId.split('@')[0];
+//     async execute(sock, msg, args, currentPrefix, chatBot) {
+//         const chatId = msg.key.remoteJid;
+//         const fromNumber = chatId.split('@')[0];
         
-// //         console.log(chalk.blue(`🔧 Setprefix from: +${fromNumber}`));
+//         console.log(chalk.blue(`🔧 Setprefix from: +${fromNumber}`));
         
-// //         // Owner verification
-// //         let isOwner = false;
+//         // Owner verification
+//         let isOwner = false;
         
-// //         // Method 1: Use chatBot's function
-// //         if (chatBot.isUserAllowed && typeof chatBot.isUserAllowed === 'function') {
-// //             isOwner = chatBot.isUserAllowed();
-// //         }
+//         // Method 1: Use chatBot's function
+//         if (chatBot.isUserAllowed && typeof chatBot.isUserAllowed === 'function') {
+//             isOwner = chatBot.isUserAllowed();
+//         }
         
-// //         // Method 2: Direct comparison
-// //         if (!isOwner && chatBot.OWNER_NUMBER) {
-// //             const normalize = (num) => num.replace(/[^0-9]/g, '');
-// //             isOwner = normalize(fromNumber) === normalize(chatBot.OWNER_NUMBER);
-// //         }
+//         // Method 2: Direct comparison
+//         if (!isOwner && chatBot.OWNER_NUMBER) {
+//             const normalize = (num) => num.replace(/[^0-9]/g, '');
+//             isOwner = normalize(fromNumber) === normalize(chatBot.OWNER_NUMBER);
+//         }
         
-// //         if (!isOwner) {
-// //             console.log(chalk.red(`❌ Access denied: +${fromNumber} is not owner`));
+//         if (!isOwner) {
+//             console.log(chalk.red(`❌ Access denied: +${fromNumber} is not owner`));
             
-// //             await sock.sendMessage(chatId, {
-// //                 text: `❌ *Permission Denied*\n\nOnly bot owner can change prefix.\n\nOwner: +${chatBot.OWNER_NUMBER || 'Unknown'}\nYou: +${fromNumber}`
-// //             }, { quoted: msg });
-// //             return;
-// //         }
+//             await sock.sendMessage(chatId, {
+//                 text: `❌ *Permission Denied*\n\nOnly bot owner can change prefix.\n\nOwner: +${chatBot.OWNER_NUMBER || 'Unknown'}\nYou: +${fromNumber}`
+//             }, { quoted: msg });
+//             return;
+//         }
         
-// //         console.log(chalk.green(`✅ Owner verified: +${fromNumber}`));
+//         console.log(chalk.green(`✅ Owner verified: +${fromNumber}`));
         
-// //         // Check restart availability
-// //         const restartMethods = isAutoRestartAvailable();
+//         // Check restart availability
+//         const restartMethods = isAutoRestartAvailable();
         
-// //         // Show help if no args
-// //         if (args.length === 0) {
-// //             const storedPrefix = getStoredPrefix();
-// //             const effectivePrefix = storedPrefix || currentPrefix || '.';
+//         // Show help if no args
+//         if (args.length === 0) {
+//             const storedPrefix = getStoredPrefix();
+//             const effectivePrefix = storedPrefix || currentPrefix || '.';
             
-// //             let restartInfo = '';
-// //             if (restartMethods.hasPidFile) {
-// //                 restartInfo = '✅ Auto-restart: Available (PID detected)';
-// //             } else {
-// //                 restartInfo = '⚠️ Auto-restart: May require manual restart';
-// //             }
+//             let restartInfo = '';
+//             if (restartMethods.hasPidFile) {
+//                 restartInfo = '✅ Auto-restart: Available (PID detected)';
+//             } else {
+//                 restartInfo = '⚠️ Auto-restart: May require manual restart';
+//             }
             
-// //             await sock.sendMessage(chatId, {
-// //                 text: `🔤 *PREFIX COMMAND*\n\n*Current Prefix:* \`${effectivePrefix}\`\n${restartInfo}\n\n*Usage:*\n• ${effectivePrefix}setprefix <new_prefix>\n• ${effectivePrefix}setprefix reset\n• ${effectivePrefix}setprefix status\n\n*Examples:*\n${effectivePrefix}setprefix !\n${effectivePrefix}setprefix #\n${effectivePrefix}setprefix reset\n\n*Note:* Bot auto-restarts in 2 seconds after change!`
-// //             }, { quoted: msg });
-// //             return;
-// //         }
+//             await sock.sendMessage(chatId, {
+//                 text: `🔤 *PREFIX COMMAND*\n\n*Current Prefix:* \`${effectivePrefix}\`\n${restartInfo}\n\n*Usage:*\n• ${effectivePrefix}setprefix <new_prefix>\n• ${effectivePrefix}setprefix reset\n• ${effectivePrefix}setprefix status\n\n*Examples:*\n${effectivePrefix}setprefix !\n${effectivePrefix}setprefix #\n${effectivePrefix}setprefix reset\n\n*Note:* Bot auto-restarts in 2 seconds after change!`
+//             }, { quoted: msg });
+//             return;
+//         }
         
-// //         const action = args[0].toLowerCase();
+//         const action = args[0].toLowerCase();
         
-// //         // Show status
-// //         if (action === 'status') {
-// //             const storedPrefix = getStoredPrefix();
-// //             const effectivePrefix = storedPrefix || currentPrefix || '.';
+//         // Show status
+//         if (action === 'status') {
+//             const storedPrefix = getStoredPrefix();
+//             const effectivePrefix = storedPrefix || currentPrefix || '.';
             
-// //             let restartStatus = '🟡 Partial';
-// //             if (restartMethods.hasPidFile) restartStatus = '🟢 Available';
+//             let restartStatus = '🟡 Partial';
+//             if (restartMethods.hasPidFile) restartStatus = '🟢 Available';
             
-// //             await sock.sendMessage(chatId, {
-// //                 text: `📊 *PREFIX STATUS*\n\n*Active Prefix:* \`${effectivePrefix}\`\n*Stored Prefix:* ${storedPrefix ? `\`${storedPrefix}\`` : 'None'}\n*Auto-restart:* ${restartStatus}\n*Owner:* +${fromNumber}\n\n*Restart Methods:*\n${restartMethods.hasPidFile ? '✅ PID file found' : '⚠️ No PID file'}\n${restartMethods.canExit ? '✅ Process exit' : '❌ Cannot exit'}\n\n*After restart:* \`${storedPrefix || '.'}command\``
-// //             }, { quoted: msg });
-// //             return;
-// //         }
+//             await sock.sendMessage(chatId, {
+//                 text: `📊 *PREFIX STATUS*\n\n*Active Prefix:* \`${effectivePrefix}\`\n*Stored Prefix:* ${storedPrefix ? `\`${storedPrefix}\`` : 'None'}\n*Auto-restart:* ${restartStatus}\n*Owner:* +${fromNumber}\n\n*Restart Methods:*\n${restartMethods.hasPidFile ? '✅ PID file found' : '⚠️ No PID file'}\n${restartMethods.canExit ? '✅ Process exit' : '❌ Cannot exit'}\n\n*After restart:* \`${storedPrefix || '.'}command\``
+//             }, { quoted: msg });
+//             return;
+//         }
         
-// //         // Reset prefix
-// //         if (action === 'reset') {
-// //             if (fs.existsSync(PREFIX_FILE)) {
-// //                 fs.unlinkSync(PREFIX_FILE);
+//         // Reset prefix
+//         if (action === 'reset') {
+//             if (fs.existsSync(PREFIX_FILE)) {
+//                 fs.unlinkSync(PREFIX_FILE);
                 
-// //                 // Log reset
-// //                 const logEntry = `[${new Date().toISOString()}] PREFIX_RESET: by ${fromNumber}\n`;
-// //                 fs.appendFileSync(LOG_FILE, logEntry);
-// //             }
+//                 // Log reset
+//                 const logEntry = `[${new Date().toISOString()}] PREFIX_RESET: by ${fromNumber}\n`;
+//                 fs.appendFileSync(LOG_FILE, logEntry);
+//             }
             
-// //             await sock.sendMessage(chatId, {
-// //                 text: `🔄 *PREFIX RESET*\n\n✅ Reset to default: \`.\`\n\n🤖 *Auto-restarting in 2 seconds...*\nAfter restart, use: \`.menu\``
-// //             }, { quoted: msg });
+//             await sock.sendMessage(chatId, {
+//                 text: `🔄 *PREFIX RESET*\n\n✅ Reset to default: \`.\`\n\n🤖 *Auto-restarting in 2 seconds...*\nAfter restart, use: \`.menu\``
+//             }, { quoted: msg });
             
-// //             console.log(chalk.green(`✅ Prefix reset by owner +${fromNumber}`));
+//             console.log(chalk.green(`✅ Prefix reset by owner +${fromNumber}`));
             
-// //             // Trigger restart after delay
-// //             setTimeout(async () => {
-// //                 await triggerBotRestart();
-// //                 console.log(chalk.yellow('🔄 Restart sequence initiated'));
-// //             }, 2000);
+//             // Trigger restart after delay
+//             setTimeout(async () => {
+//                 await triggerBotRestart();
+//                 console.log(chalk.yellow('🔄 Restart sequence initiated'));
+//             }, 2000);
             
-// //             return;
-// //         }
+//             return;
+//         }
         
-// //         // Validate new prefix
-// //         if (!isValidPrefix(action)) {
-// //             await sock.sendMessage(chatId, {
-// //                 text: `❌ *Invalid Prefix*\n\nPrefix must be:\n• 1-3 characters\n• No spaces\n• Valid: ! @ # $ % ^ & *\n• Or letters/numbers\n\n*Good:* ! # $ & **\n*Bad:* spaced prefix\n*Bad:* verylongprefix\n\n*Current:* \`${currentPrefix || '.'}\``
-// //             }, { quoted: msg });
-// //             return;
-// //         }
+//         // Validate new prefix
+//         if (!isValidPrefix(action)) {
+//             await sock.sendMessage(chatId, {
+//                 text: `❌ *Invalid Prefix*\n\nPrefix must be:\n• 1-3 characters\n• No spaces\n• Valid: ! @ # $ % ^ & *\n• Or letters/numbers\n\n*Good:* ! # $ & **\n*Bad:* spaced prefix\n*Bad:* verylongprefix\n\n*Current:* \`${currentPrefix || '.'}\``
+//             }, { quoted: msg });
+//             return;
+//         }
         
-// //         // Save new prefix
-// //         if (savePrefixWithRestart(action, fromNumber)) {
-// //             console.log(chalk.green(`✅ Prefix saved as "${action}" by +${fromNumber}`));
+//         // Save new prefix
+//         if (savePrefixWithRestart(action, fromNumber)) {
+//             console.log(chalk.green(`✅ Prefix saved as "${action}" by +${fromNumber}`));
             
-// //             // Send success message
-// //             const successMessage = `✅ *PREFIX CHANGED*\n\nNew prefix: \`${action}\`\n\n🤖 *Auto-restarting in 2 seconds...*\n\n*After restart, use:*\n\`${action}menu\` - Show menu\n\`${action}info\` - Bot info\n\`${action}help\` - Help\n\n*Restart log:* ${LOG_FILE}`;
+//             // Send success message
+//             const successMessage = `✅ *PREFIX CHANGED*\n\nNew prefix: \`${action}\`\n\n🤖 *Auto-restarting in 2 seconds...*\n\n*After restart, use:*\n\`${action}menu\` - Show menu\n\`${action}info\` - Bot info\n\`${action}help\` - Help\n\n*Restart log:* ${LOG_FILE}`;
             
-// //             await sock.sendMessage(chatId, { text: successMessage });
+//             await sock.sendMessage(chatId, { text: successMessage });
             
-// //             // Send countdown
-// //             for (let i = 2; i > 0; i--) {
-// //                 setTimeout(async () => {
-// //                     try {
-// //                         await sock.sendMessage(chatId, {
-// //                             text: `⏳ Restarting in ${i} second${i !== 1 ? 's' : ''}...`
-// //                         });
-// //                     } catch (error) {
-// //                         // Ignore send errors during restart
-// //                     }
-// //                 }, (2 - i) * 1000);
-// //             }
+//             // Send countdown
+//             for (let i = 2; i > 0; i--) {
+//                 setTimeout(async () => {
+//                     try {
+//                         await sock.sendMessage(chatId, {
+//                             text: `⏳ Restarting in ${i} second${i !== 1 ? 's' : ''}...`
+//                         });
+//                     } catch (error) {
+//                         // Ignore send errors during restart
+//                     }
+//                 }, (2 - i) * 1000);
+//             }
             
-// //             console.log(chalk.yellow(`🔄 Auto-restart scheduled for prefix: "${action}"`));
+//             console.log(chalk.yellow(`🔄 Auto-restart scheduled for prefix: "${action}"`));
             
-// //             // Trigger restart after 2 seconds
-// //             setTimeout(async () => {
-// //                 console.log(chalk.yellow('🔄 Executing auto-restart...'));
+//             // Trigger restart after 2 seconds
+//             setTimeout(async () => {
+//                 console.log(chalk.yellow('🔄 Executing auto-restart...'));
                 
-// //                 // Update prefix data with restart time
-// //                 try {
-// //                     const prefixData = JSON.parse(fs.readFileSync(PREFIX_FILE, 'utf8'));
-// //                     prefixData.restartTime = new Date().toISOString();
-// //                     fs.writeFileSync(PREFIX_FILE, JSON.stringify(prefixData, null, 2));
-// //                 } catch (error) {
-// //                     // Ignore
-// //                 }
+//                 // Update prefix data with restart time
+//                 try {
+//                     const prefixData = JSON.parse(fs.readFileSync(PREFIX_FILE, 'utf8'));
+//                     prefixData.restartTime = new Date().toISOString();
+//                     fs.writeFileSync(PREFIX_FILE, JSON.stringify(prefixData, null, 2));
+//                 } catch (error) {
+//                     // Ignore
+//                 }
                 
-// //                 // Trigger restart
-// //                 const restartSuccess = await triggerBotRestart();
+//                 // Trigger restart
+//                 const restartSuccess = await triggerBotRestart();
                 
-// //                 if (restartSuccess) {
-// //                     console.log(chalk.green('✅ Restart initiated successfully'));
-// //                 } else {
-// //                     console.log(chalk.yellow('⚠️ Restart may require manual intervention'));
+//                 if (restartSuccess) {
+//                     console.log(chalk.green('✅ Restart initiated successfully'));
+//                 } else {
+//                     console.log(chalk.yellow('⚠️ Restart may require manual intervention'));
                     
-// //                     // Send fallback message
-// //                     setTimeout(async () => {
-// //                         try {
-// //                             await sock.sendMessage(chatId, {
-// //                                 text: `⚠️ *Manual Restart Needed*\n\nPrefix saved as: \`${action}\`\n\nPlease restart your bot/server manually.\nAfter restart, use: \`${action}command\``
-// //                             });
-// //                         } catch (error) {
-// //                             // Ignore
-// //                         }
-// //                     }, 3000);
-// //                 }
-// //             }, 2000);
+//                     // Send fallback message
+//                     setTimeout(async () => {
+//                         try {
+//                             await sock.sendMessage(chatId, {
+//                                 text: `⚠️ *Manual Restart Needed*\n\nPrefix saved as: \`${action}\`\n\nPlease restart your bot/server manually.\nAfter restart, use: \`${action}command\``
+//                             });
+//                         } catch (error) {
+//                             // Ignore
+//                         }
+//                     }, 3000);
+//                 }
+//             }, 2000);
             
-// //         } else {
-// //             await sock.sendMessage(chatId, {
-// //                 text: '❌ Failed to save prefix. Please try again.'
-// //             }, { quoted: msg });
-// //         }
-// //     }
-// // };
+//         } else {
+//             await sock.sendMessage(chatId, {
+//                 text: '❌ Failed to save prefix. Please try again.'
+//             }, { quoted: msg });
+//         }
+//     }
+// };
 
 
 
@@ -1571,305 +1571,755 @@
 
 
 
-// ====== REAL-TIME PREFIX SYSTEM ======
-// Makes bot actually read from prefix.json
-import fs from 'fs';
-import chalk from 'chalk';
+// // ====== REAL-TIME PREFIX SYSTEM ======
+// // Makes bot actually read from prefix.json
+// import fs from 'fs';
+// import chalk from 'chalk';
 
-// ====== CONFIG ======
-const CONFIG = {
-    PREFIX_FILE: './prefix.json',
-    MAX_PREFIX_LENGTH: 3
-};
+// // ====== CONFIG ======
+// const CONFIG = {
+//     PREFIX_FILE: './prefix.json',
+//     MAX_PREFIX_LENGTH: 3
+// };
 
-// ====== GLOBAL PREFIX OVERRIDE ======
-// This will override how the bot checks for prefix
-function installPrefixOverride() {
-    console.log(chalk.yellow('[Prefix] Installing global prefix override...'));
+// // ====== GLOBAL PREFIX OVERRIDE ======
+// // This will override how the bot checks for prefix
+// function installPrefixOverride() {
+//     console.log(chalk.yellow('[Prefix] Installing global prefix override...'));
     
-    try {
-        // Create a global function that checks against saved prefix
-        if (!global.checkPrefix) {
-            global.checkPrefix = function(textMsg) {
-                // Get live prefix from file
-                const livePrefix = getLivePrefix();
-                return textMsg.startsWith(livePrefix);
-            };
-            console.log(chalk.green('[Prefix] Created global.checkPrefix()'));
-        }
+//     try {
+//         // Create a global function that checks against saved prefix
+//         if (!global.checkPrefix) {
+//             global.checkPrefix = function(textMsg) {
+//                 // Get live prefix from file
+//                 const livePrefix = getLivePrefix();
+//                 return textMsg.startsWith(livePrefix);
+//             };
+//             console.log(chalk.green('[Prefix] Created global.checkPrefix()'));
+//         }
         
-        // Create easy access to current prefix
-        if (!global.getCurrentPrefix) {
-            global.getCurrentPrefix = getLivePrefix;
-            console.log(chalk.green('[Prefix] Created global.getCurrentPrefix()'));
-        }
+//         // Create easy access to current prefix
+//         if (!global.getCurrentPrefix) {
+//             global.getCurrentPrefix = getLivePrefix;
+//             console.log(chalk.green('[Prefix] Created global.getCurrentPrefix()'));
+//         }
         
-        // Store prefix in global for easy access
-        global.LIVE_PREFIX = getLivePrefix();
-        console.log(chalk.green(`[Prefix] Set global.LIVE_PREFIX = "${global.LIVE_PREFIX}"`));
+//         // Store prefix in global for easy access
+//         global.LIVE_PREFIX = getLivePrefix();
+//         console.log(chalk.green(`[Prefix] Set global.LIVE_PREFIX = "${global.LIVE_PREFIX}"`));
         
-        return true;
+//         return true;
         
-    } catch (error) {
-        console.log(chalk.red('[Prefix] Override failed:', error.message));
-        return false;
-    }
-}
+//     } catch (error) {
+//         console.log(chalk.red('[Prefix] Override failed:', error.message));
+//         return false;
+//     }
+// }
 
-// ====== UTILITY FUNCTIONS ======
-function getLivePrefix() {
-    try {
-        if (fs.existsSync(CONFIG.PREFIX_FILE)) {
-            const data = JSON.parse(fs.readFileSync(CONFIG.PREFIX_FILE, 'utf8'));
-            return data.prefix || '.';
-        }
-    } catch (error) {
-        console.error(chalk.red('[Prefix] Read error:'), error.message);
-    }
-    return '.';
-}
+// // ====== UTILITY FUNCTIONS ======
+// function getLivePrefix() {
+//     try {
+//         if (fs.existsSync(CONFIG.PREFIX_FILE)) {
+//             const data = JSON.parse(fs.readFileSync(CONFIG.PREFIX_FILE, 'utf8'));
+//             return data.prefix || '.';
+//         }
+//     } catch (error) {
+//         console.error(chalk.red('[Prefix] Read error:'), error.message);
+//     }
+//     return '.';
+// }
 
-function saveLivePrefix(newPrefix, owner) {
-    try {
-        const data = {
-            prefix: newPrefix,
-            owner: owner,
-            timestamp: new Date().toISOString(),
-            version: 'real-time'
-        };
+// function saveLivePrefix(newPrefix, owner) {
+//     try {
+//         const data = {
+//             prefix: newPrefix,
+//             owner: owner,
+//             timestamp: new Date().toISOString(),
+//             version: 'real-time'
+//         };
         
-        fs.writeFileSync(CONFIG.PREFIX_FILE, JSON.stringify(data, null, 2));
+//         fs.writeFileSync(CONFIG.PREFIX_FILE, JSON.stringify(data, null, 2));
         
-        // Update global prefix immediately
-        global.LIVE_PREFIX = newPrefix;
-        console.log(chalk.green(`[Prefix] Updated global.LIVE_PREFIX to "${newPrefix}"`));
+//         // Update global prefix immediately
+//         global.LIVE_PREFIX = newPrefix;
+//         console.log(chalk.green(`[Prefix] Updated global.LIVE_PREFIX to "${newPrefix}"`));
         
-        return true;
-    } catch (error) {
-        console.error(chalk.red('[Prefix] Save error:'), error.message);
-        return false;
-    }
-}
+//         return true;
+//     } catch (error) {
+//         console.error(chalk.red('[Prefix] Save error:'), error.message);
+//         return false;
+//     }
+// }
 
-// ====== PATCH THE BOT'S MESSAGE HANDLER ======
-function patchMessageHandler() {
-    console.log(chalk.yellow('[Prefix] Attempting to patch message handler...'));
+// // ====== PATCH THE BOT'S MESSAGE HANDLER ======
+// function patchMessageHandler() {
+//     console.log(chalk.yellow('[Prefix] Attempting to patch message handler...'));
     
-    try {
-        // Find and patch the handleIncomingMessage function
-        // This is a bit hacky but works
+//     try {
+//         // Find and patch the handleIncomingMessage function
+//         // This is a bit hacky but works
         
-        // First, let's create a wrapper for textMsg.startsWith
-        const originalStartsWith = String.prototype.startsWith;
+//         // First, let's create a wrapper for textMsg.startsWith
+//         const originalStartsWith = String.prototype.startsWith;
         
-        if (!String.prototype._originalStartsWith) {
-            String.prototype._originalStartsWith = originalStartsWith;
-        }
+//         if (!String.prototype._originalStartsWith) {
+//             String.prototype._originalStartsWith = originalStartsWith;
+//         }
         
-        // Create patched version
-        String.prototype.startsWith = function(searchString, position) {
-            // If checking for PREFIX, use live prefix instead
-            if (searchString === global.PREFIX || searchString === (global.PREFIX || '.')) {
-                const livePrefix = getLivePrefix();
-                return this._originalStartsWith(livePrefix, position);
-            }
-            return this._originalStartsWith(searchString, position);
-        };
+//         // Create patched version
+//         String.prototype.startsWith = function(searchString, position) {
+//             // If checking for PREFIX, use live prefix instead
+//             if (searchString === global.PREFIX || searchString === (global.PREFIX || '.')) {
+//                 const livePrefix = getLivePrefix();
+//                 return this._originalStartsWith(livePrefix, position);
+//             }
+//             return this._originalStartsWith(searchString, position);
+//         };
         
-        console.log(chalk.green('[Prefix] Patched String.prototype.startsWith'));
-        return true;
+//         console.log(chalk.green('[Prefix] Patched String.prototype.startsWith'));
+//         return true;
         
-    } catch (error) {
-        console.log(chalk.red('[Prefix] Patch failed:', error.message));
-        return false;
-    }
-}
+//     } catch (error) {
+//         console.log(chalk.red('[Prefix] Patch failed:', error.message));
+//         return false;
+//     }
+// }
 
-// ====== COMMAND MODULE ======
-export default {
-    name: 'setprefix',
-    alias: ['prefix', 'realprefix', 'fixprefix'],
-    description: 'Change prefix - bot reads from prefix.json',
+// // ====== COMMAND MODULE ======
+// export default {
+//     name: 'setprefix',
+//     alias: ['prefix', 'realprefix', 'fixprefix'],
+//     description: 'Change prefix - bot reads from prefix.json',
     
-    async execute(sock, msg, args, currentPrefix, chatBot) {
-        const chatId = msg.key.remoteJid;
-        const sender = chatId.split('@')[0];
+//     async execute(sock, msg, args, currentPrefix, chatBot) {
+//         const chatId = msg.key.remoteJid;
+//         const sender = chatId.split('@')[0];
         
-        // ====== OWNER CHECK ======
-        let isOwner = false;
+//         // ====== OWNER CHECK ======
+//         let isOwner = false;
         
-        if (chatBot.isUserAllowed && typeof chatBot.isUserAllowed === 'function') {
-            isOwner = chatBot.isUserAllowed();
-        }
+//         if (chatBot.isUserAllowed && typeof chatBot.isUserAllowed === 'function') {
+//             isOwner = chatBot.isUserAllowed();
+//         }
         
-        if (!isOwner && chatBot.OWNER_NUMBER) {
-            const normalize = (num) => num.replace(/[^0-9]/g, '');
-            isOwner = normalize(sender) === normalize(chatBot.OWNER_NUMBER);
-        }
+//         if (!isOwner && chatBot.OWNER_NUMBER) {
+//             const normalize = (num) => num.replace(/[^0-9]/g, '');
+//             isOwner = normalize(sender) === normalize(chatBot.OWNER_NUMBER);
+//         }
         
-        if (!isOwner) {
-            await sock.sendMessage(chatId, { 
-                text: '🔒 Owner only command' 
-            }, { quoted: msg });
-            return;
-        }
+//         if (!isOwner) {
+//             await sock.sendMessage(chatId, { 
+//                 text: '🔒 Owner only command' 
+//             }, { quoted: msg });
+//             return;
+//         }
         
-        console.log(chalk.blue(`[Prefix] Command from: +${sender}`));
+//         console.log(chalk.blue(`[Prefix] Command from: +${sender}`));
         
-        // ====== INSTALL OVERRIDE ON FIRST USE ======
-        if (!global.checkPrefix) {
-            installPrefixOverride();
-            patchMessageHandler();
-        }
+//         // ====== INSTALL OVERRIDE ON FIRST USE ======
+//         if (!global.checkPrefix) {
+//             installPrefixOverride();
+//             patchMessageHandler();
+//         }
         
-        // ====== LOAD CURRENT PREFIX ======
-        const livePrefix = getLivePrefix();
+//         // ====== LOAD CURRENT PREFIX ======
+//         const livePrefix = getLivePrefix();
         
-        // ====== NO ARGUMENTS - SHOW HELP ======
-        if (args.length === 0) {
-            const helpText = 
-                '🔤 *REAL-TIME PREFIX*\n\n' +
-                '✅ *Live Prefix:* `' + livePrefix + '`\n' +
-                '🤖 *Bot Prefix:* `' + (currentPrefix || '.') + '`\n\n' +
-                'Usage: `' + livePrefix + 'setprefix <new>`\n' +
-                'Example: `' + livePrefix + 'setprefix !`\n' +
-                'Reset: `' + livePrefix + 'setprefix reset`\n\n' +
-                '⚡ *Bot reads from prefix.json*';
+//         // ====== NO ARGUMENTS - SHOW HELP ======
+//         if (args.length === 0) {
+//             const helpText = 
+//                 '🔤 *REAL-TIME PREFIX*\n\n' +
+//                 '✅ *Live Prefix:* `' + livePrefix + '`\n' +
+//                 '🤖 *Bot Prefix:* `' + (currentPrefix || '.') + '`\n\n' +
+//                 'Usage: `' + livePrefix + 'setprefix <new>`\n' +
+//                 'Example: `' + livePrefix + 'setprefix !`\n' +
+//                 'Reset: `' + livePrefix + 'setprefix reset`\n\n' +
+//                 '⚡ *Bot reads from prefix.json*';
             
-            await sock.sendMessage(chatId, { text: helpText }, { quoted: msg });
-            return;
-        }
+//             await sock.sendMessage(chatId, { text: helpText }, { quoted: msg });
+//             return;
+//         }
         
-        const action = args[0];
+//         const action = args[0];
         
-        // ====== STATUS COMMAND ======
-        if (action.toLowerCase() === 'status') {
-            const isPatched = !!global.checkPrefix;
-            const hasOverride = !!global.LIVE_PREFIX;
+//         // ====== STATUS COMMAND ======
+//         if (action.toLowerCase() === 'status') {
+//             const isPatched = !!global.checkPrefix;
+//             const hasOverride = !!global.LIVE_PREFIX;
             
-            const statusText = 
-                '📊 *PREFIX SYSTEM STATUS*\n\n' +
-                '✅ *Live Prefix:* `' + livePrefix + '`\n' +
-                '🤖 *Bot Prefix:* `' + (currentPrefix || '.') + '`\n' +
-                '📁 *File Exists:* ' + (fs.existsSync(CONFIG.PREFIX_FILE) ? '✅ Yes' : '❌ No') + '\n' +
-                '⚡ *System Patched:* ' + (isPatched ? '✅ Yes' : '❌ No') + '\n' +
-                '🎯 *Override Active:* ' + (hasOverride ? '✅ Yes' : '❌ No') + '\n\n' +
-                '💡 *Bot should respond to:*\n' +
-                '`' + livePrefix + 'command`';
+//             const statusText = 
+//                 '📊 *PREFIX SYSTEM STATUS*\n\n' +
+//                 '✅ *Live Prefix:* `' + livePrefix + '`\n' +
+//                 '🤖 *Bot Prefix:* `' + (currentPrefix || '.') + '`\n' +
+//                 '📁 *File Exists:* ' + (fs.existsSync(CONFIG.PREFIX_FILE) ? '✅ Yes' : '❌ No') + '\n' +
+//                 '⚡ *System Patched:* ' + (isPatched ? '✅ Yes' : '❌ No') + '\n' +
+//                 '🎯 *Override Active:* ' + (hasOverride ? '✅ Yes' : '❌ No') + '\n\n' +
+//                 '💡 *Bot should respond to:*\n' +
+//                 '`' + livePrefix + 'command`';
             
-            await sock.sendMessage(chatId, { text: statusText });
-            return;
-        }
+//             await sock.sendMessage(chatId, { text: statusText });
+//             return;
+//         }
         
-        // ====== RESET COMMAND ======
-        if (action.toLowerCase() === 'reset') {
-            if (fs.existsSync(CONFIG.PREFIX_FILE)) {
-                fs.unlinkSync(CONFIG.PREFIX_FILE);
-            }
+//         // ====== RESET COMMAND ======
+//         if (action.toLowerCase() === 'reset') {
+//             if (fs.existsSync(CONFIG.PREFIX_FILE)) {
+//                 fs.unlinkSync(CONFIG.PREFIX_FILE);
+//             }
             
-            // Update global
-            global.LIVE_PREFIX = '.';
+//             // Update global
+//             global.LIVE_PREFIX = '.';
             
-            const successText = 
-                '🔄 *PREFIX RESET*\n\n' +
-                '✅ Reset to default: `.`\n\n' +
-                '🎯 *Bot should now respond to:*\n' +
-                '• `.menu`\n' +
-                '• `.info`\n' +
-                '• `.help`\n\n' +
-                '🧪 *Test it:* `.menu`';
+//             const successText = 
+//                 '🔄 *PREFIX RESET*\n\n' +
+//                 '✅ Reset to default: `.`\n\n' +
+//                 '🎯 *Bot should now respond to:*\n' +
+//                 '• `.menu`\n' +
+//                 '• `.info`\n' +
+//                 '• `.help`\n\n' +
+//                 '🧪 *Test it:* `.menu`';
             
-            await sock.sendMessage(chatId, { text: successText });
-            return;
-        }
+//             await sock.sendMessage(chatId, { text: successText });
+//             return;
+//         }
         
-        // ====== VALIDATE NEW PREFIX ======
-        if (action.length > CONFIG.MAX_PREFIX_LENGTH || 
-            action.includes(' ') || 
-            !action.trim()) {
-            await sock.sendMessage(chatId, { 
-                text: '❌ *INVALID PREFIX*\n\nMust be:\n• 1-3 characters\n• No spaces\n• Examples: ! # $ & *' 
-            }, { quoted: msg });
-            return;
-        }
+//         // ====== VALIDATE NEW PREFIX ======
+//         if (action.length > CONFIG.MAX_PREFIX_LENGTH || 
+//             action.includes(' ') || 
+//             !action.trim()) {
+//             await sock.sendMessage(chatId, { 
+//                 text: '❌ *INVALID PREFIX*\n\nMust be:\n• 1-3 characters\n• No spaces\n• Examples: ! # $ & *' 
+//             }, { quoted: msg });
+//             return;
+//         }
         
-        // ====== SAVE NEW PREFIX ======
-        const saveSuccess = saveLivePrefix(action, sender);
+//         // ====== SAVE NEW PREFIX ======
+//         const saveSuccess = saveLivePrefix(action, sender);
         
-        if (!saveSuccess) {
-            await sock.sendMessage(chatId, { 
-                text: '❌ Failed to save prefix' 
-            });
-            return;
-        }
+//         if (!saveSuccess) {
+//             await sock.sendMessage(chatId, { 
+//                 text: '❌ Failed to save prefix' 
+//             });
+//             return;
+//         }
         
-        console.log(chalk.green(`[Prefix] Saved to prefix.json: "${action}"`));
+//         console.log(chalk.green(`[Prefix] Saved to prefix.json: "${action}"`));
         
-        // ====== SEND SUCCESS MESSAGE ======
-        const successText = 
-            '✅ *PREFIX UPDATED IN REAL-TIME!*\n\n' +
-            '✅ New prefix: `' + action + '`\n\n' +
-            '📁 *Saved to:* prefix.json\n' +
-            '⚡ *Bot reading from file*\n\n' +
-            '🎯 *TEST IMMEDIATELY:*\n' +
-            'Type: `' + action + 'menu`\n\n' +
-            '🤖 *Bot should respond!*';
+//         // ====== SEND SUCCESS MESSAGE ======
+//         const successText = 
+//             '✅ *PREFIX UPDATED IN REAL-TIME!*\n\n' +
+//             '✅ New prefix: `' + action + '`\n\n' +
+//             '📁 *Saved to:* prefix.json\n' +
+//             '⚡ *Bot reading from file*\n\n' +
+//             '🎯 *TEST IMMEDIATELY:*\n' +
+//             'Type: `' + action + 'menu`\n\n' +
+//             '🤖 *Bot should respond!*';
         
-        await sock.sendMessage(chatId, { text: successText });
+//         await sock.sendMessage(chatId, { text: successText });
         
-        // ====== TEST IT FOR THE USER ======
-        setTimeout(async () => {
-            try {
-                // Auto-test by sending a test command
-                const testMessage = 
-                    '🧪 *AUTO-TESTING...*\n\n' +
-                    'Trying: `' + action + 'menu`\n' +
-                    'Bot should respond below ⬇️';
+//         // ====== TEST IT FOR THE USER ======
+//         setTimeout(async () => {
+//             try {
+//                 // Auto-test by sending a test command
+//                 const testMessage = 
+//                     '🧪 *AUTO-TESTING...*\n\n' +
+//                     'Trying: `' + action + 'menu`\n' +
+//                     'Bot should respond below ⬇️';
                 
-                await sock.sendMessage(chatId, { text: testMessage });
+//                 await sock.sendMessage(chatId, { text: testMessage });
                 
-                // Send the actual command as if user typed it
-                setTimeout(async () => {
-                    try {
-                        // Simulate the command
-                        await sock.sendMessage(chatId, { 
-                            text: action + 'menu'
-                        });
-                    } catch (error) {
-                        // Ignore
-                    }
-                }, 1000);
+//                 // Send the actual command as if user typed it
+//                 setTimeout(async () => {
+//                     try {
+//                         // Simulate the command
+//                         await sock.sendMessage(chatId, { 
+//                             text: action + 'menu'
+//                         });
+//                     } catch (error) {
+//                         // Ignore
+//                     }
+//                 }, 1000);
                 
-            } catch (error) {
-                // Ignore test errors
-            }
-        }, 2000);
+//             } catch (error) {
+//                 // Ignore test errors
+//             }
+//         }, 2000);
         
-        // ====== SEND INSTRUCTIONS ======
-        setTimeout(async () => {
-            try {
-                const instructions = 
-                    '💡 *HOW IT WORKS:*\n\n' +
-                    '1. Prefix saved to `prefix.json`\n' +
-                    '2. Bot reads from that file\n' +
-                    '3. Commands check against saved prefix\n' +
-                    '4. No restart needed!\n\n' +
-                    '🎯 *USE:* `' + action + 'command`';
+//         // ====== SEND INSTRUCTIONS ======
+//         setTimeout(async () => {
+//             try {
+//                 const instructions = 
+//                     '💡 *HOW IT WORKS:*\n\n' +
+//                     '1. Prefix saved to `prefix.json`\n' +
+//                     '2. Bot reads from that file\n' +
+//                     '3. Commands check against saved prefix\n' +
+//                     '4. No restart needed!\n\n' +
+//                     '🎯 *USE:* `' + action + 'command`';
                 
-                await sock.sendMessage(chatId, { text: instructions });
-            } catch (error) {
-                // Ignore
-            }
-        }, 5000);
-    }
-};
+//                 await sock.sendMessage(chatId, { text: instructions });
+//             } catch (error) {
+//                 // Ignore
+//             }
+//         }, 5000);
+//     }
+// };
 
-// ====== INITIAL SETUP ======
-console.log(chalk.blue('[Prefix] Real-time prefix system loaded'));
-console.log(chalk.green('[Prefix] Reading from prefix.json'));
+// // ====== INITIAL SETUP ======
+// console.log(chalk.blue('[Prefix] Real-time prefix system loaded'));
+// console.log(chalk.green('[Prefix] Reading from prefix.json'));
 
-// Auto-install override when module loads
-setTimeout(() => {
-    installPrefixOverride();
-    patchMessageHandler();
-}, 1000);
+// // Auto-install override when module loads
+// setTimeout(() => {
+//     installPrefixOverride();
+//     patchMessageHandler();
+// }, 1000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // commands/setprefix.js
+
+// export default {
+//     name: 'setprefix',
+//     alias: ['prefix', 'changeprefix'],
+//     description: 'Change the bot prefix',
+//     category: 'Owner',
+    
+//     async execute(sock, msg, args) {
+//         console.log('='.repeat(50));
+//         console.log('[Prefix] Setprefix command received');
+        
+//         try {
+//             const senderJid = msg.key.remoteJid;
+//             console.log(`[Prefix] Sender JID: ${senderJid}`);
+//             console.log(`[Prefix] JID Type: ${getJidType(senderJid)}`);
+            
+//             // Check if user is owner - USING ENHANCED CHECK
+//             const isOwner = await checkEnhancedOwner(senderJid, msg.key.participant || senderJid);
+            
+//             if (!isOwner) {
+//                 console.log('[Prefix] User is NOT owner, denying access');
+//                 return sock.sendMessage(senderJid, {
+//                     text: '❌ *ACCESS DENIED*\nOnly the bot owner can change the prefix.'
+//                 }, { quoted: msg });
+//             }
+            
+//             console.log('[Prefix] User is owner, proceeding...');
+            
+//             // Get new prefix from args
+//             const newPrefix = args[0];
+            
+//             if (!newPrefix) {
+//                 const currentPrefix = getCurrentPrefix();
+//                 const ownerIds = loadOwnerIds();
+                
+//                 let response = `🔧 *Prefix Configuration*\n\n`;
+//                 response += `📝 Current Prefix: *"${currentPrefix}"*\n\n`;
+//                 response += `👑 *Owner Information:*\n`;
+//                 response += `• Primary: ${ownerIds.primary_number || 'Not set'}\n`;
+//                 response += `• Total Owner IDs: ${ownerIds.ids.length}\n\n`;
+//                 response += `📖 *Usage:*\n`;
+//                 response += `• ${currentPrefix}setprefix [new_prefix] - Change prefix\n`;
+//                 response += `• ${currentPrefix}setprefix addowner [@mention] - Add owner\n`;
+//                 response += `• ${currentPrefix}setprefix listowners - List all owners\n`;
+//                 response += `• ${currentPrefix}setprefix removeowner [number] - Remove owner\n`;
+//                 response += `\n⚠️ Prefix must be 1-3 characters only.`;
+                
+//                 return sock.sendMessage(senderJid, { text: response }, { quoted: msg });
+//             }
+            
+//             // Handle subcommands
+//             if (newPrefix.toLowerCase() === 'addowner') {
+//                 return await handleAddOwner(sock, msg, args.slice(1), senderJid);
+//             }
+            
+//             if (newPrefix.toLowerCase() === 'listowners') {
+//                 return await handleListOwners(sock, msg, senderJid);
+//             }
+            
+//             if (newPrefix.toLowerCase() === 'removeowner') {
+//                 return await handleRemoveOwner(sock, msg, args.slice(1), senderJid);
+//             }
+            
+//             // Validate new prefix
+//             if (newPrefix.length > 3) {
+//                 return sock.sendMessage(senderJid, {
+//                     text: '❌ Prefix must be 1-3 characters maximum!'
+//                 }, { quoted: msg });
+//             }
+            
+//             if (newPrefix.match(/[\\\/\n\r\t]/)) {
+//                 return sock.sendMessage(senderJid, {
+//                     text: '❌ Prefix cannot contain special characters!'
+//                 }, { quoted: msg });
+//             }
+            
+//             // Save new prefix
+//             const oldPrefix = getCurrentPrefix();
+            
+//             const prefixData = {
+//                 prefix: newPrefix,
+//                 lastChanged: new Date().toISOString(),
+//                 changedBy: senderJid,
+//                 oldPrefix: oldPrefix
+//             };
+            
+//             fs.writeFileSync('./prefix.json', JSON.stringify(prefixData, null, 2));
+            
+//             // Send confirmation
+//             await sock.sendMessage(senderJid, {
+//                 text: `✅ *Prefix Updated Successfully!*\n\n📝 Old Prefix: *"${oldPrefix}"*\n✨ New Prefix: *"${newPrefix}"*\n\nBot will now respond to commands starting with *"${newPrefix}"*`
+//             }, { quoted: msg });
+            
+//             console.log(`[Prefix] Prefix changed from "${oldPrefix}" to "${newPrefix}" by ${senderJid}`);
+            
+//         } catch (error) {
+//             console.error('[Prefix] Error:', error);
+//             await sock.sendMessage(msg.key.remoteJid, {
+//                 text: `❌ Error: ${error.message}`
+//             }, { quoted: msg });
+//         }
+//     }
+// };
+
+// // ====== ENHANCED OWNER CHECKING FUNCTIONS ======
+
+// import fs from 'fs';
+
+// // Get JID type
+// function getJidType(jid) {
+//     if (!jid) return 'unknown';
+//     if (jid.includes('@lid')) return 'lid';
+//     if (jid.includes('@g.us')) return 'group';
+//     if (jid.includes('@broadcast')) return 'broadcast';
+//     if (jid.includes('@s.whatsapp.net')) return 'personal';
+//     return 'unknown';
+// }
+
+// // Get current prefix
+// function getCurrentPrefix() {
+//     try {
+//         if (fs.existsSync('./prefix.json')) {
+//             const data = JSON.parse(fs.readFileSync('./prefix.json', 'utf8'));
+//             return data.prefix || process.env.PREFIX || '.';
+//         }
+//     } catch (error) {
+//         console.error('❌ Error reading prefix file:', error);
+//     }
+//     return process.env.PREFIX || '.';
+// }
+
+// // Load owner IDs
+// function loadOwnerIds() {
+//     try {
+//         if (fs.existsSync('./owner_ids.json')) {
+//             const data = JSON.parse(fs.readFileSync('./owner_ids.json', 'utf-8'));
+//             return data;
+//         }
+//     } catch (error) {
+//         // File doesn't exist yet
+//     }
+    
+//     return {
+//         primary_jid: null,
+//         primary_number: null,
+//         ids: [],
+//         last_updated: new Date().toISOString()
+//     };
+// }
+
+// // Load owner info from owner.json
+// function loadOwnerInfo() {
+//     try {
+//         if (fs.existsSync('./owner.json')) {
+//             const data = JSON.parse(fs.readFileSync('./owner.json', 'utf-8'));
+//             return data;
+//         }
+//     } catch (error) {
+//         console.error('Error loading owner info:', error);
+//     }
+//     return null;
+// }
+
+// // Enhanced owner check that handles all JID formats
+// async function checkEnhancedOwner(senderJid, participantJid = null) {
+//     console.log('[Prefix] Enhanced owner check started');
+//     console.log(`[Prefix] Sender JID: ${senderJid}`);
+//     console.log(`[Prefix] Participant JID: ${participantJid}`);
+    
+//     // Load owner IDs from owner_ids.json
+//     const ownerIds = loadOwnerIds();
+//     console.log(`[Prefix] Loaded owner IDs: ${ownerIds.ids.length}`);
+    
+//     // Check direct match in owner_ids.json
+//     const directMatch = ownerIds.ids.some(owner => {
+//         const normalizedSender = normalizeJid(senderJid);
+//         const normalizedOwner = normalizeJid(owner.jid);
+//         return normalizedSender === normalizedOwner;
+//     });
+    
+//     if (directMatch) {
+//         console.log('[Prefix] Direct match found in owner_ids.json');
+//         return true;
+//     }
+    
+//     // Check participant JID if different
+//     if (participantJid && participantJid !== senderJid) {
+//         const participantMatch = ownerIds.ids.some(owner => {
+//             const normalizedParticipant = normalizeJid(participantJid);
+//             const normalizedOwner = normalizeJid(owner.jid);
+//             return normalizedParticipant === normalizedOwner;
+//         });
+        
+//         if (participantMatch) {
+//             console.log('[Prefix] Participant match found in owner_ids.json');
+//             return true;
+//         }
+//     }
+    
+//     // Fallback: Check owner.json (legacy support)
+//     const ownerInfo = loadOwnerInfo();
+//     if (ownerInfo && ownerInfo.OWNER_NUMBER) {
+//         console.log(`[Prefix] Checking owner.json: ${ownerInfo.OWNER_NUMBER}`);
+        
+//         // Extract phone number from sender JID
+//         const senderNumber = extractPhoneNumber(senderJid);
+//         console.log(`[Prefix] Sender number: ${senderNumber}`);
+        
+//         if (senderNumber && senderNumber === ownerInfo.OWNER_NUMBER) {
+//             console.log('[Prefix] Phone number match found in owner.json');
+            
+//             // Add this JID to owner_ids.json for future
+//             addOwnerToIds(senderJid);
+//             return true;
+//         }
+        
+//         // Also check participant number
+//         if (participantJid) {
+//             const participantNumber = extractPhoneNumber(participantJid);
+//             console.log(`[Prefix] Participant number: ${participantNumber}`);
+            
+//             if (participantNumber && participantNumber === ownerInfo.OWNER_NUMBER) {
+//                 console.log('[Prefix] Participant phone number match found');
+//                 addOwnerToIds(participantJid);
+//                 return true;
+//             }
+//         }
+//     }
+    
+//     console.log('[Prefix] No owner match found');
+//     return false;
+// }
+
+// // Normalize JID by extracting phone number
+// function normalizeJid(jid) {
+//     if (!jid) return '';
+    
+//     // Extract phone number (remove everything after @)
+//     const phonePart = jid.split('@')[0];
+    
+//     // Remove any suffix after : (like :33 in "254703397679:33")
+//     const cleanNumber = phonePart.split(':')[0];
+    
+//     return cleanNumber;
+// }
+
+// // Extract phone number from JID
+// function extractPhoneNumber(jid) {
+//     if (!jid) return null;
+    
+//     // Get the part before @
+//     const phonePart = jid.split('@')[0];
+    
+//     // Remove any device ID suffix (like :33)
+//     const cleanNumber = phonePart.split(':')[0];
+    
+//     // Remove any non-numeric characters
+//     return cleanNumber.replace(/\D/g, '');
+// }
+
+// // Add owner to owner_ids.json
+// function addOwnerToIds(jid) {
+//     try {
+//         const ownerIds = loadOwnerIds();
+//         const normalizedJid = normalizeJid(jid);
+        
+//         // Check if already exists
+//         const exists = ownerIds.ids.some(owner => 
+//             normalizeJid(owner.jid) === normalizedJid
+//         );
+        
+//         if (!exists) {
+//             ownerIds.ids.push({
+//                 jid: jid,
+//                 added: new Date().toISOString(),
+//                 type: getJidType(jid),
+//                 phone_number: extractPhoneNumber(jid)
+//             });
+            
+//             // Update primary if not set
+//             if (!ownerIds.primary_jid) {
+//                 ownerIds.primary_jid = jid;
+//                 ownerIds.primary_number = extractPhoneNumber(jid);
+//             }
+            
+//             fs.writeFileSync('./owner_ids.json', JSON.stringify(ownerIds, null, 2));
+//             console.log(`[Prefix] Added owner ID: ${jid}`);
+//         }
+        
+//         return true;
+//     } catch (error) {
+//         console.error('[Prefix] Error adding owner to IDs:', error);
+//         return false;
+//     }
+// }
+
+// // ====== SUBCOMMAND HANDLERS ======
+
+// async function handleAddOwner(sock, msg, args, senderJid) {
+//     const targetUser = args[0];
+    
+//     if (!targetUser) {
+//         return sock.sendMessage(senderJid, {
+//             text: '❌ Please mention a user or provide a phone number!\n\nExample:\n• .setprefix addowner @user\n• .setprefix addowner 254712345678'
+//         }, { quoted: msg });
+//     }
+    
+//     // Check if target is a mention
+//     let targetJid;
+    
+//     if (targetUser.includes('@')) {
+//         // It's already a JID
+//         targetJid = targetUser;
+//     } else if (msg.message.extendedTextMessage?.contextInfo?.mentionedJid) {
+//         // Get from mention
+//         targetJid = msg.message.extendedTextMessage.contextInfo.mentionedJid[0];
+//     } else if (/^\d{10,15}$/.test(targetUser)) {
+//         // It's a phone number
+//         targetJid = `${targetUser}@s.whatsapp.net`;
+//     } else {
+//         return sock.sendMessage(senderJid, {
+//             text: '❌ Invalid format. Please provide a valid phone number or mention a user.'
+//         }, { quoted: msg });
+//     }
+    
+//     // Add to owner IDs
+//     addOwnerToIds(targetJid);
+    
+//     await sock.sendMessage(senderJid, {
+//         text: `✅ *Owner Added Successfully!*\n\n📱 New Owner: ${targetJid}\n\nThey now have full access to owner commands.`
+//     }, { quoted: msg });
+// }
+
+// async function handleListOwners(sock, msg, senderJid) {
+//     const ownerIds = loadOwnerIds();
+//     const ownerInfo = loadOwnerInfo();
+    
+//     let response = `👑 *Bot Owners List*\n\n`;
+    
+//     // Show primary owner
+//     if (ownerIds.primary_jid) {
+//         response += `*Primary Owner:*\n`;
+//         response += `• JID: ${ownerIds.primary_jid}\n`;
+//         response += `• Phone: ${ownerIds.primary_number || 'N/A'}\n`;
+//         response += `• Type: Primary\n\n`;
+//     } else if (ownerInfo) {
+//         response += `*Primary Owner (Legacy):*\n`;
+//         response += `• Phone: ${ownerInfo.OWNER_NUMBER}\n`;
+//         response += `• JID: ${ownerInfo.OWNER_JID || 'N/A'}\n\n`;
+//     }
+    
+//     // Show additional owners
+//     if (ownerIds.ids.length > 0) {
+//         response += `*Additional Owners (${ownerIds.ids.length}):*\n`;
+        
+//         ownerIds.ids.forEach((owner, index) => {
+//             // Skip primary if already shown
+//             if (owner.jid === ownerIds.primary_jid) return;
+            
+//             response += `${index + 1}. ${owner.phone_number || 'N/A'}\n`;
+//             response += `   • Type: ${owner.type}\n`;
+//             response += `   • Added: ${new Date(owner.added).toLocaleDateString()}\n`;
+//         });
+//     } else {
+//         response += `📭 No additional owners added.\n\n`;
+//     }
+    
+//     response += `\n📖 *Owner Management:*\n`;
+//     response += `• Add: .setprefix addowner [@mention/number]\n`;
+//     response += `• Remove: .setprefix removeowner [number]\n`;
+    
+//     await sock.sendMessage(senderJid, { text: response }, { quoted: msg });
+// }
+
+// async function handleRemoveOwner(sock, msg, args, senderJid) {
+//     const targetNumber = args[0];
+    
+//     if (!targetNumber) {
+//         return sock.sendMessage(senderJid, {
+//             text: '❌ Please provide the phone number to remove!\n\nExample: .setprefix removeowner 254712345678'
+//         }, { quoted: msg });
+//     }
+    
+//     const ownerIds = loadOwnerIds();
+//     const cleanTarget = targetNumber.replace(/\D/g, '');
+    
+//     // Don't allow removing primary owner
+//     if (ownerIds.primary_number === cleanTarget) {
+//         return sock.sendMessage(senderJid, {
+//             text: '❌ Cannot remove primary owner! You must set a new primary owner first.'
+//         }, { quoted: msg });
+//     }
+    
+//     // Find and remove
+//     const initialCount = ownerIds.ids.length;
+//     ownerIds.ids = ownerIds.ids.filter(owner => {
+//         const ownerNumber = extractPhoneNumber(owner.jid);
+//         return ownerNumber !== cleanTarget;
+//     });
+    
+//     if (ownerIds.ids.length < initialCount) {
+//         fs.writeFileSync('./owner_ids.json', JSON.stringify(ownerIds, null, 2));
+        
+//         await sock.sendMessage(senderJid, {
+//             text: `✅ *Owner Removed Successfully!*\n\n📱 Removed: ${cleanTarget}\n\nThey no longer have owner access.`
+//         }, { quoted: msg });
+//     } else {
+//         await sock.sendMessage(senderJid, {
+//             text: `❌ Owner not found: ${cleanTarget}\n\nUse .setprefix listowners to see current owners.`
+//         }, { quoted: msg });
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
