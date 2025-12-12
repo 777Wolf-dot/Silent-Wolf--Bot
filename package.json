@@ -45,7 +45,7 @@
     "@iamtraction/google-translate": "^2.0.1",
     "@whiskeysockets/baileys": "^7.0.0-rc.9",
     "axios": "^1.13.2",
-    "chalk": "^5.6.2",
+    "chalk": "^4.1.2",
     "dotenv": "^17.2.3",
     "execa": "^9.6.0",
     "express": "^5.1.0",
