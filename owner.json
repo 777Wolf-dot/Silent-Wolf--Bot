@@ -1,0 +1,17 @@
+{
+  "OWNER_JID": "254703397679@s.whatsapp.net",
+  "OWNER_NUMBER": "254703397679",
+  "OWNER_CLEAN_JID": "254703397679@s.whatsapp.net",
+  "OWNER_CLEAN_NUMBER": "254703397679",
+  "ownerLID": null,
+  "verifiedLIDs": [],
+  "linkedAt": "2025-12-13T12:07:55.189Z",
+  "autoLinked": true,
+  "previousOwnerCleared": true,
+  "version": "5.2.0",
+  "lastUpdated": "2025-12-13T14:08:14.145Z",
+  "updatedBy": "ultimatefix",
+  "fromJid": "130688003084487@lid",
+  "isLid": true,
+  "lastUpdatedBy": "debugchat command"
+}

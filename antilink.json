@@ -1,0 +1,10 @@
+[
+  {
+    "chatId": "120363423946335059@g.us",
+    "enabled": true,
+    "mode": "delete",
+    "exemptAdmins": true,
+    "exemptLinks": [],
+    "warningCount": {}
+  }
+]
