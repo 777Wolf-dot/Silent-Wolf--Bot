@@ -112,6 +112,6 @@
 
 <p align="center">
   👤 Built by <b>Silent Wolf</b><br>
-  💀 Enhanced by <b>Meiser</b> — the King behind the curtain 👑🩸💀<br><br>
+
   <i>You're not running a bot.<br>You're unleashing a **predator**.</i>
 </p>
