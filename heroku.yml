@@ -1,0 +1,9 @@
+build:
+  docker:
+    web: Dockerfile
+run:
+  web: node index.js
+# release:
+#   image: web
+#   command:
+#     - echo "Running release phase"
