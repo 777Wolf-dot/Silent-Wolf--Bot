@@ -21,7 +21,7 @@
 </div>
 
 <p align="center" style="color: #00ff00; text-shadow: 0 0 5px #00ff00;">
-  <i>"Trust a woman at your won risk"</i>
+  <i>Silent Wolf</i>
 </p>
 
 
